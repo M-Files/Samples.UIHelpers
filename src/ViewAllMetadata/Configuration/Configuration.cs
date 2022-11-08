@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 
-namespace SeparatePreview
+namespace ViewAllMetadata
 {
     [DataContract]
     public class Configuration
@@ -14,16 +14,10 @@ namespace SeparatePreview
         [DataMember]
         [JsonConfEditor
         (
-            Label = "Task Pane Configuration"
-        )]
-        public TaskPaneConfiguration TaskPaneConfiguration { get; set; }
-
-        [DataMember]
-        [JsonConfEditor
-        (
             Label = "Languages",
             ChildName = "Language"
         )]
+
         // TODO: In future versions of the VAF we can use ObjectMembersAttribute!
         public List<LanguageOverride> LanguageOverrides { get; set; } = new List<LanguageOverride>();
     }

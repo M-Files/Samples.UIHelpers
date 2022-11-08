@@ -11,7 +11,7 @@ param(
 $null = [System.Reflection.Assembly]::LoadWithPartialName("Interop.MFilesAPI")
 
 # Application details
-$appFilePath = "bin\Debug\SeparatePreview.mfappx"
+$appFilePath = "bin\Debug\ViewAllMetadata.mfappx"
 $appGuid = "f27a149d-d754-48ac-a047-b6c5917a6c91"
 
 # Target vault

@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Security.Cryptography;
 
-namespace SeparatePreview
+namespace ViewAllMetadata
 {
     /// <summary>
     /// A base implementation of <see cref="IResourceStringProvider"/>

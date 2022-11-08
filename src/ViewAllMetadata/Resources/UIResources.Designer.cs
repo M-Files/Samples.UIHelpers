@@ -61,29 +61,11 @@ namespace ViewAllMetadata.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Open Preview Window.
+        ///   Looks up a localized string similar to Show all metadata.
         /// </summary>
-        internal static string Commands_OpenPreviewWindow {
+        internal static string Commands_ShowAllMetadata {
             get {
-                return ResourceManager.GetString("Commands_OpenPreviewWindow", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Please select a document..
-        /// </summary>
-        internal static string PreviewWindow_PleaseSelectADocument {
-            get {
-                return ResourceManager.GetString("PreviewWindow_PleaseSelectADocument", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Preview.
-        /// </summary>
-        internal static string PreviewWindow_Title {
-            get {
-                return ResourceManager.GetString("PreviewWindow_Title", resourceCulture);
+                return ResourceManager.GetString("Commands_ShowAllMetadata", resourceCulture);
             }
         }
     }

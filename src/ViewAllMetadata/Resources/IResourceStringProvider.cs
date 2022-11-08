@@ -1,4 +1,4 @@
-﻿namespace SeparatePreview
+﻿namespace ViewAllMetadata
 {
     public interface IResourceStringProvider
     {

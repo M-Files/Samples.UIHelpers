@@ -6,11 +6,7 @@ function OnNewShellUI(shellUI)
 	/// <param name="shellUI" type="MFiles.ShellUI">The new shell UI object.</param> 
 
 	// Initialize the console.
-	console.initialize(shellUI, "Separate Preview");
-
-	var dashboardCallback = null;
-	var showPreviewCommandId = null;
-	var isWindowOpen = false;
+	console.initialize(shellUI, "View all metadata");
 
 	// Register to listen new shell frame creation event.
 	shellUI.Events.Register
@@ -21,6 +17,11 @@ function OnNewShellUI(shellUI)
 			/// <summary>Handles the OnNewShellFrame event.</summary>
 			/// <param name="shellFrame" type="MFiles.ShellFrame">The new shell frame object.</param>
 
+			var showAllMetadataCommandId = null;
+			var selectedItem = null;
+			var registrationCallback = null;
+			var tab = null;
+
 			// Set up the default configuration.
 			var configuration = {
 				TaskPaneConfiguration: {
@@ -28,160 +29,232 @@ function OnNewShellUI(shellUI)
 					Priority: 0
 				},
 				ResourceStrings: {
-					Commands_OpenPreviewWindow: "Open Preview Window",
-					PreviewWindow_Title: "Preview",
-					PreviewWindow_PleaseSelectADocument: "Please select a document."
+					Commands_ShowAllMetadata: "Show all metadata"
                 }
-			}
-
-			function markWindowAsOpen()
-			{
-				/// <summary>Marks the window as open so that we don't spawn a new one.</summary>
-
-				// Update the global variable.
-				isWindowOpen = true;
-
-				// Disable the command.
-				shellFrame.Commands.SetCommandState(showPreviewCommandId, CommandLocation_All, CommandState_Inactive);
-			}
-
-			function markWindowAsClosed()
-			{
-				/// <summary>Marks the window as closed so that we can spawn a new one.</summary>
-
-				// Update the global variable.
-				isWindowOpen = false;
-
-				// Disable the command.
-				shellFrame.Commands.SetCommandState(showPreviewCommandId, CommandLocation_All, CommandState_Active);
 			}
 
 			function shellFrameStartedHandler()
 			{
+				// Sanity.
+				if (!shellFrame.BottomPane.Available)
+					return;
+
 				// Attempt to get the language.
 				var lang = MFiles.ReadFromRegistry(false, "", "Language") || "";
 				console.log("Client language: " + lang);
 
-				// Pass the language to the server to get the translations.
-				shellFrame.ShellUI.Vault.Async.ExtensionMethodOperations.ExecuteVaultExtensionMethod
+				// If we have the VAF app installed then we should check whether this should happen for this user.
+				if (typeof(shellFrame.ShellUI.Vault.Async.ExtensionMethodOperations.DoesActiveVaultExtensionMethodExist) != "undefined")
+				{
+					shellFrame.ShellUI.Vault.Async.ExtensionMethodOperations.ExecuteVaultExtensionMethod
 					(
-						"SeparatePreview.GetUIXConfiguration",
-						lang,
-						function (output)
+						"ViewAllMetadata.ShouldShowAllMetadata",
+						"",
+                        function (output)
 						{
-							try
-							{
-								configuration = JSON.parse(output);
-							}
-							catch(e)
-							{
-								shellFrame.ShowMessage("Exception parsing configuration");
-								MFiles.ReportException(e);
-							}
+							// If they should not see it then die here.
+							if (output != "true")
+								return;
+
+							// Pass the language to the server to get the translations.
+							shellFrame.ShellUI.Vault.Async.ExtensionMethodOperations.ExecuteVaultExtensionMethod
+								(
+									"ViewAllMetadata.GetUIXConfiguration",
+									lang,
+									function (output)
+									{
+										try
+										{
+											configuration = JSON.parse(output);
+										}
+										catch (e)
+										{
+											shellFrame.ShowMessage("Exception parsing configuration");
+											MFiles.ReportException(e);
+										}
+									},
+									function (shorterror, longerror, errorobj)
+									{
+										MFiles.ReportException(errorobj);
+									},
+									function ()
+									{
+										try
+										{
+											// Show the button.
+											enableShowAllMetadataCommand();
+										}
+										catch (e)
+										{
+											MFiles.ReportException(e);
+										}
+									}
+								);
 						},
 						function (shorterror, longerror, errorobj)
 						{
+							// Error checking permissions.
 							MFiles.ReportException(errorobj);
-						},
-                        function ()
-						{
-							try
-							{
-								enablePreviewCommand();
-							}
-							catch (e)
-							{
-								shellFrame.ShowMessage("Exception showing preview command");
-								MFiles.ReportException(e);
-                            }
-                        }
-					);
+						}
+					)
+				}
+				else
+				{
+					// The extension method doesn't exist.
+					// Probably installed in the local install folder, so show for everyone.
+					try
+					{
+						// Show the button.
+						enableShowAllMetadataCommand();
+					}
+					catch (e)
+					{
+						MFiles.ReportException(e);
+					}
+				}
 			}
 
-			function enablePreviewCommand()
+            function tabClosed()
+			{
+				tab.Visible = false;
+				shellFrame.BottomPane.Visible = false;
+				shellFrame.BottomPane.Minimized = true;
+            }
+
+			function enableShowAllMetadataCommand()
 			{
 				// Let's create a button.
-				showPreviewCommandId = shellFrame.Commands.CreateCustomCommand
+				showAllMetadataCommandId = shellFrame.Commands.CreateCustomCommand
 					(
-						configuration.ResourceStrings.Commands_OpenPreviewWindow
+						configuration.ResourceStrings.Commands_ShowAllMetadata
 					);
 
-				// Let's add it to the task pane.
-				// ref: http://www.m-files.com/UI_Extensibility_Framework/index.html#MFClientScript~ITaskPane~AddCustomCommandToGroup.html
-				shellFrame.Commands.SetIconFromPath(showPreviewCommandId, "loupe1.ico");
-				shellFrame.TaskPane.AddCustomCommandToGroup
-					(
-						showPreviewCommandId,
-						configuration.TaskPaneConfiguration.TaskPaneGroup,
-						configuration.TaskPaneConfiguration.Priority
-					);
+				// Let's add it to the context menu.
+				shellFrame.Commands.AddCustomCommandToMenu(showAllMetadataCommandId, MenuLocation_ContextMenu_Top, 1);
 
 				// Register to respond to events.
 				shellFrame.Commands.Events.Register(Event_CustomCommand, function (command)
 				{
 					// We only care about our command.
-					if (command != showPreviewCommandId)
+					if (command != showAllMetadataCommandId)
+						return;
+					if (null == selectedItem)
 						return;
 
-					// Is the window already open?
-					if (isWindowOpen)
-						return;
-
-					// Show the dashboard.
-					shellUI.ShowPopupDashboard("PreviewDashboard", false, {
-						configuration: configuration,
-						registrationCallback: function (callback)
+					// If we have a function then try to call it.
+                    if (registrationCallback && typeof (registrationCallback) == "function")
+					{
+						try
 						{
-							// We can use the function passed to push data back to the persistent dashboard.
-							dashboardCallback = callback;
-						},
-						windowClosed: function ()
-						{
-							// When the dashboard is closed, mark it as closed so that we can open a new one.
-							markWindowAsClosed();
+							// Try to call it.
+							shellFrame.BottomPane.Visible = true;
+							shellFrame.BottomPane.Minimized = false;
+							tab.Visible = true;
+							tab.Select();
+							registrationCallback(selectedItem);
+							return true;
 						}
-					});
+                        catch (e)
+						{
+							// No dice; do it the hard way.
+                        }
+					}
 
-					// Mark the window as open.
-					markWindowAsOpen();
+					// Do we have a tab?
+					if (null == tab)
+					{
+						tab = shellFrame.BottomPane.AddTab("showAllMetadata", "Metadata", "");
+					}
 
+					// Show the bottom pane.
+					tab.Visible = true;
+					tab.Select();
+					shellFrame.BottomPane.Visible = true;
+					shellFrame.BottomPane.Minimized = false;
+
+					tab.ShowDashboard
+					(
+						"Dashboard",
+						{
+							registrationCallback: function (fn)
+							{
+								registrationCallback = fn
+							},
+							tabClosedCallback: tabClosed,
+							selectedItem: selectedItem
+						}
+					);
 				})
+			}
+            function selectionChangedHandler(selectedItems, shellListing)
+			{
+				// Sanity.
+				if (false == shellListing.IsActive)
+				{
+					return false;
+				}
 
-				// Set the initial command state.
-				shellFrame.Commands.SetCommandState(showPreviewCommandId, CommandLocation_All, isWindowOpen ? CommandState_Inactive : CommandState_Active);
+				// Did we get one item?
+				selectedItem = null;
+				var isOneObjectSelected = selectedItems.Count == 1 && selectedItems.ObjectVersionsAndProperties.Count == 1;
+				if (isOneObjectSelected)
+				{
+					selectedItem = selectedItems.ObjectVersionsAndProperties[0];
+				}
+				if (false == isOneObjectSelected)
+					return false;
+
+				// If the tab is configured and we can call into the dashboard then select the new object.
+				if (null == tab || null == registrationCallback)
+					return false;;
+				try
+				{
+					registrationCallback(selectedItem)
+					tab.Select();
+					return true;
+				}
+                catch (e)
+				{
+					return false;
+                }
+
             }
 			function shellListingStartedHandler(shellListing)
 			{
 				// Listen for selection change events on the listing
-				shellListing.Events.Register(Event_SelectionChanged, function (selectedItems)
-				{
-
-					if (false == shellListing.IsActive)
-						return;
-
-					// Sanity.
-					if (selectedItems.ObjectVersions.Count == 0)
-						return;
-
-					// If we have a means to alert the dashboard of the selected item then do so.
-					if (null != dashboardCallback)
+				shellListing.Events.Register
+				(
+					Event_ShowContextMenu,
+					function (selectedItems)
 					{
-						try
-						{
-							// Call the callback, passing the selected item.
-							dashboardCallback(selectedItems);
-						}
-						catch (e)
-						{
+						// Sanity.
+						if (false == shellListing.IsActive)
+							return false;
 
-						}
+						// Was there only one item selected (and is it an object version)?
+						selectedItem = null;
+						var isOneObjectSelected = selectedItems.Count == 1 && selectedItems.ObjectVersionsAndProperties.Count == 1;
+						if (isOneObjectSelected)
+						{
+							selectedItem = selectedItems.ObjectVersionsAndProperties[0];
+                        }
+
+						// Show the context menu item only if there is 1 object selected.
+						shellFrame.Commands.SetCommandState(
+							showAllMetadataCommandId,
+							CommandLocation_All,
+							isOneObjectSelected ? CommandState_Active : CommandState_Hidden
+						);
+
+						return true;
 					}
-				});
+				);
             }
 
 			// Register to listen to the started event.
 			shellFrame.Events.Register(Event_Started, shellFrameStartedHandler);
 			shellFrame.Events.Register(Event_NewShellListing, shellListingStartedHandler);
+			shellFrame.Events.Register(Event_SelectionChanged, selectionChangedHandler);
 		}
 	);
 

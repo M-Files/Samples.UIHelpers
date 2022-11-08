@@ -3,7 +3,7 @@ using System.Collections;
 using System.Globalization;
 using System.Linq;
 
-namespace SeparatePreview
+namespace ViewAllMetadata
 {
     /// <summary>
     /// The default implementation of <see cref="IResourceStringProvider"/>,
@@ -29,9 +29,7 @@ namespace SeparatePreview
                 if (null != languageOverride)
                 {
                     // We have to hard-code some of these values here, unlike in the resources.
-                    resourceStrings.Add(nameof(languageOverride.Commands_OpenPreviewWindow), languageOverride.Commands_OpenPreviewWindow);
-                    resourceStrings.Add(nameof(languageOverride.PreviewWindow_PleaseSelectADocument), languageOverride.PreviewWindow_PleaseSelectADocument);
-                    resourceStrings.Add(nameof(languageOverride.PreviewWindow_Title), languageOverride.PreviewWindow_Title);
+                    resourceStrings.Add(nameof(languageOverride.Commands_ShowAllMetadata), languageOverride.Commands_ShowAllMetadata);
                     return resourceStrings;
                 }
             }

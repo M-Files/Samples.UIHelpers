@@ -57,8 +57,7 @@
   <ItemGroup>
     <Compile Include="Configuration\Configuration.cs" />
     <Compile Include="Configuration\LanguageOverride.cs" />
-    <Compile Include="Configuration\TaskPaneConfiguration.cs" />
-    <Compile Include="Configuration\TaskPaneGroup.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Resources\IResourceStringProvider.cs" />
     <Compile Include="Languages\Language.cs" />
     <Compile Include="Languages\LanguageStableValueOptionsProvider.cs" />

@@ -117,13 +117,7 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Commands_OpenPreviewWindow" xml:space="preserve">
-    <value>Open Preview Window</value>
-  </data>
-  <data name="PreviewWindow_PleaseSelectADocument" xml:space="preserve">
-    <value>Please select a document.</value>
-  </data>
-  <data name="PreviewWindow_Title" xml:space="preserve">
-    <value>Preview</value>
+  <data name="Commands_ShowAllMetadata" xml:space="preserve">
+    <value>Show all metadata</value>
   </data>
 </root>

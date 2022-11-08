@@ -7,7 +7,7 @@ using MFilesAPI;
 using System;
 using System.Diagnostics;
 
-namespace SeparatePreview
+namespace ViewAllMetadata
 {
     public class VaultApplication
         : MFiles.VAF.Extensions.ConfigurableVaultApplicationBase<Configuration>
@@ -26,20 +26,20 @@ namespace SeparatePreview
         {
             try
             {
-                string appPath = "SeparatePreview.UIX.mfappx";
+                string appPath = "ViewAllMetadata.UIX.mfappx";
                 if (System.IO.File.Exists(appPath))
                 {
                     vault.CustomApplicationManagementOperations.InstallCustomApplication(appPath);
                 }
                 else
                 {
-                    this.Logger?.Fatal($"Could not install Separate Preview UIX application; {appPath} does not exist.");
+                    this.Logger?.Fatal($"Could not install View all Metadata UIX application; {appPath} does not exist.");
                 }
             }
             catch (Exception ex)
             {
                 if (!MFUtils.IsMFilesAlreadyExistsError(ex))
-                    this.Logger?.Fatal(ex, $"Could not install Separate Preview UIX application.");
+                    this.Logger?.Fatal(ex, $"Could not install  View all Metadata UIX application.");
             }
 
             base.InitializeApplication(vault);
@@ -47,40 +47,47 @@ namespace SeparatePreview
 
         #endregion
 
-#pragma warning disable IDE0051 // Remove unused private members
         /// <summary>
-        /// Registers a Vault Extension Method with name "SeparatePreview.GetUIXConfiguration".
+        /// Registers a Vault Extension Method with name "ViewAllMetadata.GetUIXConfiguration".
         /// Users must have at least MFVaultAccess.MFVaultAccessNone access to execute the method.
         /// </summary>
         /// <param name="env">The vault/object environment.</param>
         /// <returns>The any output from the vault extension method execution.</returns>
         /// <remarks>The input to the vault extension method is available in <see cref="EventHandlerEnvironment.Input"/>.</remarks>
-        [VaultExtensionMethod("SeparatePreview.GetUIXConfiguration",
+        [VaultExtensionMethod("ViewAllMetadata.GetUIXConfiguration",
             RequiredVaultAccess = MFVaultAccess.MFVaultAccessNone)]
         private string GetUIXConfiguration(EventHandlerEnvironment env)
         {
             // Create and populate the configuration.
             var configuration = new UIXConfiguration()
             {
-                // Use the task pane config from the configuration, if we have it, or fall back to the default.
-                TaskPaneConfiguration =
-                    this.Configuration?.TaskPaneConfiguration
-                    ?? new TaskPaneConfiguration(),
-
                 // Create the resource strings from the provider, or default to none.
-                ResourceStrings = 
+                ResourceStrings =
                     this.ResourceStringProvider?.Create
                     (
-                        env.Input.ToLower(), 
+                        env.Input.ToLower(),
                         this.Configuration?.LanguageOverrides?.ToArray()
                     )
                     ?? new ResourceStrings()
-			};
+            };
 
             // Serialize the configuration for use in the UIX application.
             return Newtonsoft.Json.JsonConvert.SerializeObject(configuration);
         }
-#pragma warning restore IDE0051 // Remove unused private members
+
+        /// <summary>
+        /// Registers a Vault Extension Method with name "ViewAllMetadata.ShouldShowAllMetadata".
+        /// Users must have at least MFVaultAccess.MFVaultAccessNone access to execute the method.
+        /// </summary>
+        /// <param name="env">The vault/object environment.</param>
+        /// <returns>The any output from the vault extension method execution.</returns>
+        /// <remarks>The input to the vault extension method is available in <see cref="EventHandlerEnvironment.Input"/>.</remarks>
+        [VaultExtensionMethod("ViewAllMetadata.ShouldShowAllMetadata",
+            RequiredVaultAccess = MFVaultAccess.MFVaultAccessNone)]
+        private string ShouldShowAllMetadata(EventHandlerEnvironment env)
+        {
+            return "true";
+        }
 
     }
 }

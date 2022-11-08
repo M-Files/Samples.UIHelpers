@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Runtime.Serialization;
 
-namespace SeparatePreview
+namespace ViewAllMetadata
 {
     [DataContract]
     public class ResourceStrings

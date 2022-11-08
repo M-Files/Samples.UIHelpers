@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <application xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.m-files.com/schemas/appdef-client-v4.xsd">
 	<guid>1B9552B3-C1C5-44b9-9A5F-D4ABAC5E8AE2</guid>	
-	<name>Separate preview UIX</name>
-	<version>2.1</version>
-	<description>The UI component of the 'Separate Preview' application</description>
-	<publisher>M-Files Corporation</publisher>
-	<copyright>(c) M-Files Corporation 2017 onwards</copyright>
-	<required-mfiles-version>20.12.0.0</required-mfiles-version>
+	<name>View all metadata UIX</name>
+	<version>0.1</version>
+	<description>The UI component of the 'View all metadata' application</description>
+	<publisher>M-Files Corporation (open-source)</publisher>
+	<copyright>M-Files Corporation 2022 onwards</copyright>
+	<required-mfiles-version>22.11.0.0</required-mfiles-version>
     <enabled-by-default>true</enabled-by-default>
 	<master-application-guid>f27a149d-d754-48ac-a547-b6c5917a6c91</master-application-guid>
     <platforms>
@@ -20,8 +20,8 @@
 		</module>
 	</modules>
 	<dashboards>
-		<dashboard id="PreviewDashboard">	
-			<content>preview-dashboard/preview-dashboard.html</content>
+		<dashboard id="Dashboard">	
+			<content>dashboard/dashboard.html</content>
 		</dashboard>
 	</dashboards>
 </application>

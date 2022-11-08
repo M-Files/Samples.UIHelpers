@@ -3,7 +3,7 @@ using MFiles.VAF.Configuration.JsonEditor;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace SeparatePreview
+namespace ViewAllMetadata
 {
     public class LanguageStableValueOptionsProvider
 		: IStableValueOptionsProvider

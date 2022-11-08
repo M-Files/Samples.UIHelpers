@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.Serialization;
 
-namespace SeparatePreview
+namespace ViewAllMetadata
 {
     [DataContract]
     public class UIXConfiguration
@@ -9,8 +9,5 @@ namespace SeparatePreview
         [DataMember]
         public ResourceStrings ResourceStrings { get; set; }
             = new ResourceStrings();
-
-        [DataMember]
-        public TaskPaneConfiguration TaskPaneConfiguration { get; set; }
     }
 }
