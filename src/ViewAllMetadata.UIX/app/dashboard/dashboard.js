@@ -43,6 +43,25 @@ function OnNewDashboard(dashboard)
 
         // Build up the list item.
         var $listItem = $("<li></li>");
+        switch (propertyDef.DataType)
+        {
+            case MFDatatypeText:
+                $listItem.addClass("text");
+                break;
+            case MFDatatypeMultiLineText:
+                $listItem.addClass("multi-line-text");
+                break;
+            case MFDatatypeMultiSelectLookup:
+                // Get the data out the lookups.
+                var lookups = propertyValue.Value.GetValueAsLookups();
+                value = $("<div></div>");
+                for (var i = 0; i < lookups.Count; i++)
+                {
+                    value.append($("<div></div>").text(lookups[i].DisplayValue));
+                }
+                $valueSpan.empty().append(value);
+                break;
+        }
         $listItem.append($label);
         $listItem.append($valueSpan);
 

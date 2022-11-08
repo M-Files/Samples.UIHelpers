@@ -321,6 +321,7 @@ function OnNewShellUI(shellUI)
 			shellFrame.Events.Register(Event_Started, shellFrameStartedHandler);
 			shellFrame.Events.Register(Event_NewShellListing, shellListingStartedHandler);
 			shellFrame.Events.Register(Event_SelectionChanged, selectionChangedHandler);
+			shellFrame.Events.Register(Event_SelectedItemsChanged, selectionChangedHandler);
 			shellFrame.Events.Register(Event_ViewLocationChangedAsync, tabClosed);
 		}
 	);
