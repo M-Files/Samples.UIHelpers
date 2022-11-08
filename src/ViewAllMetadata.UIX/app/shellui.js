@@ -8,6 +8,53 @@ function OnNewShellUI(shellUI)
 	// Initialize the console.
 	console.initialize(shellUI, "View all metadata");
 
+	var propertyDefinitions = {};
+	var classes = {};
+
+    function shellUIStartedHandler()
+	{
+		// Load all the property definitions.
+		shellUI.Vault.Async.PropertyDefOperations.GetPropertyDefs
+		(
+			function (output)
+			{
+				propertyDefinitions = {};
+				for (var i = 0; i < output.Count; i++)
+				{
+					var pd = output[i];
+					propertyDefinitions[pd.ID] = pd;
+				}
+			},
+			function (shorterror, longerror, errorobj)
+			{
+				// Error checking permissions.
+				MFiles.ReportException(errorobj);
+			}
+		);
+
+		// Load all the property definitions.
+		shellUI.Vault.Async.ClassOperations.GetAllObjectClasses
+		(
+			function (output)
+			{
+				classes = {};
+				for (var i = 0; i < output.Count; i++)
+				{
+					var c = output[i];
+					classes[c.ID] = c;
+				}
+			},
+			function (shorterror, longerror, errorobj)
+			{
+				// Error checking permissions.
+				MFiles.ReportException(errorobj);
+			}
+		);
+    }
+
+	// Load the property definitions when the UI starts.
+	shellUI.Events.Register(Event_Started, shellUIStartedHandler);
+
 	// Register to listen new shell frame creation event.
 	shellUI.Events.Register
 	(
@@ -46,9 +93,9 @@ function OnNewShellUI(shellUI)
 				console.log("Client language: " + lang);
 
 				// If we have the VAF app installed then we should check whether this should happen for this user.
-				if (typeof(shellFrame.ShellUI.Vault.Async.ExtensionMethodOperations.DoesActiveVaultExtensionMethodExist) != "undefined")
+				if (typeof (shellUI.Vault.Async.ExtensionMethodOperations.DoesActiveVaultExtensionMethodExist) != "undefined")
 				{
-					shellFrame.ShellUI.Vault.Async.ExtensionMethodOperations.ExecuteVaultExtensionMethod
+					shellUI.Vault.Async.ExtensionMethodOperations.ExecuteVaultExtensionMethod
 					(
 						"ViewAllMetadata.ShouldShowAllMetadata",
 						"",
@@ -59,7 +106,7 @@ function OnNewShellUI(shellUI)
 								return;
 
 							// Pass the language to the server to get the translations.
-							shellFrame.ShellUI.Vault.Async.ExtensionMethodOperations.ExecuteVaultExtensionMethod
+							shellUI.Vault.Async.ExtensionMethodOperations.ExecuteVaultExtensionMethod
 								(
 									"ViewAllMetadata.GetUIXConfiguration",
 									lang,
@@ -122,7 +169,17 @@ function OnNewShellUI(shellUI)
 					tab.Visible = false;
 				shellFrame.BottomPane.Visible = false;
 				shellFrame.BottomPane.Minimized = true;
-            }
+			}
+
+			function getPropertyDefinition(propertyDefId)
+			{
+				return propertyDefinitions[propertyDefId];
+			}
+
+			function getObjectClass(classId)
+			{
+				return classes[classId];
+			}
 
 			function enableShowAllMetadataCommand()
 			{
@@ -184,6 +241,8 @@ function OnNewShellUI(shellUI)
 								registrationCallback = fn
 							},
 							tabClosedCallback: tabClosed,
+							getPropertyDefinition: getPropertyDefinition,
+							getObjectClass: getObjectClass,
 							selectedItem: selectedItem
 						}
 					);
