@@ -39,6 +39,8 @@ function OnNewShellUI(shellUI)
 				if (!shellFrame.BottomPane.Available)
 					return;
 
+				tabClosed();
+
 				// Attempt to get the language.
 				var lang = MFiles.ReadFromRegistry(false, "", "Language") || "";
 				console.log("Client language: " + lang);
@@ -116,7 +118,8 @@ function OnNewShellUI(shellUI)
 
             function tabClosed()
 			{
-				tab.Visible = false;
+				if(null != tab)
+					tab.Visible = false;
 				shellFrame.BottomPane.Visible = false;
 				shellFrame.BottomPane.Minimized = true;
             }
@@ -249,12 +252,13 @@ function OnNewShellUI(shellUI)
 						return true;
 					}
 				);
-            }
+			}
 
-			// Register to listen to the started event.
+			// Register shell frame events.
 			shellFrame.Events.Register(Event_Started, shellFrameStartedHandler);
 			shellFrame.Events.Register(Event_NewShellListing, shellListingStartedHandler);
 			shellFrame.Events.Register(Event_SelectionChanged, selectionChangedHandler);
+			shellFrame.Events.Register(Event_ViewLocationChangedAsync, tabClosed);
 		}
 	);
 

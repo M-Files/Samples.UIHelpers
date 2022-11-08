@@ -6,9 +6,9 @@ head, body {
 
 body {
     padding: 10px;
+    padding-top: 40px;
     font-family: Lato;
     color: #767676;
-    padding-bottom: 50px;
 }
 
 h1 {
@@ -16,18 +16,6 @@ h1 {
     color: #363A40;
 }
 
-div.properties
-{
-    position: absolute;
-    top: 70px;
-    left: 0px;
-    right: 0px;
-    bottom: 60px;
-    overflow: auto;
-    overflow-y: scroll;
-    padding: 0px 10px;
-    box-sizing: content-box;
-}
 ol.properties {
     column-count: 1;
     column-gap: 10px;
@@ -38,13 +26,12 @@ ol.properties, ol.properties li {
     padding: 0px;
     list-style: none;
     line-height: 20px;
-    display: inline-block;
 }
 ol.properties li {
     padding: 5px;
     position: relative;
     padding-left: 170px;
-    display: inline-block;
+    break-inside: avoid;
 }
 ol.properties li:hover {
     background-color: #F4F4F4;
@@ -65,7 +52,7 @@ ol.properties label {
     overflow: hidden;
     vertical-align: top;
     position: absolute;
-    left: 0px;
+    left: 5px;
 }
 
 ol.properties label.mandatory span::after {
@@ -82,10 +69,9 @@ ol.properties li > span {
     white-space: pre-line;
 }
 
-.buttonGroup
-{
+.buttonGroup {
     position: fixed;
-    bottom: 0px;
+    top: 0px;
     left: 0px;
     right: 0px;
     height: 30px;
