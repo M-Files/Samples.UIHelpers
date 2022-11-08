@@ -163,8 +163,10 @@ function OnNewShellUI(shellUI)
 				}
 			}
 
-            function tabClosed()
+			var tabClosedExplicitly = false;
+            function tabClosed(explicit)
 			{
+				tabClosedExplicitly = explicit;
 				if(null != tab)
 					tab.Visible = false;
 				shellFrame.BottomPane.Visible = false;
@@ -274,7 +276,17 @@ function OnNewShellUI(shellUI)
 					return false;;
 				try
 				{
-					registrationCallback(selectedItem)
+					// Show the item details.
+					registrationCallback(selectedItem);
+
+					// If we did not close explicitly then open again.
+                    if (!tabClosedExplicitly)
+					{
+						tab.Visible = true;
+						shellFrame.BottomPane.Visible = true;
+						shellFrame.BottomPane.Minimized = false;
+                    }
+
 					tab.Select();
 					return true;
 				}

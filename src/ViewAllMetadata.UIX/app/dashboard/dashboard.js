@@ -15,7 +15,7 @@ function OnNewDashboard(dashboard)
     $("#btnClose").click(function ()
     {
         if (typeof (dashboard.CustomData.tabClosedCallback) == "function")
-            dashboard.CustomData.tabClosedCallback();
+            dashboard.CustomData.tabClosedCallback(true);
     })
 
     // Pass a reference back to our handler.
