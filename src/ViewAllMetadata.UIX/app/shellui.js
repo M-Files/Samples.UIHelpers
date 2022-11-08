@@ -102,7 +102,7 @@ function OnNewShellUI(shellUI)
                         function (output)
 						{
 							// If they should not see it then die here.
-							if (output != "true")
+							if ((output + "").toLowerCase() != "true")
 								return;
 
 							// Pass the language to the server to get the translations.
@@ -290,7 +290,8 @@ function OnNewShellUI(shellUI)
 					function (selectedItems)
 					{
 						// Sanity.
-						if (false == shellListing.IsActive)
+						if (false == shellListing.IsActive
+								|| null == showAllMetadataCommandId)
 							return false;
 
 						// Was there only one item selected (and is it an object version)?

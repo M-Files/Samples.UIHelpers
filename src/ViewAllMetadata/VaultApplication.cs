@@ -2,10 +2,14 @@ using MFiles.VAF;
 using MFiles.VAF.AppTasks;
 using MFiles.VAF.Common;
 using MFiles.VAF.Configuration;
+using MFiles.VAF.Configuration.AdminConfigurations;
+using MFiles.VAF.Configuration.Domain.Dashboards;
 using MFiles.VAF.Core;
 using MFilesAPI;
 using System;
 using System.Diagnostics;
+using System.Linq;
+using System.Runtime.InteropServices.WindowsRuntime;
 
 namespace ViewAllMetadata
 {
@@ -86,7 +90,46 @@ namespace ViewAllMetadata
             RequiredVaultAccess = MFVaultAccess.MFVaultAccessNone)]
         private string ShouldShowAllMetadata(EventHandlerEnvironment env)
         {
-            return "true";
+            // Do we have any specific users allowed access?
+            if (null != this.Configuration?.UserConfiguration?.AllowedUsers)
+            {
+                // If this user is specified then allow access.
+                var users = this
+                    .Configuration
+                    .UserConfiguration
+                    .AllowedUsers
+                    .Where(u => u != null)
+                    .Select(u => u.Resolve(env.Vault, typeof(UserAccount)));
+                if (users.Any(u => u.ID == env.CurrentUserID))
+                    return true.ToString();
+            }
+
+            // Do we have any specific user groups access?
+            if (null != this.Configuration?.UserConfiguration?.AllowedUserGroups)
+            {
+                // If this user is specified then allow access.
+                var groups = this
+                    .Configuration
+                    .UserConfiguration
+                    .AllowedUserGroups
+                    .Where(u => u != null)
+                    .Select(u => u.Resolve(env.Vault, typeof(UserGroup)));
+                if (groups.Any(g => env.CurrentUserSessionInfo.UserAndGroupMemberships.GetUserOrUserGroupIDIndex(g.ID, MFUserOrUserGroupType.MFUserOrUserGroupTypeUserGroup) > -1))
+                    return true.ToString();
+            }
+
+            // Nope.
+            return false.ToString();
+        }
+
+        /// <inheritdoc />
+        /// <remarks>This does not use any async operations, so hide it.</remarks>
+        public override IDashboardContent GetAsynchronousOperationDashboardContent
+        (
+            IConfigurationRequestContext context
+        )
+        {
+            return null;
         }
 
     }
