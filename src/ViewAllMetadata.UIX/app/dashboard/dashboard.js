@@ -69,6 +69,12 @@ function OnNewDashboard(dashboard)
         $listItem.append($label);
         $listItem.append($valueSpan);
 
+        // Is the property editable?
+        if (propertyDef.AutomaticValueType == MFAutomaticValueTypeNone)
+        {
+            $listItem.addClass("editable");
+        }
+
         return $listItem;
     }
 

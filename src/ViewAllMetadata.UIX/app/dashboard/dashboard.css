@@ -75,6 +75,9 @@ ol.properties li.text > span {
     overflow: hidden;
     text-overflow: ellipsis;
 }
+ol.properties li.editable > span{
+    cursor: text;
+}
 
 .buttonGroup {
     position: fixed;
