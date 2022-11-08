@@ -32,7 +32,7 @@ ol.properties, ol.properties li {
 ol.properties li {
     padding: 5px;
     position: relative;
-    padding-left: 170px;
+    padding-left: 195px;
     break-inside: avoid;
 }
 ol.properties li:hover {
