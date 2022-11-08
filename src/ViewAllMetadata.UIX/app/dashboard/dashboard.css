@@ -78,6 +78,11 @@ ol.properties li.text > span {
 ol.properties li.editable > span{
     cursor: text;
 }
+ol.properties li.editable:hover {
+    background-image: url("../images/icon-edit.png");
+    background-repeat: no-repeat;
+    background-position: 170px 6px;
+}
 
 .buttonGroup {
     position: fixed;
