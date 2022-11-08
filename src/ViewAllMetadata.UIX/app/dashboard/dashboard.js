@@ -54,12 +54,16 @@ function OnNewDashboard(dashboard)
             case MFDatatypeMultiSelectLookup:
                 // Get the data out the lookups.
                 var lookups = propertyValue.Value.GetValueAsLookups();
-                value = $("<div></div>");
-                for (var i = 0; i < lookups.Count; i++)
+                // Only replace the value if we have something (otherwise leave as "---").
+                if (lookups.Count > 0)
                 {
-                    value.append($("<div></div>").text(lookups[i].DisplayValue));
+                    value = $("<div></div>");
+                    for (var i = 0; i < lookups.Count; i++)
+                    {
+                        value.append($("<div></div>").text(lookups[i].DisplayValue));
+                    }
+                    $valueSpan.empty().append(value);
                 }
-                $valueSpan.empty().append(value);
                 break;
         }
         $listItem.append($label);
@@ -162,6 +166,10 @@ function OnNewDashboard(dashboard)
 
             // Skip built-in properties.
             if (p.PropertyDef < 1000 && p.PropertyDef != 0 && p.PropertyDef != 100)
+                continue;
+
+            // If this is the name or title and we have another property set for that on the class then skip.
+            if (p.propertyDef == 0 && objectClass.NamePropertyDef > 0)
                 continue;
 
             // Get the property definition details.
