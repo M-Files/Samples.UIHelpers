@@ -264,7 +264,10 @@ function OnNewShellUI(shellUI)
 					selectedItem = selectedItems.ObjectVersionsAndProperties[0];
 				}
 				if (false == isOneObjectSelected)
+				{
+					tabClosed();
 					return false;
+				}
 
 				// If the tab is configured and we can call into the dashboard then select the new object.
 				if (null == tab || null == registrationCallback)
