@@ -9,7 +9,19 @@ using System.Runtime.Serialization;
 
 namespace ViewAllMetadata
 {
-
+    [DataContract]
+    public class AdvancedConfiguration
+    {
+        [DataMember]
+        [JsonConfEditor
+        (
+            Label = ResourceMarker.Id + nameof(Resources.Configuration.Languages_Label),
+            ChildName = ResourceMarker.Id + nameof(Resources.Configuration.Languages_ChildName)
+        )]
+        // TODO: In future versions of the VAF we can use ObjectMembersAttribute!
+        public List<LanguageOverride> LanguageOverrides { get; set; }
+            = new List<LanguageOverride>();
+    }
     [DataContract]
     public class Configuration
         : ConfigurationBase
@@ -44,15 +56,13 @@ namespace ViewAllMetadata
         public CustomAccessRestrictionTypeConfiguration CustomAccessRestrictionTypeConfiguration { get; set; } 
             = new CustomAccessRestrictionTypeConfiguration();
 
-        [DataMember]
+        [DataMember(Order = Int32.MaxValue)]
         [JsonConfEditor
         (
-            Label = ResourceMarker.Id + nameof(Resources.Configuration.Languages_Label),
-            ChildName = ResourceMarker.Id + nameof(Resources.Configuration.Languages_ChildName)
+            Label = ResourceMarker.Id + nameof(Resources.Configuration.Advanced_Label)
         )]
-        // TODO: In future versions of the VAF we can use ObjectMembersAttribute!
-        public List<LanguageOverride> LanguageOverrides { get; set; } 
-            = new List<LanguageOverride>();
+        public AdvancedConfiguration AdvancedConfiguration { get; set; }
+            = new AdvancedConfiguration();
 
         /// <summary>
         /// Checks whether the user with session info <paramref name="sessionInfo"/> is allowed

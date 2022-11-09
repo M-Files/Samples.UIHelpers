@@ -126,6 +126,9 @@
   <data name="AccessRestrictionType_Label" xml:space="preserve">
     <value>Access Restriction Type</value>
   </data>
+  <data name="Advanced_Label" xml:space="preserve">
+    <value>Advanced</value>
+  </data>
   <data name="AllowedUserGroups_Label" xml:space="preserve">
     <value>Allowed User Groups</value>
   </data>
