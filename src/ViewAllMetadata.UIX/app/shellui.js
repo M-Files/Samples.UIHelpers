@@ -73,7 +73,9 @@ function OnNewShellUI(shellUI)
 			var configuration = {
 				ResourceStrings: {
 					Commands_ShowAllMetadata: "Show all metadata",
-					Buttons_Close: "Close"
+					Buttons_Close: "Close",
+					Buttons_Discard: "Discard",
+					Buttons_Save: "Save"
                 }
 			}
 

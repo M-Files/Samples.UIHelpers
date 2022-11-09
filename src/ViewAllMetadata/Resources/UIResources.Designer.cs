@@ -70,6 +70,24 @@ namespace ViewAllMetadata.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Discard.
+        /// </summary>
+        internal static string Buttons_Discard {
+            get {
+                return ResourceManager.GetString("Buttons_Discard", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Save.
+        /// </summary>
+        internal static string Buttons_Save {
+            get {
+                return ResourceManager.GetString("Buttons_Save", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Show all metadata.
         /// </summary>
         internal static string Commands_ShowAllMetadata {

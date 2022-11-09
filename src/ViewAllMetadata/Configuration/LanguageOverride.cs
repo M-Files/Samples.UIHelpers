@@ -27,5 +27,21 @@ namespace ViewAllMetadata
             HelpText = ResourceMarker.Id + nameof(Resources.Configuration.UI_Commands_Buttons_Close_HelpText)
         )]
         public string Buttons_Close { get; set; }
+
+        [DataMember]
+        [JsonConfEditor
+        (
+            Label = ResourceMarker.Id + nameof(Resources.Configuration.UI_Commands_Buttons_Discard_Label),
+            HelpText = ResourceMarker.Id + nameof(Resources.Configuration.UI_Commands_Buttons_Discard_HelpText)
+        )]
+        public string Buttons_Discard { get; set; }
+
+        [DataMember]
+        [JsonConfEditor
+        (
+            Label = ResourceMarker.Id + nameof(Resources.Configuration.UI_Commands_Buttons_Save_Label),
+            HelpText = ResourceMarker.Id + nameof(Resources.Configuration.UI_Commands_Buttons_Save_HelpText)
+        )]
+        public string Buttons_Save { get; set; }
     }
 }

@@ -33,6 +33,10 @@ namespace ViewAllMetadata
                         resourceStrings.Add(nameof(languageOverride.Commands_ShowAllMetadata), languageOverride.Commands_ShowAllMetadata);
                     if (false == string.IsNullOrWhiteSpace(languageOverride.Buttons_Close))
                         resourceStrings.Add(nameof(languageOverride.Buttons_Close), languageOverride.Buttons_Close);
+                    if (false == string.IsNullOrWhiteSpace(languageOverride.Buttons_Discard))
+                        resourceStrings.Add(nameof(languageOverride.Buttons_Discard), languageOverride.Buttons_Discard);
+                    if (false == string.IsNullOrWhiteSpace(languageOverride.Buttons_Save))
+                        resourceStrings.Add(nameof(languageOverride.Buttons_Save), languageOverride.Buttons_Save);
                     return resourceStrings;
                 }
             }

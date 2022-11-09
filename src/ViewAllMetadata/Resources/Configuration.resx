@@ -150,6 +150,18 @@
   <data name="UI_Commands_Buttons_Close_Label" xml:space="preserve">
     <value>Close</value>
   </data>
+  <data name="UI_Commands_Buttons_Discard_HelpText" xml:space="preserve">
+    <value>The text shown on the "discard" button in the dashboard</value>
+  </data>
+  <data name="UI_Commands_Buttons_Discard_Label" xml:space="preserve">
+    <value>Discard</value>
+  </data>
+  <data name="UI_Commands_Buttons_Save_HelpText" xml:space="preserve">
+    <value>The text shown on the "save" button in the dashboard</value>
+  </data>
+  <data name="UI_Commands_Buttons_Save_Label" xml:space="preserve">
+    <value>Save</value>
+  </data>
   <data name="UI_Commands_ShowAllMetadata_HelpText" xml:space="preserve">
     <value>Command button text, shown in the context menu</value>
   </data>

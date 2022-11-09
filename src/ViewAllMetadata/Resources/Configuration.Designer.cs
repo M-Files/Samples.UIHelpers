@@ -160,6 +160,42 @@ namespace ViewAllMetadata.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The text shown on the &quot;discard&quot; button in the dashboard.
+        /// </summary>
+        internal static string UI_Commands_Buttons_Discard_HelpText {
+            get {
+                return ResourceManager.GetString("UI_Commands_Buttons_Discard_HelpText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Discard.
+        /// </summary>
+        internal static string UI_Commands_Buttons_Discard_Label {
+            get {
+                return ResourceManager.GetString("UI_Commands_Buttons_Discard_Label", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The text shown on the &quot;save&quot; button in the dashboard.
+        /// </summary>
+        internal static string UI_Commands_Buttons_Save_HelpText {
+            get {
+                return ResourceManager.GetString("UI_Commands_Buttons_Save_HelpText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Save.
+        /// </summary>
+        internal static string UI_Commands_Buttons_Save_Label {
+            get {
+                return ResourceManager.GetString("UI_Commands_Buttons_Save_Label", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Command button text, shown in the context menu.
         /// </summary>
         internal static string UI_Commands_ShowAllMetadata_HelpText {

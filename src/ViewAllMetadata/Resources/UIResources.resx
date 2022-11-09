@@ -120,6 +120,12 @@
   <data name="Buttons_Close" xml:space="preserve">
     <value>Close</value>
   </data>
+  <data name="Buttons_Discard" xml:space="preserve">
+    <value>Discard</value>
+  </data>
+  <data name="Buttons_Save" xml:space="preserve">
+    <value>Save</value>
+  </data>
   <data name="Commands_ShowAllMetadata" xml:space="preserve">
     <value>Show all metadata</value>
   </data>
