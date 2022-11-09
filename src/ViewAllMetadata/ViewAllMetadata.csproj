@@ -78,6 +78,7 @@
       <DependentUpon>UIResources.resx</DependentUpon>
     </Compile>
     <Compile Include="UIXConfiguration\UIXConfiguration.cs" />
+    <Compile Include="VaultApplication.VaultExtensionMethods.cs" />
     <Compile Include="VaultApplication.cs" />
   </ItemGroup>
   <ItemGroup>
