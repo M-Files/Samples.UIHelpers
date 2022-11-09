@@ -29,7 +29,10 @@ namespace ViewAllMetadata
                 if (null != languageOverride)
                 {
                     // We have to hard-code some of these values here, unlike in the resources.
-                    resourceStrings.Add(nameof(languageOverride.Commands_ShowAllMetadata), languageOverride.Commands_ShowAllMetadata);
+                    if(false == string.IsNullOrWhiteSpace(languageOverride.Commands_ShowAllMetadata))
+                        resourceStrings.Add(nameof(languageOverride.Commands_ShowAllMetadata), languageOverride.Commands_ShowAllMetadata);
+                    if (false == string.IsNullOrWhiteSpace(languageOverride.Buttons_Close))
+                        resourceStrings.Add(nameof(languageOverride.Buttons_Close), languageOverride.Buttons_Close);
                     return resourceStrings;
                 }
             }

@@ -117,10 +117,43 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Buttons_Close" xml:space="preserve">
+  <data name="AccessRestrictionType_ByVaultRights" xml:space="preserve">
+    <value>By vault access rights</value>
+  </data>
+  <data name="AccessRestrictionType_Custom" xml:space="preserve">
+    <value>Custom</value>
+  </data>
+  <data name="AccessRestrictionType_Label" xml:space="preserve">
+    <value>Access Restriction Type</value>
+  </data>
+  <data name="AllowedUserGroups_Label" xml:space="preserve">
+    <value>Allowed User Groups</value>
+  </data>
+  <data name="AllowedUsers_Label" xml:space="preserve">
+    <value>Allowed Users</value>
+  </data>
+  <data name="Languages_ChildName" xml:space="preserve">
+    <value>Language</value>
+  </data>
+  <data name="Languages_Label" xml:space="preserve">
+    <value>Languages</value>
+  </data>
+  <data name="RequiredAccessRights_Label" xml:space="preserve">
+    <value>Required Access Rights</value>
+  </data>
+  <data name="UI_Commands_Buttons_Close_HelpText" xml:space="preserve">
+    <value>The text shown on the "close" button in the dashboard</value>
+  </data>
+  <data name="UI_Commands_Buttons_Close_Label" xml:space="preserve">
     <value>Close</value>
   </data>
-  <data name="Commands_ShowAllMetadata" xml:space="preserve">
+  <data name="UI_Commands_ShowAllMetadata_HelpText" xml:space="preserve">
+    <value>Command button text, shown in the context menu</value>
+  </data>
+  <data name="UI_Commands_ShowAllMetadata_Label" xml:space="preserve">
     <value>Show all metadata</value>
+  </data>
+  <data name="UserConfiguration_Label" xml:space="preserve">
+    <value>User Configuration</value>
   </data>
 </root>
