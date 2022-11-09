@@ -92,8 +92,13 @@
         switch (propertyDef.DataType)
         {
             case MFDatatypeText:
-                var value = $(".auto-select", $listItem).val();
-                if ((value + "").length == 0)
+                var value = $(".auto-select", $listItem).val() + "";
+
+                // Update the property value in memory.
+                propertyValue.Value.SetValue(MFDatatypeText, value);
+
+                // Update the UI.
+                if (value.length == 0)
                     value = "---";
                 $(".read-only-value", $listItem).text(value);
                 break;

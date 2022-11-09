@@ -65,6 +65,7 @@ function ObjectRenderer(dashboard)
             dashboard.CustomData.tabClosedCallback(false);
             return;
         }
+        renderer.originalObject = selectedItem.Clone();
 
         // Set the title.
         $("#title").text(selectedItem.VersionData.Title)
