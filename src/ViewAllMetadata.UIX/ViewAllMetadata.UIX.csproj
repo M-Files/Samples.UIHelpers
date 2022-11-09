@@ -28,6 +28,7 @@
     <Content Include="app\console-shellui.js" />
     <Content Include="app\dashboard\dashboard.css" />
     <Content Include="app\images\icon-edit.png" />
+    <Content Include="app\dashboard\renderer.js" />
     <Content Include="app\json2.js" />
     <Content Include="app\scripts\jquery-1.7.2.min.js" />
     <Content Include="app\shellui.js" />
