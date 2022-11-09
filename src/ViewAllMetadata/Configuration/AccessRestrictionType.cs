@@ -4,10 +4,10 @@ namespace ViewAllMetadata
 {
     public enum AccessRestrictionType
     {
-        [JsonConfEditor(Label = "By vault access rights")]
+        [JsonConfEditor(Label = ResourceMarker.Id + nameof(Resources.Configuration.AccessRestrictionType_ByVaultRights))]
         ByVaultRights = 0,
 
-        [JsonConfEditor(Label = "Custom")]
+        [JsonConfEditor(Label = ResourceMarker.Id + nameof(Resources.Configuration.AccessRestrictionType_Custom))]
         Custom = 1
     }
 }

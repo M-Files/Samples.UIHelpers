@@ -71,12 +71,9 @@ function OnNewShellUI(shellUI)
 
 			// Set up the default configuration.
 			var configuration = {
-				TaskPaneConfiguration: {
-					TaskPaneGroup: 2, // ViewAndModify
-					Priority: 0
-				},
 				ResourceStrings: {
-					Commands_ShowAllMetadata: "Show all metadata"
+					Commands_ShowAllMetadata: "Show all metadata",
+					Buttons_Close: "Close"
                 }
 			}
 
@@ -245,7 +242,8 @@ function OnNewShellUI(shellUI)
 							tabClosedCallback: tabClosed,
 							getPropertyDefinition: getPropertyDefinition,
 							getObjectClass: getObjectClass,
-							selectedItem: selectedItem
+							selectedItem: selectedItem,
+							resourceStrings: configuration.ResourceStrings
 						}
 					);
 				})

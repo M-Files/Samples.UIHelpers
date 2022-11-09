@@ -61,6 +61,15 @@ namespace ViewAllMetadata.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Close.
+        /// </summary>
+        internal static string Buttons_Close {
+            get {
+                return ResourceManager.GetString("Buttons_Close", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Show all metadata.
         /// </summary>
         internal static string Commands_ShowAllMetadata {

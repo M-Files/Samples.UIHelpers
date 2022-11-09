@@ -17,7 +17,7 @@ namespace ViewAllMetadata
         [DataMember]
         [JsonConfEditor
         (
-            Label = "Access Restriction Type",
+            Label = ResourceMarker.Id + nameof(Resources.Configuration.AccessRestrictionType_Label),
             DefaultValue = AccessRestrictionType.ByVaultRights
         )]
         public AccessRestrictionType AccessRestrictionType { get; set; } 
@@ -26,31 +26,33 @@ namespace ViewAllMetadata
         [DataMember]
         [JsonConfEditor
         (
-            Label = "Required Access Rights",
+            Label = ResourceMarker.Id + nameof(Resources.Configuration.RequiredAccessRights_Label),
             Hidden = false,
             HideWhen = ".parent._children{.key == 'AccessRestrictionType' && .value != 'ByVaultRights' }",
             DefaultValue = MFVaultAccess.MFVaultAccessChangeFullControlRole
         )]
-        public MFVaultAccess AccessRights { get; set; }
+        public MFVaultAccess RequiredAccessRights { get; set; }
             = MFVaultAccess.MFVaultAccessChangeFullControlRole;
 
         [DataMember]
         [JsonConfEditor
         (
-            Label = "User Configuration",
+            Label = ResourceMarker.Id + nameof(Resources.Configuration.UserConfiguration_Label),
             Hidden = true,
             ShowWhen = ".parent._children{.key == 'AccessRestrictionType' && .value == 'Custom' }"
         )]
-        public UserConfiguration UserConfiguration { get; set; } = new UserConfiguration();
+        public CustomAccessRestrictionTypeConfiguration CustomAccessRestrictionTypeConfiguration { get; set; } 
+            = new CustomAccessRestrictionTypeConfiguration();
 
         [DataMember]
         [JsonConfEditor
         (
-            Label = "Languages",
-            ChildName = "Language"
+            Label = ResourceMarker.Id + nameof(Resources.Configuration.Languages_Label),
+            ChildName = ResourceMarker.Id + nameof(Resources.Configuration.Languages_ChildName)
         )]
         // TODO: In future versions of the VAF we can use ObjectMembersAttribute!
-        public List<LanguageOverride> LanguageOverrides { get; set; } = new List<LanguageOverride>();
+        public List<LanguageOverride> LanguageOverrides { get; set; } 
+            = new List<LanguageOverride>();
 
         /// <summary>
         /// Checks whether the user with session info <paramref name="sessionInfo"/> is allowed
@@ -73,11 +75,11 @@ namespace ViewAllMetadata
                     {
 
                         // Do we have any specific users allowed access?
-                        if (null != this.UserConfiguration?.AllowedUsers)
+                        if (null != this.CustomAccessRestrictionTypeConfiguration?.AllowedUsers)
                         {
                             // If this user is specified then allow access.
                             var users = this
-                                .UserConfiguration
+                                .CustomAccessRestrictionTypeConfiguration
                                 .AllowedUsers
                                 .Where(u => u != null)
                                 .Select(u => u.Resolve(vault, typeof(UserAccount)));
@@ -86,11 +88,11 @@ namespace ViewAllMetadata
                         }
 
                         // Do we have any specific user groups access?
-                        if (null != this.UserConfiguration?.AllowedUserGroups)
+                        if (null != this.CustomAccessRestrictionTypeConfiguration?.AllowedUserGroups)
                         {
                             // If this user is specified then allow access.
                             var groups = this
-                                .UserConfiguration
+                                .CustomAccessRestrictionTypeConfiguration
                                 .AllowedUserGroups
                                 .Where(u => u != null)
                                 .Select(u => u.Resolve(vault, typeof(UserGroup)));
@@ -103,40 +105,9 @@ namespace ViewAllMetadata
                     }
                 default:
                     {
-                        return sessionInfo.CheckVaultAccess(this.AccessRights);
+                        return sessionInfo.CheckVaultAccess(this.RequiredAccessRights);
                     }
             }
         }
-    }
-
-    [DataContract]
-    public class UserConfiguration
-    {
-        [DataMember(IsRequired = false)]
-        [MFValueListItem
-        (
-            ValueList = (int)MFBuiltInValueList.MFBuiltInValueListUsers, 
-            Validate = false, 
-            AllowEmpty = true
-        )]
-        [JsonConfEditor
-        (
-            Label = "Allowed Users",
-            IsRequired = false
-       )]
-        public List<MFIdentifier> AllowedUsers { get; set; } = new List<MFIdentifier>();
-
-        [DataMember(IsRequired = false)]
-        [MFUserGroup
-        (
-            Validate = false, 
-            AllowEmpty = true
-        )]
-        [JsonConfEditor
-        (
-            Label = "Allowed User Groups",
-            IsRequired = false
-        )]
-        public List<MFIdentifier> AllowedUserGroups { get; set; } = new List<MFIdentifier>();
     }
 }

@@ -107,5 +107,12 @@ namespace ViewAllMetadata
             return null;
         }
 
+        protected override void StartApplication()
+        {
+            base.StartApplication();
+            this.AddResourceManagerToConfiguration(Resources.UIResources.ResourceManager);
+            this.AddResourceManagerToConfiguration(Resources.Configuration.ResourceManager);
+        }
+
     }
 }

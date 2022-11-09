@@ -16,7 +16,7 @@ function OnNewDashboard(dashboard)
     {
         if (typeof (dashboard.CustomData.tabClosedCallback) == "function")
             dashboard.CustomData.tabClosedCallback(true);
-    })
+    }).text(dashboard.CustomData.resourceStrings.Buttons_Close);
 
     // Pass a reference back to our handler.
     dashboard.CustomData.registrationCallback(handleNewSelectedItem);
