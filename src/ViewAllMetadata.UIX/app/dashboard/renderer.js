@@ -18,11 +18,11 @@
 
         return $label;
     }
-    function renderValue(propertyDef, propertyValue, isRequired, $parent)
+    function renderReadOnlyValue(propertyDef, propertyValue, isRequired, $parent)
     {
 
         // Create the value for the PV.
-        var $value = $("<span></span>");
+        var $value = $("<span></span>").addClass("read-only-value");
         var value = propertyValue.Value.DisplayValue;
         if ((value + "").length == 0)
             value = "---";
@@ -54,25 +54,72 @@
         return $value
 
     }
+    function renderEditableValue(propertyDef, propertyValue, isRequired, $parent)
+    {
+
+        // Create the value for the PV.
+        var $value = $("<span></span>").addClass("editing-value");
+
+        // Render each data type.
+        switch (propertyDef.DataType)
+        {
+            case MFDatatypeText:
+                var $input = $("<input type='text' />").addClass("auto-select");
+                $input.val(propertyValue.Value.DisplayValue);
+                $value.append($input);
+                break;
+        }
+
+        // Add to a parent if we can.
+        if (null != $parent)
+            $parent.append($value);
+
+        return $value
+
+    }
     t.renderPropertyValue = function (propertyDef, propertyValue, isRequired, $parent)
     {
         // Create the (parent) list item.
         var $listItem = $("<li></li>");
         $listItem.addClass("mfdatatype-" + propertyDef.DataType.toString()); // Add a class for the data type
+        $listItem.data("propertyDef", propertyDef);
+        $listItem.data("propertyValue", propertyValue);
 
         // Create the label.
         renderLabel(propertyDef, propertyValue, isRequired, $listItem);
 
-        // Create the value.
-        renderValue(propertyDef, propertyValue, isRequired, $listItem);
+        // Create the read-only value.
+        renderReadOnlyValue(propertyDef, propertyValue, isRequired, $listItem);
 
         // Is the property editable?
         if (propertyDef.AutomaticValueType == MFAutomaticValueTypeNone)
+        {
+            // Mark it as editable.
             $listItem.addClass("editable");
+
+            // For now only deal with text properties, as that's all we support.
+            if (propertyDef.DataType == 1)
+            {
+
+                // Create the editable value.
+                renderEditableValue(propertyDef, propertyValue, isRequired, $listItem);
+
+                // Add the handler to allow editing.
+                $listItem.click(function (e)
+                {
+                    $(".editing").removeClass("editing");
+                    $listItem.addClass("editing");
+                    $(".auto-select", $listItem).select();
+                    e.stopPropagation();
+                    return false;
+                });
+            }
+        }
 
         // Add to a parent if we can.
         if (null != $parent)
             $parent.append($listItem);
+
 
         return $listItem;
     }
@@ -82,7 +129,7 @@
         var properties = [];
 
         // Class is always first.
-        properties.push({ propertyDef: 100, isRequired: true });
+        properties.push({ propertyDef: 100, isRequired: true, isRemovable: false });
         renderedPropertyDefs.push(100);
 
         // Then properties from the class, in the order they
@@ -96,7 +143,7 @@
                 continue;
 
             // Add in the property.
-            properties.push({ propertyDef: associatedPropertyDef.PropertyDef, isRequired: associatedPropertyDef.Required });
+            properties.push({ propertyDef: associatedPropertyDef.PropertyDef, isRequired: associatedPropertyDef.Required, isRemovable: false });
             renderedPropertyDefs.push(associatedPropertyDef.PropertyDef);
         }
 
@@ -118,7 +165,7 @@
                 continue;
 
             // Add in the property.
-            properties.push({ propertyDef: p.PropertyDef, isRequired: false });
+            properties.push({ propertyDef: p.PropertyDef, isRequired: false, isRemovable: true });
             renderedPropertyDefs.push(p.PropertyDef);
         }
 
@@ -178,8 +225,13 @@
         t.dashboard.CustomData.registrationCallback(t.renderObject);
 
     // Render any selected item.
-    if(t.dashboard.CustomData.selectedItem)
-        t.renderObject(dashboard.CustomData.selectedItem)
+    if (t.dashboard.CustomData.selectedItem)
+        t.renderObject(dashboard.CustomData.selectedItem);
+
+    $("body").click(function ()
+    {
+        $(".editing").removeClass("editing");
+    });
 
     return t;
 }

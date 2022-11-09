@@ -3,6 +3,7 @@
 head, body {
     padding: 0px;
     margin: 0px;
+    height: 100%;
 }
 
 body {
@@ -17,13 +18,20 @@ h1 {
     padding: 0px 20px;
     font-weight: normal;
     margin-right: 110px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 /* properties list */
-
-ol.properties {
-    column-count: 1;
-    column-gap: 10px;
+div.properties {
+    position: fixed;
+    top: 60px;
+    left: 0px;
+    right: 0px;
+    bottom: 51px;
+    overflow-y: auto;
+    padding: 0px 20px;
 }
 
 ol.properties, ol.properties li {
@@ -32,11 +40,18 @@ ol.properties, ol.properties li {
     list-style: none;
     line-height: 20px;
 }
+
+ol.properties {
+    column-count: 1;
+    column-gap: 10px;
+    margin: 10px 0px;
+}
 ol.properties li {
     padding: 5px;
     position: relative;
     padding-left: 195px;
     break-inside: avoid;
+    padding-right: 20px;
 }
 ol.properties li:hover {
     background-color: #F4F4F4;
@@ -66,19 +81,19 @@ ol.properties label.mandatory span::after {
     padding-left: 2px;
 }
 
-ol.properties li > span {
+ol.properties li .read-only-value {
     color: #363A40;
     vertical-align: top;
     display: inline-block;
     white-space: pre-line;
 }
-ol.properties li.mfdatatype-1 > span {
+ol.properties li.mfdatatype-1 .read-only-value {
     display: block;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
-ol.properties li.editable > span{
+ol.properties li.editable .read-only-value {
     cursor: text;
 }
 ol.properties li.editable:hover {
@@ -86,6 +101,22 @@ ol.properties li.editable:hover {
     background-repeat: no-repeat;
     background-position: 170px 6px;
 }
+ol.properties li.editable .editing-value{
+    display: none;
+}
+ol.properties li.editable.editing .read-only-value {
+    display: none;
+}
+ol.properties li.editable.editing .editing-value {
+    display: block;
+}
+/* make text, real and integer input boxes full width */
+    ol.properties li.mfdatatype-1.editable.editing input,
+    ol.properties li.mfdatatype-2.editable.editing input,
+    ol.properties li.mfdatatype-3.editable.editing input {
+        display: inline-block;
+        width: 100%;
+    }
 
 /* buttons */
 
@@ -101,7 +132,7 @@ button {
     font-family: 'Segoe UI', Arial, sans-serif;
     text-align: center;
 }
-button:hover, button:active
+button:hover, button:active, button.save:active, button.save:hover
 {
     border-color: #318CCC;
     background-color: #318CCC;
@@ -120,6 +151,18 @@ button.save {
     box-sizing: content-box;
     padding: 10px 20px;
     text-align: right;
+}
+.buttonGroup.bottom {
+    position: fixed;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+    box-sizing: content-box;
+    padding: 10px 20px;
+    text-align: right;
+    border-top: 2px solid #EEE;
+    height: 30px;
+    background-color: white;
 }
 
 /* more columns on wider screens */
