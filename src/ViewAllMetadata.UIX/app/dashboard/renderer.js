@@ -2,35 +2,35 @@
 {
     var t = this;
     t.dashboard = dashboard;
-
-    t.renderPropertyValue = function (propertyDef, propertyValue, isRequired, $parent)
+    function renderLabel(propertyDef, propertyValue, isRequired, $parent)
     {
-
         // Create the label for the PV.
         var $label = $("<label></label>");
         if (isRequired)
             $label.addClass("mandatory");
         var $labelSpan = $("<span></span>");
         $labelSpan.text(propertyDef.Name);
-        $label.append($labelSpan)
+        $label.append($labelSpan);
+
+        // Add to a parent if we can.
+        if (null != $parent)
+            $parent.append($label);
+
+        return $label;
+    }
+    function renderValue(propertyDef, propertyValue, isRequired, $parent)
+    {
 
         // Create the value for the PV.
-        var $valueSpan = $("<span></span>");
+        var $value = $("<span></span>");
         var value = propertyValue.Value.DisplayValue;
         if ((value + "").length == 0)
             value = "---";
-        $valueSpan.text(value);
+        $value.text(value);
 
-        // Build up the list item.
-        var $listItem = $("<li></li>");
+        // Do any special processing for different data types.
         switch (propertyDef.DataType)
         {
-            case MFDatatypeText:
-                $listItem.addClass("text");
-                break;
-            case MFDatatypeMultiLineText:
-                $listItem.addClass("multi-line-text");
-                break;
             case MFDatatypeMultiSelectLookup:
                 // Get the data out the lookups.
                 var lookups = propertyValue.Value.GetValueAsLookups();
@@ -42,24 +42,88 @@
                     {
                         value.append($("<div></div>").text(lookups[i].DisplayValue));
                     }
-                    $valueSpan.empty().append(value);
+                    $value.empty().append(value);
                 }
                 break;
         }
-        $listItem.append($label);
-        $listItem.append($valueSpan);
+
+        // Add to a parent if we can.
+        if (null != $parent)
+            $parent.append($value);
+
+        return $value
+
+    }
+    t.renderPropertyValue = function (propertyDef, propertyValue, isRequired, $parent)
+    {
+        // Create the (parent) list item.
+        var $listItem = $("<li></li>");
+        $listItem.addClass("mfdatatype-" + propertyDef.DataType.toString()); // Add a class for the data type
+
+        // Create the label.
+        renderLabel(propertyDef, propertyValue, isRequired, $listItem);
+
+        // Create the value.
+        renderValue(propertyDef, propertyValue, isRequired, $listItem);
 
         // Is the property editable?
         if (propertyDef.AutomaticValueType == MFAutomaticValueTypeNone)
-        {
             $listItem.addClass("editable");
-        }
 
         // Add to a parent if we can.
         if (null != $parent)
             $parent.append($listItem);
 
         return $listItem;
+    }
+    function getOrderedProperties(objectClass, objectProperties)
+    {
+        var renderedPropertyDefs = [];
+        var properties = [];
+
+        // Class is always first.
+        properties.push({ propertyDef: 100, isRequired: true });
+        renderedPropertyDefs.push(100);
+
+        // Then properties from the class, in the order they
+        // appear in the associated property defs collection.
+        for (var i = 0; i < objectClass.AssociatedPropertyDefs.Count; i++)
+        {
+            var associatedPropertyDef = objectClass.AssociatedPropertyDefs[i];
+
+            // Skip built-in properties.
+            if (associatedPropertyDef.PropertyDef < 1000 && associatedPropertyDef.PropertyDef != 0 && associatedPropertyDef.PropertyDef != 100)
+                continue;
+
+            // Add in the property.
+            properties.push({ propertyDef: associatedPropertyDef.PropertyDef, isRequired: associatedPropertyDef.Required });
+            renderedPropertyDefs.push(associatedPropertyDef.PropertyDef);
+        }
+
+        // Then anything else.
+        for (var i = 0; i < objectProperties.Count; i++)
+        {
+            var p = objectProperties[i];
+
+            // Skip rendered ones.
+            if (renderedPropertyDefs.indexOf(p.PropertyDef) > -1)
+                continue;
+
+            // Skip built-in properties.
+            if (p.PropertyDef < 1000 && p.PropertyDef != 0 && p.PropertyDef != 100)
+                continue;
+
+            // If this is the name or title and we have another property set for that on the class then skip.
+            if (p.propertyDef == 0 && objectClass.NamePropertyDef > 0)
+                continue;
+
+            // Add in the property.
+            properties.push({ propertyDef: p.PropertyDef, isRequired: false });
+            renderedPropertyDefs.push(p.PropertyDef);
+        }
+
+        // Return the array of properties to render.
+        return properties;
     }
     t.renderObject = function (selectedItem)
     {
@@ -76,98 +140,34 @@
         // Clear the rendered properties.
         var $propertiesList = $("ol.properties");
         $propertiesList.empty();
-        var renderedPropertyDefs = [];
 
-        // Render class.
-        if (1 == 1)
+        // Render the properties.
+        var properties = getOrderedProperties
+        (
+            dashboard.CustomData.getObjectClass(selectedItem.VersionData.Class),
+            selectedItem.Properties
+        );
+        for (var i = 0; i < properties.length; i++)
         {
-            // Get the index of the property in the collection.
-            var propertyIndex = selectedItem.Properties.IndexOf(100)
-            if (-1 == propertyIndex)
-                return;
-
-            // Mark this as rendered.
-            renderedPropertyDefs.push(100);
+            var property = properties[i];
 
             // Get the property definition details.
-            var propertyDef = dashboard.CustomData.getPropertyDefinition(100);
+            var propertyDef = dashboard.CustomData.getPropertyDefinition(property.propertyDef);
             if (null == propertyDef)
-                return;
-
-            // Render.
-            t.renderPropertyValue
-                (
-                    propertyDef,
-                    selectedItem.Properties[propertyIndex - 1],
-                    true,
-                    $propertiesList
-                );
-        }
-
-        // Render the class associated properties, in order.
-        var objectClass = dashboard.CustomData.getObjectClass(selectedItem.VersionData.Class);
-        if (null == objectClass)
-            return;
-        for (var i = 0; i < objectClass.AssociatedPropertyDefs.Count; i++)
-        {
-            // Get details about this property on this class (e.g. is it mandatory?).
-            var associatedPropertyDef = objectClass.AssociatedPropertyDefs[i];
-
-            // Skip built-in properties.
-            if (associatedPropertyDef.PropertyDef < 1000 && associatedPropertyDef.PropertyDef != 0 && associatedPropertyDef.PropertyDef != 100)
                 continue;
 
-            // Get the index of the property in the collection.
-            var propertyIndex = selectedItem.Properties.IndexOf(associatedPropertyDef.PropertyDef)
+            // Get the property value.
+            var propertyIndex = selectedItem.Properties.IndexOf(propertyDef.ID);
             if (-1 == propertyIndex)
                 continue;
-
-            // Mark this as rendered.
-            renderedPropertyDefs.push(associatedPropertyDef.PropertyDef);
-
-            // Get the property definition details.
-            var propertyDef = dashboard.CustomData.getPropertyDefinition(associatedPropertyDef.PropertyDef);
-            if (null == propertyDef)
-                continue;
+            var propertyValue = selectedItem.Properties[propertyIndex - 1];
 
             // Render.
             t.renderPropertyValue
                 (
                     propertyDef,
-                    selectedItem.Properties[propertyIndex - 1],
-                    associatedPropertyDef.Required || propertyDef == 100,
-                    $propertiesList
-                );
-        }
-
-        // Render anything that's left.
-        for (var i = 0; i < selectedItem.Properties.Count; i++)
-        {
-            var p = selectedItem.Properties[i];
-
-            // Skip rendered ones.
-            if (renderedPropertyDefs.indexOf(p.PropertyDef) > -1)
-                continue;
-
-            // Skip built-in properties.
-            if (p.PropertyDef < 1000 && p.PropertyDef != 0 && p.PropertyDef != 100)
-                continue;
-
-            // If this is the name or title and we have another property set for that on the class then skip.
-            if (p.propertyDef == 0 && objectClass.NamePropertyDef > 0)
-                continue;
-
-            // Get the property definition details.
-            var propertyDef = dashboard.CustomData.getPropertyDefinition(p.PropertyDef);
-            if (null == propertyDef)
-                continue;
-
-            // Render.
-            t.renderPropertyValue
-                (
-                    propertyDef,
-                    p,
-                    false,
+                    propertyValue,
+                    property.isRequired,
                     $propertiesList
                 );
         }

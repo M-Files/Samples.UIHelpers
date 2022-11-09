@@ -69,7 +69,7 @@ ol.properties li > span {
     display: inline-block;
     white-space: pre-line;
 }
-ol.properties li.text > span {
+ol.properties li.mfdatatype-1 > span {
     display: block;
     white-space: nowrap;
     overflow: hidden;
