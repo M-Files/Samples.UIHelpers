@@ -88,6 +88,15 @@ namespace ViewAllMetadata.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Advanced.
+        /// </summary>
+        internal static string Advanced_Label {
+            get {
+                return ResourceManager.GetString("Advanced_Label", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Allowed User Groups.
         /// </summary>
         internal static string AllowedUserGroups_Label {

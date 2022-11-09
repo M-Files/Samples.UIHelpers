@@ -70,7 +70,7 @@ namespace ViewAllMetadata
                     this.ResourceStringProvider?.Create
                     (
                         env.Input.ToLower(),
-                        this.Configuration?.LanguageOverrides?.ToArray()
+                        this.Configuration?.AdvancedConfiguration?.LanguageOverrides?.ToArray()
                     )
                     ?? new ResourceStrings()
             };
