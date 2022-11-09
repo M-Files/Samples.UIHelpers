@@ -1,4 +1,5 @@
-﻿
+﻿/* basic */
+
 head, body {
     padding: 0px;
     margin: 0px;
@@ -17,6 +18,8 @@ h1 {
     font-weight: normal;
     margin-right: 110px;
 }
+
+/* properties list */
 
 ol.properties {
     column-count: 1;
@@ -84,16 +87,9 @@ ol.properties li.editable:hover {
     background-position: 170px 6px;
 }
 
-.buttonGroup {
-    position: fixed;
-    top: 10px;
-    left: 0px;
-    right: 0px;
-    box-sizing: content-box;
-    padding: 10px 20px;
-    text-align: right;
-}
-.buttonGroup button {
+/* buttons */
+
+button {
     border: 1px solid #ABABAB;
     border-radius: 2px;
     background-color: white;
@@ -105,29 +101,39 @@ ol.properties li.editable:hover {
     font-family: 'Segoe UI', Arial, sans-serif;
     text-align: center;
 }
-.buttonGroup button:hover, .buttonGroup button:active
+button:hover, button:active
 {
     border-color: #318CCC;
     background-color: #318CCC;
     color: white;
 }
-.buttonGroup button.save {
+button.save {
     border-color: #318CCC;
     color: #318CCC;
 }
+
+.buttonGroup.top {
+    position: fixed;
+    top: 10px;
+    left: 0px;
+    right: 0px;
+    box-sizing: content-box;
+    padding: 10px 20px;
+    text-align: right;
+}
+
+/* more columns on wider screens */
 
 @media screen and (min-width: 900px) {
     ol.properties {
         column-count: 2;
     }
 }
-
 @media screen and (min-width: 1420px) {
     ol.properties {
         column-count: 3;
     }
 }
-
 @media screen and (min-width: 1940px) {
     ol.properties {
         column-count: 4;
