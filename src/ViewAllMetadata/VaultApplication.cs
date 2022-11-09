@@ -13,7 +13,7 @@ using System.Runtime.InteropServices.WindowsRuntime;
 
 namespace ViewAllMetadata
 {
-    public class VaultApplication
+    public partial class VaultApplication
         : MFiles.VAF.Extensions.ConfigurableVaultApplicationBase<Configuration>
     {
         /// <summary>
@@ -51,62 +51,12 @@ namespace ViewAllMetadata
 
         #endregion
 
-        /// <summary>
-        /// Registers a Vault Extension Method with name "ViewAllMetadata.GetUIXConfiguration".
-        /// Users must have at least MFVaultAccess.MFVaultAccessNone access to execute the method.
-        /// </summary>
-        /// <param name="env">The vault/object environment.</param>
-        /// <returns>The any output from the vault extension method execution.</returns>
-        /// <remarks>The input to the vault extension method is available in <see cref="EventHandlerEnvironment.Input"/>.</remarks>
-        [VaultExtensionMethod("ViewAllMetadata.GetUIXConfiguration",
-            RequiredVaultAccess = MFVaultAccess.MFVaultAccessNone)]
-        private string GetUIXConfiguration(EventHandlerEnvironment env)
-        {
-            // Create and populate the configuration.
-            var configuration = new UIXConfiguration()
-            {
-                // Create the resource strings from the provider, or default to none.
-                ResourceStrings =
-                    this.ResourceStringProvider?.Create
-                    (
-                        env.Input.ToLower(),
-                        this.Configuration?.AdvancedConfiguration?.LanguageOverrides?.ToArray()
-                    )
-                    ?? new ResourceStrings()
-            };
-
-            // Serialize the configuration for use in the UIX application.
-            return Newtonsoft.Json.JsonConvert.SerializeObject(configuration);
-        }
-
-        /// <summary>
-        /// Registers a Vault Extension Method with name "ViewAllMetadata.ShouldShowAllMetadata".
-        /// Users must have at least MFVaultAccess.MFVaultAccessNone access to execute the method.
-        /// </summary>
-        /// <param name="env">The vault/object environment.</param>
-        /// <returns>The any output from the vault extension method execution.</returns>
-        /// <remarks>The input to the vault extension method is available in <see cref="EventHandlerEnvironment.Input"/>.</remarks>
-        [VaultExtensionMethod("ViewAllMetadata.ShouldShowAllMetadata",
-            RequiredVaultAccess = MFVaultAccess.MFVaultAccessNone)]
-        private string ShouldShowAllMetadata(EventHandlerEnvironment env)
-        {
-            return this
-                .Configuration
-                .UserIsAllowedAccess(env.Vault, env.CurrentUserSessionInfo)
-                .ToString()
-                .ToLower();
-        }
-
         /// <inheritdoc />
         /// <remarks>This does not use any async operations, so hide it.</remarks>
-        public override IDashboardContent GetAsynchronousOperationDashboardContent
-        (
-            IConfigurationRequestContext context
-        )
-        {
-            return null;
-        }
+        public override IDashboardContent GetAsynchronousOperationDashboardContent(IConfigurationRequestContext context) => null;
 
+        /// <inheritdoc />
+        /// <remarks>Adds the project resource managers.</remarks>
         protected override void StartApplication()
         {
             base.StartApplication();
