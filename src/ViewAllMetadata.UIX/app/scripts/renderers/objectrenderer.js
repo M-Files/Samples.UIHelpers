@@ -53,8 +53,8 @@ function ObjectRenderer(dashboard)
         // Return the array of properties to render.
         return properties;
     }
-    var originalObject = renderer.dashboard.CustomData.selectedItem;
-    renderer.renderObject = function (selectedItem)
+    var originalObject = null;
+    renderer.render = function (selectedItem)
     {
         renderer.originalObject = selectedItem;
 
@@ -110,7 +110,7 @@ function ObjectRenderer(dashboard)
 
     // Pass a reference back to our handler.
     if (renderer.dashboard.CustomData.registrationCallback)
-        renderer.dashboard.CustomData.registrationCallback(renderer.renderObject);
+        renderer.dashboard.CustomData.registrationCallback(renderer.render);
 
     // When the body is clicked, undo any editing.
     $("body").click(function ()
@@ -137,12 +137,8 @@ function ObjectRenderer(dashboard)
     // Configure the discard button.
     $("#btnDiscard").click(function ()
     {
-        renderer.renderObject(renderer.originalObject);
+        renderer.render(renderer.originalObject);
     }).text(dashboard.CustomData.resourceStrings.Buttons_Discard || "Discard");
-
-    // Render any selected item.
-    if (renderer.originalObject)
-        renderer.renderObject(renderer.originalObject);
 
     return renderer;
 }

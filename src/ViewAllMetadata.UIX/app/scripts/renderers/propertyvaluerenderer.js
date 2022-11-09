@@ -67,6 +67,7 @@
             case MFDatatypeText:
                 var $input = $("<input type='text' />").addClass("auto-select");
                 $input.val(propertyValue.Value.DisplayValue);
+                $input.blur(function () { renderer.exitEditMode(); });
                 $value.append($input);
                 break;
         }

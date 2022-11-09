@@ -1,21 +1,28 @@
 "use strict";
 
-function Dashboard(dashboard)
+function Dashboard(d)
 {
     /// <summary>The entry point of Dashboard.</summary>
-    /// <param name="dashboard" type="MFiles.Dashboard">The new Dashboard object.</param>
+    /// <param name="d" type="MFiles.Dashboard">The new Dashboard object.</param>
+    var dashboard = this;
 
     // Parent is a shell pane container (tab), when dashboard is shown in right pane.
-    var shellUI = dashboard.Parent.ShellFrame.ShellUI;
+    var shellUI = d.Parent.ShellFrame.ShellUI;
 
     // Initialize console.
     console.initialize(shellUI, "Show all metadata (dashboard)");
 
     // Set up the renderer.
-    new ObjectRenderer(dashboard);
+    var renderer = new ObjectRenderer(d);
+
+    // Expose the render method.
+    dashboard.render = function (selectedItem)
+    {
+        renderer.render(selectedItem);
+    }
 }
 
 function OnNewDashboard(dashboard)
 {
-    new Dashboard(dashboard);
+    (new Dashboard(dashboard)).render(dashboard.CustomData.selectedItem);
 }

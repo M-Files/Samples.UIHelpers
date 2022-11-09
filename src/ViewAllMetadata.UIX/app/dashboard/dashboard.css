@@ -87,6 +87,10 @@ ol.properties li .read-only-value {
     display: inline-block;
     white-space: pre-line;
 }
+ol.properties li.mfdatatype-13 {
+    min-height: 56px;
+}
+
 ol.properties li.mfdatatype-1 .read-only-value {
     display: block;
     white-space: nowrap;
