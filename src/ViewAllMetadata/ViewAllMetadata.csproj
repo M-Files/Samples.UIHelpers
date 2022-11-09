@@ -55,6 +55,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Configuration\AccessRestrictionType.cs" />
     <Compile Include="Configuration\Configuration.cs" />
     <Compile Include="Configuration\LanguageOverride.cs" />
     <Compile Include="GlobalSuppressions.cs" />

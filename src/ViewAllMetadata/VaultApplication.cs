@@ -90,36 +90,11 @@ namespace ViewAllMetadata
             RequiredVaultAccess = MFVaultAccess.MFVaultAccessNone)]
         private string ShouldShowAllMetadata(EventHandlerEnvironment env)
         {
-            // Do we have any specific users allowed access?
-            if (null != this.Configuration?.UserConfiguration?.AllowedUsers)
-            {
-                // If this user is specified then allow access.
-                var users = this
-                    .Configuration
-                    .UserConfiguration
-                    .AllowedUsers
-                    .Where(u => u != null)
-                    .Select(u => u.Resolve(env.Vault, typeof(UserAccount)));
-                if (users.Any(u => u.ID == env.CurrentUserID))
-                    return true.ToString();
-            }
-
-            // Do we have any specific user groups access?
-            if (null != this.Configuration?.UserConfiguration?.AllowedUserGroups)
-            {
-                // If this user is specified then allow access.
-                var groups = this
-                    .Configuration
-                    .UserConfiguration
-                    .AllowedUserGroups
-                    .Where(u => u != null)
-                    .Select(u => u.Resolve(env.Vault, typeof(UserGroup)));
-                if (groups.Any(g => env.CurrentUserSessionInfo.UserAndGroupMemberships.GetUserOrUserGroupIDIndex(g.ID, MFUserOrUserGroupType.MFUserOrUserGroupTypeUserGroup) > -1))
-                    return true.ToString();
-            }
-
-            // Nope.
-            return false.ToString();
+            return this
+                .Configuration
+                .UserIsAllowedAccess(env.Vault, env.CurrentUserSessionInfo)
+                .ToString()
+                .ToLower();
         }
 
         /// <inheritdoc />
