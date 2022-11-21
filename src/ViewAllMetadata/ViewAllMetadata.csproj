@@ -1,4 +1,4 @@
-﻿<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -8,10 +8,11 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>ViewAllMetadata</RootNamespace>
     <AssemblyName>ViewAllMetadata</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -56,9 +57,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Configuration\AccessRestrictionType.cs" />
+    <Compile Include="Configuration\AdvancedConfiguration.cs" />
     <Compile Include="Configuration\Configuration.cs" />
     <Compile Include="Configuration\CustomAccessRestrictionTypeConfiguration.cs" />
+    <Compile Include="Configuration\ICanPerformCustomValidation.cs" />
     <Compile Include="Configuration\LanguageOverride.cs" />
+    <Compile Include="Languages\LanguageProvider.cs" />
+    <Compile Include="Configuration\Location.cs" />
+    <Compile Include="Configuration\UsesResourcesAttribute.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Resources\Configuration.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -67,7 +73,6 @@
     </Compile>
     <Compile Include="Resources\IResourceStringProvider.cs" />
     <Compile Include="Languages\Language.cs" />
-    <Compile Include="Languages\LanguageStableValueOptionsProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources\DefaultResourceStringProvider.cs" />
     <Compile Include="Resources\ResourceStringProviderBase.cs" />
@@ -94,7 +99,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="MFiles.VAF.Extensions">
-      <Version>22.10.42-prerelease</Version>
+      <Version>22.11.49-prerelease</Version>
     </PackageReference>
     <PackageReference Include="MSBuildTasks">
       <Version>1.5.0.235</Version>

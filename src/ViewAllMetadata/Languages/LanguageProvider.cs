@@ -1,16 +1,18 @@
-﻿using MFiles.VAF.Configuration.AdminConfigurations;
+﻿using MFiles.VAF.Configuration;
+using MFiles.VAF.Configuration.AdminConfigurations;
 using MFiles.VAF.Configuration.JsonEditor;
+using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Resources;
 
 namespace ViewAllMetadata
 {
-    public class LanguageStableValueOptionsProvider
-		: IStableValueOptionsProvider
-	{
-		public static readonly List<Language> Languages = new List<Language>();
-		static LanguageStableValueOptionsProvider()
-		{
+    public class LanguageProvider
+        : IObjectEditorMembersProvider
+    {
+        public static readonly List<Language> Languages = new List<Language>();
+        static LanguageProvider()
+        {
 
             #region Add standard languages
 
@@ -57,12 +59,33 @@ namespace ViewAllMetadata
 
         }
 
-        /// <inheritdoc />
-		IEnumerable<ValueOption> IStableValueOptionsProvider.GetOptions(IConfigurationRequestContext context)
-            => Languages.Select(l => new ValueOption()
-				{
-					Label = l.Name,
-					Value = l.UICode
-				});
-	}
+        public IEnumerable<ObjectEditorMember> GetMembers
+        (
+            Type memberType,
+            IConfigurationRequestContext context,
+            ResourceManager resourceManager
+        )
+        {
+            var members = new SortedList<string, ObjectEditorMember>();
+            foreach (var l in Languages)
+            {
+                var label = ResourceMarker.ResolveText(l.Name, "", resourceManager);
+                if (string.IsNullOrWhiteSpace(label))
+                    label = l.Name;
+                members.Add(label, new ObjectEditorMember()
+                {
+                    Key = l.UICode,
+                    Attributes = new List<Attribute>()
+                    {
+                        new JsonConfEditorAttribute()
+                        {
+                            Label = label,
+                            DefaultValue = "Fallback to English (US)"
+                        }
+                    }
+                });
+            }
+            return members.Values;
+        }
+    }
 }

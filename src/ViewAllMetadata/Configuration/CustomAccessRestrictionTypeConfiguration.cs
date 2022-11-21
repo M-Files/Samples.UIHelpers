@@ -6,6 +6,7 @@ using System.Runtime.Serialization;
 namespace ViewAllMetadata
 {
     [DataContract]
+    [UsesResources(typeof(Resources.Configuration))]
     public class CustomAccessRestrictionTypeConfiguration
     {
         [DataMember(IsRequired = false)]

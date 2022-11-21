@@ -135,11 +135,32 @@
   <data name="AllowedUsers_Label" xml:space="preserve">
     <value>Allowed Users</value>
   </data>
+  <data name="ConfiguredLocations_HelpText" xml:space="preserve">
+    <value />
+  </data>
+  <data name="ConfiguredLocations_Label" xml:space="preserve">
+    <value>Allowed locations</value>
+  </data>
+  <data name="DefaultLocation_HelpText" xml:space="preserve">
+    <value />
+  </data>
+  <data name="DefaultLocation_Label" xml:space="preserve">
+    <value>Default location</value>
+  </data>
   <data name="Languages_ChildName" xml:space="preserve">
     <value>Language</value>
   </data>
   <data name="Languages_Label" xml:space="preserve">
     <value>Languages</value>
+  </data>
+  <data name="Location_BottomPane" xml:space="preserve">
+    <value>Under the listing</value>
+  </data>
+  <data name="Location_NewTab" xml:space="preserve">
+    <value>Tab on right</value>
+  </data>
+  <data name="Location_PopOut" xml:space="preserve">
+    <value>In a pop-out window</value>
   </data>
   <data name="RequiredAccessRights_Label" xml:space="preserve">
     <value>Required Access Rights</value>

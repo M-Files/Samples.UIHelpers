@@ -2,6 +2,7 @@
 
 namespace ViewAllMetadata
 {
+    [UsesResources(typeof(Resources.Configuration))]
     public enum AccessRestrictionType
     {
         [JsonConfEditor(Label = ResourceMarker.Id + nameof(Resources.Configuration.AccessRestrictionType_ByVaultRights))]

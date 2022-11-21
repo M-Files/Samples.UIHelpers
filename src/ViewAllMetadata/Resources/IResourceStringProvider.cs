@@ -1,4 +1,6 @@
-﻿namespace ViewAllMetadata
+﻿using System.Collections.Generic;
+
+namespace ViewAllMetadata
 {
     public interface IResourceStringProvider
     {
@@ -8,6 +10,6 @@
         /// </summary>
         /// <param name="languageCode">The language code</param>
         /// <param name="languageOverrides">If provided, strings that override the internal resource dictionary.</param>
-        ResourceStrings Create(string languageCode, params LanguageOverride[] languageOverrides);
+        ResourceStrings Create(string languageCode, Dictionary<string, LanguageOverride> languageOverrides);
     }
 }

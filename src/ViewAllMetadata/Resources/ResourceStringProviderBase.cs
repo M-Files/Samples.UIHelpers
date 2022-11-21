@@ -1,4 +1,5 @@
-﻿using MFiles.VaultApplications.Logging;
+﻿using MFiles.VAF.Configuration.Logging;
+using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
 
@@ -41,9 +42,9 @@ namespace ViewAllMetadata
         protected virtual string ConvertUILanguageToLanguageCode(string uiLanguage)
         {
             // Convert it if needed.
-            uiLanguage = LanguageStableValueOptionsProvider.Languages?.Any(l => l.CultureCode == uiLanguage) ?? false
+            uiLanguage = LanguageProvider.Languages?.Any(l => l.CultureCode == uiLanguage) ?? false
                 ? uiLanguage // We already had a valid culture code.
-                : LanguageStableValueOptionsProvider.Languages?.FirstOrDefault(l => l.UICode == uiLanguage)?.CultureCode;
+                : LanguageProvider.Languages?.FirstOrDefault(l => l.UICode == uiLanguage)?.CultureCode;
 
             return string.IsNullOrWhiteSpace(uiLanguage)
 
@@ -55,6 +56,6 @@ namespace ViewAllMetadata
         }
 
 		/// <inheritdoc />
-        public abstract ResourceStrings Create(string language, params LanguageOverride[] languageOverrides);
+        public abstract ResourceStrings Create(string language, Dictionary<string, LanguageOverride> languageOverrides);
     }
 }

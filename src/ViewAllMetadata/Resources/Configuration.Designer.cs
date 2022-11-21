@@ -115,6 +115,42 @@ namespace ViewAllMetadata.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        internal static string ConfiguredLocations_HelpText {
+            get {
+                return ResourceManager.GetString("ConfiguredLocations_HelpText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Allowed locations.
+        /// </summary>
+        internal static string ConfiguredLocations_Label {
+            get {
+                return ResourceManager.GetString("ConfiguredLocations_Label", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        internal static string DefaultLocation_HelpText {
+            get {
+                return ResourceManager.GetString("DefaultLocation_HelpText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Default location.
+        /// </summary>
+        internal static string DefaultLocation_Label {
+            get {
+                return ResourceManager.GetString("DefaultLocation_Label", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Language.
         /// </summary>
         internal static string Languages_ChildName {
@@ -129,6 +165,33 @@ namespace ViewAllMetadata.Resources {
         internal static string Languages_Label {
             get {
                 return ResourceManager.GetString("Languages_Label", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Under the listing.
+        /// </summary>
+        internal static string Location_BottomPane {
+            get {
+                return ResourceManager.GetString("Location_BottomPane", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tab on right.
+        /// </summary>
+        internal static string Location_NewTab {
+            get {
+                return ResourceManager.GetString("Location_NewTab", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to In a pop-out window.
+        /// </summary>
+        internal static string Location_PopOut {
+            get {
+                return ResourceManager.GetString("Location_PopOut", resourceCulture);
             }
         }
         

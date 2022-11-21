@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 
@@ -14,7 +15,7 @@ namespace ViewAllMetadata
     {
         /// <inheritdoc />
         /// <exception cref="ArgumentNullException"></exception>
-        public override ResourceStrings Create(string languageCode, params LanguageOverride[] languageOverrides)
+        public override ResourceStrings Create(string languageCode, Dictionary<string, LanguageOverride> languageOverrides)
         {
             // Sanity.
             if (string.IsNullOrWhiteSpace(languageCode))
@@ -25,7 +26,9 @@ namespace ViewAllMetadata
 
             // If we have a valid language override then use that.
             {
-                var languageOverride = languageOverrides?.FirstOrDefault(o => o.Language == languageCode);
+                var languageOverride = (languageOverrides?.ContainsKey(languageCode) ?? false)
+                    ? languageOverrides[languageCode]
+                    : null;
                 if (null != languageOverride)
                 {
                     // We have to hard-code some of these values here, unlike in the resources.

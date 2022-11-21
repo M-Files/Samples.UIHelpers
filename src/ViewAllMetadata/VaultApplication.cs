@@ -7,7 +7,9 @@ using MFiles.VAF.Configuration.Domain.Dashboards;
 using MFiles.VAF.Core;
 using MFilesAPI;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 
@@ -53,15 +55,19 @@ namespace ViewAllMetadata
 
         /// <inheritdoc />
         /// <remarks>This does not use any async operations, so hide it.</remarks>
-        public override IDashboardContent GetAsynchronousOperationDashboardContent(IConfigurationRequestContext context) => null;
+        public override IDashboardContent GetAsynchronousOperationDashboardContent(IConfigurationRequestContext context)
+            => null;
 
         /// <inheritdoc />
-        /// <remarks>Adds the project resource managers.</remarks>
-        protected override void StartApplication()
+        protected override IEnumerable<ValidationFinding> CustomValidation(Vault vault, Configuration config)
         {
-            base.StartApplication();
-            this.AddResourceManagerToConfiguration(Resources.UIResources.ResourceManager);
-            this.AddResourceManagerToConfiguration(Resources.Configuration.ResourceManager);
+            foreach (var vf in base.CustomValidation(vault, config))
+                yield return vf;
+
+            // Let the config validate itself.
+            if(null != config)
+                foreach (var vf in config?.CustomValidation(vault) ?? Enumerable.Empty<ValidationFinding>())
+                    yield return vf;
         }
 
     }

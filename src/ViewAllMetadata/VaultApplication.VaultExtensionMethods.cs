@@ -36,7 +36,7 @@ namespace ViewAllMetadata
                     this.ResourceStringProvider?.Create
                     (
                         env.Input.ToLower(),
-                        this.Configuration?.AdvancedConfiguration?.LanguageOverrides?.ToArray()
+                        this.Configuration?.AdvancedConfiguration?.LanguageOverrides
                     )
                     ?? new ResourceStrings()
             };
