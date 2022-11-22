@@ -15,16 +15,6 @@ namespace ViewAllMetadata
         [DataMember]
         [JsonConfEditor
         (
-            Label = ResourceMarker.Id + nameof(Resources.Configuration.Languages_Label),
-            ChildName = ResourceMarker.Id + nameof(Resources.Configuration.Languages_ChildName)
-        )]
-        [ObjectMembers(typeof(LanguageProvider))]
-        public Dictionary<string, LanguageOverride> LanguageOverrides { get; set; }
-            = new Dictionary<string, LanguageOverride>();
-
-        [DataMember]
-        [JsonConfEditor
-        (
             Label = ResourceMarker.Id + nameof(Resources.Configuration.DefaultLocation_Label),
             HelpText = ResourceMarker.Id + nameof(Resources.Configuration.DefaultLocation_HelpText),
             DefaultValue = Location.BottomPane
@@ -42,6 +32,16 @@ namespace ViewAllMetadata
         [ObjectMembers(typeof(LocationProvider.ViewAllMetadataLocationProvider))]
         public Dictionary<string, bool> ConfiguredLocations { get; set; }
             = new Dictionary<string, bool>();
+
+        [DataMember]
+        [JsonConfEditor
+        (
+            Label = ResourceMarker.Id + nameof(Resources.Configuration.Languages_Label),
+            ChildName = ResourceMarker.Id + nameof(Resources.Configuration.Languages_ChildName)
+        )]
+        [ObjectMembers(typeof(LanguageProvider))]
+        public Dictionary<string, LanguageOverride> LanguageOverrides { get; set; }
+            = new Dictionary<string, LanguageOverride>();
 
         public IEnumerable<Location> AllowedLocations
         {
@@ -78,7 +78,7 @@ namespace ViewAllMetadata
             if ((this.AllowedLocations?.Any() ?? false)
                 && false == this.AllowedLocations.Contains(this.DefaultLocation))
             {
-                yield return new ValidationFinding(ValidationFindingType.Error, "AdvancedConfiguration.DefaultLocation", "The default location is not in the list of allowed locations.");
+                yield return new ValidationFinding(ValidationFindingType.Error, "/AdvancedConfiguration/DefaultLocation", "The default location is not in the list of allowed locations.");
             }
         }
     }
