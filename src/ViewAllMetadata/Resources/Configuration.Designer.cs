@@ -151,6 +151,15 @@ namespace ViewAllMetadata.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Enable Editing.
+        /// </summary>
+        internal static string EnableEditing_Label {
+            get {
+                return ResourceManager.GetString("EnableEditing_Label", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Language.
         /// </summary>
         internal static string Languages_ChildName {

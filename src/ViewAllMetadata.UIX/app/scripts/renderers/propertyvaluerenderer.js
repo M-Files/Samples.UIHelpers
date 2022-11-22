@@ -1,4 +1,4 @@
-﻿function PropertyValueRenderer(propertyDef, propertyValue, isRequired, $parent)
+﻿function PropertyValueRenderer(dashboard, propertyDef, propertyValue, isRequired, $parent)
 {
     var renderer = this;
     var $listItem = null;
@@ -82,6 +82,9 @@
 
     renderer.enterEditMode = function ()
     {
+        // No editing?  Die.
+        if (!dashboard.CustomData.configuration.EnableEditing)
+            return;
         if (null == $listItem)
             return;
         $listItem.addClass("editing");
@@ -89,6 +92,9 @@
     }
     renderer.exitEditMode = function ()
     {
+        // No editing?  Die.
+        if (!dashboard.CustomData.configuration.EnableEditing)
+            return;
         switch (propertyDef.DataType)
         {
             case MFDatatypeText:
@@ -120,28 +126,34 @@
         // Create the read-only value.
         renderReadOnlyValue($listItem);
 
-        // Is the property editable?
-        if (propertyDef.AutomaticValueType == MFAutomaticValueTypeNone)
+        // Is editing enabled?
+        if (dashboard.CustomData.configuration.EnableEditing)
         {
-            // Mark it as editable.
-            $listItem.addClass("editable");
 
-            // For now only deal with text properties, as that's all we support.
-            if (propertyDef.DataType == 1)
+            // Is the property editable?
+            if (propertyDef.AutomaticValueType == MFAutomaticValueTypeNone)
             {
+                // Mark it as editable.
+                $listItem.addClass("editable");
 
-                // Create the editable value.
-                renderEditableValue($listItem);
-
-                // Add the handler to allow editing.
-                $listItem.click(function (e)
+                // For now only deal with text properties, as that's all we support.
+                if (propertyDef.DataType == 1)
                 {
-                    $(".editing").removeClass("editing");
-                    renderer.enterEditMode();
-                    e.stopPropagation();
-                    return false;
-                });
+
+                    // Create the editable value.
+                    renderEditableValue($listItem);
+
+                    // Add the handler to allow editing.
+                    $listItem.click(function (e)
+                    {
+                        $(".editing").removeClass("editing");
+                        renderer.enterEditMode();
+                        e.stopPropagation();
+                        return false;
+                    });
+                }
             }
+
         }
 
         // Add to a parent if we can.

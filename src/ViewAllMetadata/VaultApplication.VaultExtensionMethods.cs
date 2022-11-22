@@ -38,8 +38,14 @@ namespace ViewAllMetadata
                         env.Input.ToLower(),
                         this.Configuration?.AdvancedConfiguration?.LanguageOverrides
                     )
-                    ?? new ResourceStrings()
+                    ?? new ResourceStrings(),
+                EnableEditing = this.Configuration?.EnableEditing ?? false,
+                DefaultLocation = this.Configuration?.AdvancedConfiguration?.DefaultLocation ?? Location.BottomPane
             };
+            if (this.Configuration?.AdvancedConfiguration?.AllowedLocations?.Any() ?? false)
+            {
+                configuration.AllowedLocations = this.Configuration.AdvancedConfiguration.AllowedLocations.ToArray();
+            }
 
             // Serialize the configuration for use in the UIX application.
             return Newtonsoft.Json.JsonConvert.SerializeObject(configuration);

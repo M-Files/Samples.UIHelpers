@@ -23,15 +23,30 @@ h1 {
     text-overflow: ellipsis;
 }
 
+div.menu.top {
+    background-color: #F4F4F4;
+    height: 32px;
+    position: absolute;
+    left: 0px;
+    right: 0px;
+    padding: 0px 25px 5px 5px;
+    text-align: right;
+    z-index: 1000;
+}
+div.menu.top .button{
+    padding: 10px 7px;
+    cursor: pointer;
+}
+
 /* properties list */
 div.properties {
     position: fixed;
-    top: 60px;
+    top: 80px;
     left: 0px;
     right: 0px;
     bottom: 51px;
     overflow-y: auto;
-    padding: 0px 20px;
+    padding: 25px 20px 0px 20px;
 }
 
 ol.properties, ol.properties li {

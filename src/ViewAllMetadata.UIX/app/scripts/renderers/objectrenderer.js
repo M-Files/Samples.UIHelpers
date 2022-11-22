@@ -98,7 +98,8 @@ function ObjectRenderer(dashboard)
 
             // Render.
             var propertyValueRenderer = new PropertyValueRenderer
-            (
+                (
+                dashboard,
                 propertyDef,
                 propertyValue,
                 property.isRequired,
@@ -127,19 +128,57 @@ function ObjectRenderer(dashboard)
     {
         if (typeof (dashboard.CustomData.tabClosedCallback) == "function")
             dashboard.CustomData.tabClosedCallback(true);
-    }).text(dashboard.CustomData.resourceStrings.Buttons_Close || "Close");
+    }).text(dashboard.CustomData.configuration.ResourceStrings.Buttons_Close || "Close");
 
     // Configure the save button.
     $("#btnSave").click(function ()
     {
         alert("Save not done yet.");
-    }).text(dashboard.CustomData.resourceStrings.Buttons_Save || "Save");
+    }).text(dashboard.CustomData.configuration.ResourceStrings.Buttons_Save || "Save");
 
     // Configure the discard button.
     $("#btnDiscard").click(function ()
     {
         renderer.render(renderer.originalObject);
-    }).text(dashboard.CustomData.resourceStrings.Buttons_Discard || "Discard");
+    }).text(dashboard.CustomData.configuration.ResourceStrings.Buttons_Discard || "Discard");
+
+    // Configure the locations buttons
+    function isLocationAllowed(location)
+    {
+        // Don't show an option to select the same place.
+        if (dashboard.CustomData.currentLocation == location)
+            return false;
+        for (var i = 0; i < dashboard.CustomData.configuration.AllowedLocations.length; i++)
+        {
+            if (dashboard.CustomData.configuration.AllowedLocations[i] == location)
+                return true;
+        }
+        return false;
+    }
+    $(".button.window.bottom").each(function (i, o)
+    {
+        var $button = $(this);
+        // TODO: Change title.
+        $button.click(function () { alert("bottom") }) // TODO: toggle to bottom.
+        if (!isLocationAllowed(0))
+            $button.hide();
+    });
+    $(".button.window.tab").each(function (i, o)
+    {
+        var $button = $(this);
+        // TODO: Change title.
+        $button.click(function () { alert("tab") }) // TODO: toggle to tab.
+        if (!isLocationAllowed(1))
+            $button.hide();
+    });
+    $(".button.window.popout").each(function (i, o)
+    {
+        var $button = $(this);
+        // TODO: Change title.
+        $button.click(function () { alert("popout") }) // TODO: toggle to popout.
+        if (!isLocationAllowed(2))
+            $button.hide();
+    });
 
     return renderer;
 }

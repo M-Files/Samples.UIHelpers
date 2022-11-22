@@ -24,8 +24,17 @@ namespace ViewAllMetadata
             Label = ResourceMarker.Id + nameof(Resources.Configuration.AccessRestrictionType_Label),
             DefaultValue = AccessRestrictionType.ByVaultRights
         )]
-        public AccessRestrictionType AccessRestrictionType { get; set; } 
+        public AccessRestrictionType AccessRestrictionType { get; set; }
             = AccessRestrictionType.ByVaultRights;
+
+        // TODO: Editing
+        //[DataMember]
+        //[JsonConfEditor
+        //(
+        //    Label = ResourceMarker.Id + nameof(Resources.Configuration.EnableEditing_Label),
+        //    DefaultValue = false
+        //)]
+        public bool EnableEditing{ get; set; }
 
         [DataMember]
         [JsonConfEditor

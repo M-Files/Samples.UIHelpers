@@ -147,6 +147,9 @@
   <data name="DefaultLocation_Label" xml:space="preserve">
     <value>Default location</value>
   </data>
+  <data name="EnableEditing_Label" xml:space="preserve">
+    <value>Enable Editing</value>
+  </data>
   <data name="Languages_ChildName" xml:space="preserve">
     <value>Language</value>
   </data>

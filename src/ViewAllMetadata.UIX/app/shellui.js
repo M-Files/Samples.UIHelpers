@@ -76,8 +76,12 @@ function OnNewShellUI(shellUI)
 					Buttons_Close: "Close",
 					Buttons_Discard: "Discard",
 					Buttons_Save: "Save"
-                }
+				},
+				EnableEditing: false,
+				DefaultLocation: 0,
+				AllowedLocations: []
 			}
+			configuration.AllowedLocations.push(0);
 
 			function shellFrameStartedHandler()
 			{
@@ -245,7 +249,8 @@ function OnNewShellUI(shellUI)
 							getPropertyDefinition: getPropertyDefinition,
 							getObjectClass: getObjectClass,
 							selectedItem: selectedItem,
-							resourceStrings: configuration.ResourceStrings
+							configuration: configuration,
+							currentLocation: 0
 						}
 					);
 				})

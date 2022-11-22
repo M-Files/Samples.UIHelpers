@@ -27,7 +27,10 @@
     </Content>
     <Content Include="app\console-shellui.js" />
     <Content Include="app\dashboard\dashboard.css" />
+    <Content Include="app\images\bottom-pane.png" />
+    <Content Include="app\images\right-tab.png" />
     <Content Include="app\images\icon-edit.png" />
+    <Content Include="app\images\new-window.png" />
     <Content Include="app\scripts\renderers\objectrenderer.js" />
     <Content Include="app\scripts\renderers\propertyvaluerenderer.js" />
     <Content Include="app\json2.js" />
