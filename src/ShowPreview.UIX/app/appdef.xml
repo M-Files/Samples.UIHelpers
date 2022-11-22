@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<application xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:noNamespaceSchemaLocation="http://www.m-files.com/schemas/appdef-client-v4.xsd">
+	<guid>3bb694b2-383e-4576-a42b-85ec7035951a</guid>
+	<name>ShowPreview.UIX</name>
+	<version>1.0</version>
+	<description></description>
+	<publisher></publisher>	
+	<copyright></copyright>
+	<required-mfiles-version>20.12.0.0</required-mfiles-version>
+	<optional>true</optional>
+	<enabled-by-default>true</enabled-by-default>
+  <platforms>
+    <platform>Desktop</platform>
+  </platforms>
+	<modules>
+		<module environment="shellui" fast-browsing-compatible="false">
+      <file>console-shellui.js</file>
+			<file>shellui.js</file>
+		</module>
+	</modules>
+	<dashboards>
+		<dashboard id="my-dashboard">
+			<content>my-dashboard/my-dashboard.html</content>
+			<allow-selection>true</allow-selection>
+		</dashboard>
+	</dashboards>
+</application>
