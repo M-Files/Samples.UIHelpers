@@ -192,6 +192,24 @@
   <data name="UI_Commands_ShowAllMetadata_Label" xml:space="preserve">
     <value>Show all metadata</value>
   </data>
+  <data name="UI_Commands_ShowBelowListing_HelpText" xml:space="preserve">
+    <value>The text shown when hovering over the "show below listing" icon</value>
+  </data>
+  <data name="UI_Commands_ShowBelowListing_Label" xml:space="preserve">
+    <value>Show below listing</value>
+  </data>
+  <data name="UI_Commands_ShowInPopOutWindow_HelpText" xml:space="preserve">
+    <value>The text shown when hovering over the "show in a pop-up window" icon</value>
+  </data>
+  <data name="UI_Commands_ShowInPopOutWindow_Label" xml:space="preserve">
+    <value>Show in a pop-up window</value>
+  </data>
+  <data name="UI_Commands_ShowInTabOnRight_HelpText" xml:space="preserve">
+    <value>The text shown when hovering over the "show in tab on the right" icon</value>
+  </data>
+  <data name="UI_Commands_ShowInTabOnRight_Label" xml:space="preserve">
+    <value>Show in tab on right</value>
+  </data>
   <data name="UserConfiguration_Label" xml:space="preserve">
     <value>User Configuration</value>
   </data>

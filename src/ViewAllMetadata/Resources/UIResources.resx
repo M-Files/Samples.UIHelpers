@@ -129,4 +129,13 @@
   <data name="Commands_ShowAllMetadata" xml:space="preserve">
     <value>Show all metadata</value>
   </data>
+  <data name="Location_ShowBelowListing" xml:space="preserve">
+    <value>Show below the listing</value>
+  </data>
+  <data name="Location_ShowInPopOutWindow" xml:space="preserve">
+    <value>Show in a pop-out window</value>
+  </data>
+  <data name="Location_ShowInTabOnRight" xml:space="preserve">
+    <value>Show in tab on right</value>
+  </data>
 </root>

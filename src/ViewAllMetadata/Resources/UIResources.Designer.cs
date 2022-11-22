@@ -95,5 +95,32 @@ namespace ViewAllMetadata.Resources {
                 return ResourceManager.GetString("Commands_ShowAllMetadata", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show below the listing.
+        /// </summary>
+        internal static string Location_ShowBelowListing {
+            get {
+                return ResourceManager.GetString("Location_ShowBelowListing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show in a pop-out window.
+        /// </summary>
+        internal static string Location_ShowInPopOutWindow {
+            get {
+                return ResourceManager.GetString("Location_ShowInPopOutWindow", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show in tab on right.
+        /// </summary>
+        internal static string Location_ShowInTabOnRight {
+            get {
+                return ResourceManager.GetString("Location_ShowInTabOnRight", resourceCulture);
+            }
+        }
     }
 }

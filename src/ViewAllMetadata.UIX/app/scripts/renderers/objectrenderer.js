@@ -159,8 +159,12 @@ function ObjectRenderer(dashboard)
     }
     $(".button.window.bottom").each(function (i, o)
     {
-        var $button = $(this);
-        // TODO: Change title.
+        var $button = $(this)
+            .attr
+            (
+                "title",
+                dashboard.CustomData.configuration.ResourceStrings.Location_ShowBelowListing || "Show below the listing"
+            );
         $button.click(function ()
         {
             // Toggle to bottom.
@@ -173,8 +177,12 @@ function ObjectRenderer(dashboard)
     });
     $(".button.window.tab").each(function (i, o)
     {
-        var $button = $(this);
-        // TODO: Change title.
+        var $button = $(this)
+            .attr
+            (
+                "title",
+                dashboard.CustomData.configuration.ResourceStrings.Location_ShowInTabOnRight || "Show in tab on right"
+            );
         $button.click(function ()
         {
             // Toggle to tab.
@@ -187,8 +195,12 @@ function ObjectRenderer(dashboard)
     });
     $(".button.window.popout").each(function (i, o)
     {
-        var $button = $(this);
-        // TODO: Change title.
+        var $button = $(this)
+            .attr
+            (
+                "title",
+                dashboard.CustomData.configuration.ResourceStrings.Location_ShowInPopOutWindow || "Show in a pop-out window"
+            );
         $button.click(function ()
         {
             // Toggle to popout.

@@ -286,6 +286,60 @@ namespace ViewAllMetadata.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The text shown when hovering over the &quot;show below listing&quot; icon.
+        /// </summary>
+        internal static string UI_Commands_ShowBelowListing_HelpText {
+            get {
+                return ResourceManager.GetString("UI_Commands_ShowBelowListing_HelpText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show below listing.
+        /// </summary>
+        internal static string UI_Commands_ShowBelowListing_Label {
+            get {
+                return ResourceManager.GetString("UI_Commands_ShowBelowListing_Label", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The text shown when hovering over the &quot;show in a pop-up window&quot; icon.
+        /// </summary>
+        internal static string UI_Commands_ShowInPopOutWindow_HelpText {
+            get {
+                return ResourceManager.GetString("UI_Commands_ShowInPopOutWindow_HelpText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show in a pop-up window.
+        /// </summary>
+        internal static string UI_Commands_ShowInPopOutWindow_Label {
+            get {
+                return ResourceManager.GetString("UI_Commands_ShowInPopOutWindow_Label", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The text shown when hovering over the &quot;show in tab on the right&quot; icon.
+        /// </summary>
+        internal static string UI_Commands_ShowInTabOnRight_HelpText {
+            get {
+                return ResourceManager.GetString("UI_Commands_ShowInTabOnRight_HelpText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show in tab on right.
+        /// </summary>
+        internal static string UI_Commands_ShowInTabOnRight_Label {
+            get {
+                return ResourceManager.GetString("UI_Commands_ShowInTabOnRight_Label", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to User Configuration.
         /// </summary>
         internal static string UserConfiguration_Label {

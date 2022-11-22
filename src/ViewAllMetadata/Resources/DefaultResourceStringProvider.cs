@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MFiles.VAF.Extensions.ExtensionMethods;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
@@ -24,26 +25,6 @@ namespace ViewAllMetadata
             // Create the instance.
             var resourceStrings = new ResourceStrings();
 
-            // If we have a valid language override then use that.
-            {
-                var languageOverride = (languageOverrides?.ContainsKey(languageCode) ?? false)
-                    ? languageOverrides[languageCode]
-                    : null;
-                if (null != languageOverride)
-                {
-                    // We have to hard-code some of these values here, unlike in the resources.
-                    if(false == string.IsNullOrWhiteSpace(languageOverride.Commands_ShowAllMetadata))
-                        resourceStrings.Add(nameof(languageOverride.Commands_ShowAllMetadata), languageOverride.Commands_ShowAllMetadata);
-                    if (false == string.IsNullOrWhiteSpace(languageOverride.Buttons_Close))
-                        resourceStrings.Add(nameof(languageOverride.Buttons_Close), languageOverride.Buttons_Close);
-                    if (false == string.IsNullOrWhiteSpace(languageOverride.Buttons_Discard))
-                        resourceStrings.Add(nameof(languageOverride.Buttons_Discard), languageOverride.Buttons_Discard);
-                    if (false == string.IsNullOrWhiteSpace(languageOverride.Buttons_Save))
-                        resourceStrings.Add(nameof(languageOverride.Buttons_Save), languageOverride.Buttons_Save);
-                    return resourceStrings;
-                }
-            }
-
             // Ensure that we have a valid value.
             var cultureCode = this.ConvertUILanguageToLanguageCode(languageCode);
 
@@ -63,11 +44,36 @@ namespace ViewAllMetadata
             {
                 try
                 {
-                    resourceStrings.Add(v.Key?.ToString(), v.Value?.ToString());
+                    resourceStrings.AddOrUpdate(v.Key?.ToString(), v.Value?.ToString());
                 }
                 catch (Exception e)
                 {
                     this.Logger?.Warn(e, $"Could not add UI resource {v} to the dictionary.");
+                }
+            }
+
+            // If we have a valid language override then use that.
+            {
+                var languageOverride = (languageOverrides?.ContainsKey(languageCode) ?? false)
+                    ? languageOverrides[languageCode]
+                    : null;
+                if (null != languageOverride)
+                {
+                    // We have to hard-code some of these values here, unlike in the resources.
+                    if(false == string.IsNullOrWhiteSpace(languageOverride.Commands_ShowAllMetadata))
+                        resourceStrings.AddOrUpdate(nameof(languageOverride.Commands_ShowAllMetadata), languageOverride.Commands_ShowAllMetadata);
+                    if (false == string.IsNullOrWhiteSpace(languageOverride.Buttons_Close))
+                        resourceStrings.AddOrUpdate(nameof(languageOverride.Buttons_Close), languageOverride.Buttons_Close);
+                    if (false == string.IsNullOrWhiteSpace(languageOverride.Buttons_Discard))
+                        resourceStrings.AddOrUpdate(nameof(languageOverride.Buttons_Discard), languageOverride.Buttons_Discard);
+                    if (false == string.IsNullOrWhiteSpace(languageOverride.Buttons_Save))
+                        resourceStrings.AddOrUpdate(nameof(languageOverride.Buttons_Save), languageOverride.Buttons_Save);
+                    if (false == string.IsNullOrWhiteSpace(languageOverride.Location_ShowBelowListing))
+                        resourceStrings.AddOrUpdate(nameof(languageOverride.Location_ShowBelowListing), languageOverride.Location_ShowBelowListing);
+                    if (false == string.IsNullOrWhiteSpace(languageOverride.Location_ShowInTabOnRight))
+                        resourceStrings.AddOrUpdate(nameof(languageOverride.Location_ShowInTabOnRight), languageOverride.Location_ShowInTabOnRight);
+                    if (false == string.IsNullOrWhiteSpace(languageOverride.Location_ShowInPopOutWindow))
+                        resourceStrings.AddOrUpdate(nameof(languageOverride.Location_ShowInPopOutWindow), languageOverride.Location_ShowInPopOutWindow);
                 }
             }
 
