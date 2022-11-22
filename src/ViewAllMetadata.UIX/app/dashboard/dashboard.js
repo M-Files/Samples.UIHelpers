@@ -7,7 +7,17 @@ function Dashboard(d)
     var dashboard = this;
 
     // Parent is a shell pane container (tab), when dashboard is shown in right pane.
-    var shellUI = d.Parent.ShellFrame.ShellUI;
+    var shellUI = null;
+    switch (d.CustomData.currentLocation)
+    {
+        case 0: // Bottom pane.
+        case 1: // Right-hand pane.
+            shellUI = d.Parent.ShellFrame.ShellUI;
+            break;
+        case 2: // Popup pane.
+            shellUI = d.Parent;
+            break;
+    }
 
     // Initialize console.
     console.initialize(shellUI, "Show all metadata (dashboard)");

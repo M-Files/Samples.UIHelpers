@@ -10,25 +10,80 @@
 
 	var currentLocation = 0; // bottom.
 	t.getCurrentLocation = function () { return currentLocation; }
-	t.setCurrentLocation = function (l) { currentLocation = l; }
+	t.setCurrentLocation = function (newLocation)
+	{
+		// Sanity.
+		if (currentLocation == newLocation)
+			return;
+
+		// Close.
+		t.close(true);
+
+		// Set the new location.
+		currentLocation = newLocation;
+		registrationCallback = null;
+
+		// Show.
+		t.show(true);
+	};
+
+	var allowedLocations = [0];
+
+	t.configurationChanged = function (config)
+	{
+		allowedLocations = config.AllowedLocations;
+		t.setCurrentLocation(config.DefaultLocation);
+	}
 
 	t.close = function (explicit)
 	{
 		tabClosedExplicitly = explicit;
-		if (null != tab)
-			tab.Visible = false;
-		if (null != shellFrame && null != shellFrame.BottomPane)
+
+		switch (currentLocation)
 		{
-			shellFrame.BottomPane.Visible = false;
-			shellFrame.BottomPane.Minimized = true;
+			case 0: // Bottom pane.
+
+				console.log("Closing bottom pane (explicit: " + explicit + ")");
+
+				if (null != tab)
+					tab.Visible = false;
+				if (null != shellFrame && null != shellFrame.BottomPane)
+				{
+					shellFrame.BottomPane.Visible = false;
+					shellFrame.BottomPane.Minimized = true;
+				}
+				break;
+
+			default:
+
+				console.warn("Unhandled location type:" + currentLocation);
+
+				break;
 		}
 	}
     
-    t.show = function (allowUICreation)
+	t.show = function (allowUICreation)
 	{
 		// If the tab were closed, but we can re-create the UI, then set it to false.
 		if (tabClosedExplicitly && allowUICreation)
+		{
+			console.log("Tab was closed and not allowed to create UI; not showing.")
 			tabClosedExplicitly = false;
+		}
+
+		// Define the data to send to the dashboard.
+		var customData = {
+			registrationCallback: function (fn)
+			{
+				registrationCallback = fn
+			},
+			tabClosedCallback: t.close,
+			windowManager: orchestrator.getWindowManager(),
+			vaultStructureManager: orchestrator.getVaultStructureManager(),
+			selectedItem: orchestrator.getSelectedItem(),
+			configuration: orchestrator.getConfigurationManager().getConfiguration(),
+			currentLocation: currentLocation
+		};
 
 		// If we have a function then try to call it.
 		if (registrationCallback && typeof (registrationCallback) == "function")
@@ -36,17 +91,45 @@
 			try
 			{
 				// Show the item details.
-				registrationCallback(orchestrator.getSelectedItem());
+				var selectedItem = orchestrator.getSelectedItem()
+				if (null == selectedItem)
+					return false;
+				console.log("Selecting item " + selectedItem.VersionData.Title);
+				registrationCallback(selectedItem);
 
-				// If we did not close explicitly then open again.
-				if (!tabClosedExplicitly)
+				switch (currentLocation)
 				{
-					tab.Visible = true;
-					shellFrame.BottomPane.Visible = true;
-					shellFrame.BottomPane.Minimized = false;
-				}
+					case 0: // Bottom pane
 
-				tab.Select();
+						// If we did not close explicitly then open again.
+						if (!tabClosedExplicitly)
+						{
+							console.log("Showing on bottom pane (re-using existing tab)");
+
+							tab.Visible = true;
+							shellFrame.BottomPane.Visible = true;
+							shellFrame.BottomPane.Minimized = false;
+						}
+
+						tab.Select();
+						break;
+
+					case 2:
+
+						tab.ShowDashboard
+							(
+								"Dashboard",
+								customData
+							);
+
+						break;
+
+					default:
+
+						console.warn("Unhandled location type:" + currentLocation);
+
+						break;
+				}
 				return true;
 			}
 			catch (e)
@@ -57,35 +140,66 @@
 
 		// If we do not allow UI creation then die.
 		if (false == allowUICreation)
-			return;
-
-		// Do we have a tab?
-		if (null == tab)
 		{
-			tab = shellFrame.BottomPane.AddTab("showAllMetadata", "Metadata", "");
+			console.log("Not allowed to create UI; not showing.");
+			return;
 		}
 
-		// Show the bottom pane.
-		tab.Visible = true;
-		tab.Select();
-		shellFrame.BottomPane.Visible = true;
-		shellFrame.BottomPane.Minimized = false;
-
-		tab.ShowDashboard
-		(
-			"Dashboard",
+		// Define the data to send to the dashboard.
+		var customData = {
+			registrationCallback: function (fn)
 			{
-				registrationCallback: function (fn)
+				registrationCallback = fn
+			},
+			tabClosedCallback: t.close,
+			windowManager: orchestrator.getWindowManager(),
+			vaultStructureManager: orchestrator.getVaultStructureManager(),
+			selectedItem: orchestrator.getSelectedItem(),
+			configuration: orchestrator.getConfigurationManager().getConfiguration(),
+			currentLocation: currentLocation
+		};
+
+		switch (currentLocation)
+		{
+			case 0: // Bottom tab
+
+				console.log("Showing on bottom pane");
+
+				// Do we have a tab?
+				if (null == tab)
 				{
-					registrationCallback = fn
-				},
-				tabClosedCallback: t.close,
-				vaultStructureManager: orchestrator.getVaultStructureManager(),
-				selectedItem: orchestrator.getSelectedItem(),
-				configuration: orchestrator.getConfigurationManager().getConfiguration(),
-				currentLocation: 0
-			}
-		);
+					console.log("Creating bottom tab");
+					tab = shellFrame.BottomPane.AddTab("showAllMetadata", "Metadata", "");
+				}
+
+				// Show the bottom pane.
+				tab.Visible = true;
+				tab.Select();
+				shellFrame.BottomPane.Visible = true;
+				shellFrame.BottomPane.Minimized = false;
+
+				tab.ShowDashboard
+					(
+						"Dashboard",
+						customData
+					);
+				break;
+
+			case 2: // Popup
+
+				shellUI.ShowPopupDashboard
+				(
+					"Dashboard",
+					false,
+					customData
+				)
+
+			default:
+
+				console.warn("Unhandled location type:" + currentLocation);
+
+				break;
+		}
 	};
 
 	function newNormalShellFrameHandler(sf)

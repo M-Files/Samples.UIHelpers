@@ -52,6 +52,7 @@
 									try
 									{
 										configuration = JSON.parse(output);
+										orchestrator.notifyConfigurationChanged(configuration);
 									}
 									catch (e)
 									{

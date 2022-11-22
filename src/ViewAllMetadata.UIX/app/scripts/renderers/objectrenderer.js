@@ -128,6 +128,8 @@ function ObjectRenderer(dashboard)
     {
         if (typeof (dashboard.CustomData.tabClosedCallback) == "function")
             dashboard.CustomData.tabClosedCallback(true);
+        if(null != dashboard.Window)
+            dashboard.Window.Close();
     }).text(dashboard.CustomData.configuration.ResourceStrings.Buttons_Close || "Close");
 
     // Configure the save button.
@@ -146,7 +148,7 @@ function ObjectRenderer(dashboard)
     function isLocationAllowed(location)
     {
         // Don't show an option to select the same place.
-        if (dashboard.CustomData.currentLocation == location)
+        if (dashboard.CustomData.windowManager.getCurrentLocation() == location)
             return false;
         for (var i = 0; i < dashboard.CustomData.configuration.AllowedLocations.length; i++)
         {
@@ -159,7 +161,13 @@ function ObjectRenderer(dashboard)
     {
         var $button = $(this);
         // TODO: Change title.
-        $button.click(function () { alert("bottom") }) // TODO: toggle to bottom.
+        $button.click(function ()
+        {
+            // Toggle to bottom.
+            dashboard.CustomData.windowManager.setCurrentLocation(0);
+            if (null != dashboard.Window)
+                dashboard.Window.Close();
+        });
         if (!isLocationAllowed(0))
             $button.hide();
     });
@@ -167,7 +175,13 @@ function ObjectRenderer(dashboard)
     {
         var $button = $(this);
         // TODO: Change title.
-        $button.click(function () { alert("tab") }) // TODO: toggle to tab.
+        $button.click(function ()
+        {
+            // Toggle to tab.
+            dashboard.CustomData.windowManager.setCurrentLocation(1);
+            if (null != dashboard.Window)
+                dashboard.Window.Close();
+        });
         if (!isLocationAllowed(1))
             $button.hide();
     });
@@ -175,7 +189,13 @@ function ObjectRenderer(dashboard)
     {
         var $button = $(this);
         // TODO: Change title.
-        $button.click(function () { alert("popout") }) // TODO: toggle to popout.
+        $button.click(function ()
+        {
+            // Toggle to popout.
+            dashboard.CustomData.windowManager.setCurrentLocation(2);
+            if (null != dashboard.Window)
+                dashboard.Window.Close();
+        });
         if (!isLocationAllowed(2))
             $button.hide();
     });

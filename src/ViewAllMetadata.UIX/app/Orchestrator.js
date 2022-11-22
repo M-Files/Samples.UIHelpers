@@ -15,6 +15,11 @@
     t.getVaultStructureManager = function () { return vaultStructureManager; }
 	t.getConfigurationManager = function () { return configurationManager; }
 	t.getSelectedItem = function () { return selectedItem; }
+	t.notifyConfigurationChanged = function (config)
+	{
+		windowManager.configurationChanged(config);
+		vaultStructureManager.configurationChanged(config);
+	}
 
     function shellUIStartedHandler()
     {
@@ -22,9 +27,9 @@
         vaultStructureManager = new VaultStructureManager(t, shellUI);
         vaultStructureManager.populate();
 
-        // Create and populate the configuration manager.
+        // Ensure the configuration is loaded before anything else.
         configurationManager = new ConfigurationManager(t, shellUI);
-        configurationManager.populate();
+		configurationManager.populate();
 
         // Create the window manager.
         windowManager = new WindowManager(t, shellUI);

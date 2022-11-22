@@ -17,6 +17,11 @@
 		return classes[classId];
 	}
 
+	t.configurationChanged = function (config)
+	{
+
+	};
+
     t.populate = function ()
     {
 		// Load all the property definitions.
