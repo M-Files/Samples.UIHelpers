@@ -4,7 +4,8 @@
 
 	var t = this;
 	var registrationCallback = null;
-	var tab;
+	var bottomTab;
+	var sideTab;
 	var tabClosedExplicitly = false;
 	var shellFrame = null;
 
@@ -45,13 +46,21 @@
 
 				console.log("Closing bottom pane (explicit: " + explicit + ")");
 
-				if (null != tab)
-					tab.Visible = false;
+				if (null != bottomTab)
+					bottomTab.Visible = false;
 				if (null != shellFrame && null != shellFrame.BottomPane)
 				{
 					shellFrame.BottomPane.Visible = false;
 					shellFrame.BottomPane.Minimized = true;
 				}
+				break;
+
+			case 1: // Right-hand pane.
+
+				console.log("Closing right-hand pane (explicit: " + explicit + ")");
+
+				if (null != sideTab)
+					sideTab.Visible = false;
 				break;
 
 			default:
@@ -106,21 +115,22 @@
 						{
 							console.log("Showing on bottom pane (re-using existing tab)");
 
-							tab.Visible = true;
+							bottomTab.Visible = true;
 							shellFrame.BottomPane.Visible = true;
 							shellFrame.BottomPane.Minimized = false;
+							bottomTab.Select();
 						}
 
-						tab.Select();
 						break;
 
-					case 2:
+					case 1: // Bottom pane
 
-						tab.ShowDashboard
-							(
-								"Dashboard",
-								customData
-							);
+						// If we did not close explicitly then open again.
+						if (!tabClosedExplicitly)
+						{
+							console.log("Showing on side pane (re-using existing tab)");
+							sideTab.Visible = true;
+						}
 
 						break;
 
@@ -145,44 +155,52 @@
 			return;
 		}
 
-		// Define the data to send to the dashboard.
-		var customData = {
-			registrationCallback: function (fn)
-			{
-				registrationCallback = fn
-			},
-			tabClosedCallback: t.close,
-			windowManager: orchestrator.getWindowManager(),
-			vaultStructureManager: orchestrator.getVaultStructureManager(),
-			selectedItem: orchestrator.getSelectedItem(),
-			configuration: orchestrator.getConfigurationManager().getConfiguration(),
-			currentLocation: currentLocation
-		};
-
 		switch (currentLocation)
 		{
 			case 0: // Bottom tab
 
 				console.log("Showing on bottom pane");
 
-				// Do we have a tab?
-				if (null == tab)
+				// Do we have a bottom tab?
+				if (null == bottomTab)
 				{
 					console.log("Creating bottom tab");
-					tab = shellFrame.BottomPane.AddTab("showAllMetadata", "Metadata", "");
+					bottomTab = shellFrame.BottomPane.AddTab("showAllMetadata", "Raw Metadata", "");
 				}
 
 				// Show the bottom pane.
-				tab.Visible = true;
-				tab.Select();
+				bottomTab.Visible = true;
+				bottomTab.Select();
 				shellFrame.BottomPane.Visible = true;
 				shellFrame.BottomPane.Minimized = false;
 
-				tab.ShowDashboard
+				bottomTab.ShowDashboard
 					(
 						"Dashboard",
 						customData
 					);
+				break;
+
+			case 1: // Right-hand pane.
+
+				console.log("Showing on right-hand pane")
+
+				// Do we have a side tab?
+				if (null == sideTab)
+				{
+					console.log("Creating bottom tab");
+					sideTab = shellFrame.RightPane.AddTab("showAllMetadata", "Raw Metadata", "");
+				}
+
+				// Show the side pane.
+				sideTab.Visible = true;
+
+				sideTab.ShowDashboard
+					(
+						"Dashboard",
+						customData
+					);
+
 				break;
 
 			case 2: // Popup
