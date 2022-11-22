@@ -70,10 +70,6 @@
 
 		function shellFrameStartedHandler()
 		{
-			// Sanity.
-			if (!shellFrame.BottomPane.Available)
-				return;
-
 			windowManager.close();
 		}
 

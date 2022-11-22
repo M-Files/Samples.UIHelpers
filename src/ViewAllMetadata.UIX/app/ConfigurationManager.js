@@ -32,58 +32,85 @@
 		// If we have the VAF app installed then we should check whether this should happen for this user.
 		if (typeof (shellUI.Vault.Async.ExtensionMethodOperations.DoesActiveVaultExtensionMethodExist) != "undefined")
 		{
-			shellUI.Vault.Async.ExtensionMethodOperations.ExecuteVaultExtensionMethod
-				(
-					"ViewAllMetadata.ShouldShowAllMetadata",
-					"",
-					function (output)
+			shellUI.Vault.Async.ExtensionMethodOperations.DoesActiveVaultExtensionMethodExist
+			(
+				"ViewAllMetadata.ShouldShowAllMetadata",
+				function (result)
+				{
+					// If we didn't find it then fail.
+					if (!result)
 					{
-						// If they should not see it then die here.
-						if ((output + "").toLowerCase() != "true")
-							return;
+						console.error("VEM ViewAllMetadata.ShouldShowAllMetadata not found.");
+						return;
+					}
 
-						// Pass the language to the server to get the translations.
-						shellUI.Vault.Async.ExtensionMethodOperations.ExecuteVaultExtensionMethod
+					shellUI.Vault.Async.ExtensionMethodOperations.ExecuteVaultExtensionMethod
+					(
+						"ViewAllMetadata.ShouldShowAllMetadata",
+						"",
+						function (output)
+						{
+							// If they should not see it then die here.
+							if ((output + "").toLowerCase() != "true")
+								return;
+							shellUI.Vault.Async.ExtensionMethodOperations.DoesActiveVaultExtensionMethodExist
 							(
 								"ViewAllMetadata.GetUIXConfiguration",
-								lang,
-								function (output)
+								function (result)
 								{
-									try
+									// If we didn't find it then fail.
+									if (!result)
 									{
-										configuration = JSON.parse(output);
-										orchestrator.notifyConfigurationChanged(configuration);
+										console.error("VEM ViewAllMetadata.GetUIXConfiguration not found.");
+										return;
 									}
-									catch (e)
-									{
-										shellUI.ShowMessage("Exception parsing configuration");
-										MFiles.ReportException(e);
-									}
-								},
-								function (shorterror, longerror, errorobj)
-								{
-									MFiles.ReportException(errorobj);
-								},
-								function ()
-								{
-									try
-									{
-										// Show the button.
-										orchestrator.enableShowAllMetadataCommand();
-									}
-									catch (e)
-									{
-										MFiles.ReportException(e);
-									}
+
+									// Pass the language to the server to get the translations.
+									shellUI.Vault.Async.ExtensionMethodOperations.ExecuteVaultExtensionMethod
+										(
+											"ViewAllMetadata.GetUIXConfiguration",
+											lang,
+											function (output)
+											{
+												try
+												{
+													configuration = JSON.parse(output);
+													orchestrator.notifyConfigurationChanged(configuration);
+												}
+												catch (e)
+												{
+													shellUI.ShowMessage("Exception parsing configuration");
+													MFiles.ReportException(e);
+												}
+											},
+											function (shorterror, longerror, errorobj)
+											{
+												MFiles.ReportException(errorobj);
+											},
+											function ()
+											{
+												try
+												{
+													// Show the button.
+													orchestrator.enableShowAllMetadataCommand();
+												}
+												catch (e)
+												{
+													MFiles.ReportException(e);
+												}
+											}
+										);
 								}
 							);
-					},
-					function (shorterror, longerror, errorobj)
-					{
-						// Error checking permissions.
-						MFiles.ReportException(errorobj);
-					}
-				)
+						},
+						function (shorterror, longerror, errorobj)
+						{
+							// Error checking permissions.
+							MFiles.ReportException(errorobj);
+						}
+					)
+				}
+			);
 		}
 		else
 		{
