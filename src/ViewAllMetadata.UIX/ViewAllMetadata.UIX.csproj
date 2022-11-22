@@ -31,6 +31,7 @@
     <Content Include="app\images\right-tab.png" />
     <Content Include="app\images\icon-edit.png" />
     <Content Include="app\images\new-window.png" />
+    <Content Include="app\ConfigurationManager.js" />
     <Content Include="app\scripts\renderers\objectrenderer.js" />
     <Content Include="app\scripts\renderers\propertyvaluerenderer.js" />
     <Content Include="app\json2.js" />
@@ -39,9 +40,14 @@
     <Content Include="app\dashboard\dashboard.html" />
     <Content Include="app\dashboard\console-dashboard.js" />
     <Content Include="app\dashboard\dashboard.js" />
+    <Content Include="app\VaultStructureManager.js" />
+    <Content Include="app\WindowManager.js" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="app\Orchestrator.js" />
   </ItemGroup>
   <Target Name="Clean">
     <RemoveDir Directories="out" />

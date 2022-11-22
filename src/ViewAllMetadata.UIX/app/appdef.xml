@@ -16,6 +16,10 @@
 		<module environment="shellui" fast-browsing-compatible="true">
 			<file>console-shellui.js</file>
 			<file>json2.js</file>
+			<file>Orchestrator.js</file>
+			<file>ConfigurationManager.js</file>
+			<file>VaultStructureManager.js</file>
+			<file>WindowManager.js</file>
 			<file>shellui.js</file>
 		</module>
 	</modules>

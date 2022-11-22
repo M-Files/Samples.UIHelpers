@@ -78,7 +78,7 @@ function ObjectRenderer(dashboard)
         // Render the properties.
         var properties = getOrderedProperties
         (
-            dashboard.CustomData.getObjectClass(selectedItem.VersionData.Class),
+            dashboard.CustomData.vaultStructureManager.getObjectClass(selectedItem.VersionData.Class),
             selectedItem.Properties
         );
         for (var i = 0; i < properties.length; i++)
@@ -86,7 +86,7 @@ function ObjectRenderer(dashboard)
             var property = properties[i];
 
             // Get the property definition details.
-            var propertyDef = dashboard.CustomData.getPropertyDefinition(property.propertyDef);
+            var propertyDef = dashboard.CustomData.vaultStructureManager.getPropertyDefinition(property.propertyDef);
             if (null == propertyDef)
                 continue;
 
