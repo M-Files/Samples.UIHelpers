@@ -26,13 +26,26 @@ function Dashboard(d)
     var renderer = new ObjectRenderer(d);
 
     // Expose the render method.
-    dashboard.render = function (selectedItem)
+    dashboard.render = function (selectedItems)
     {
-        renderer.render(selectedItem);
+        // Pass a reference back to our renderer.
+        if (d.CustomData.registrationCallback)
+            d.CustomData.registrationCallback(dashboard.render);
+
+        // Was there only one item selected (and is it an object version)?
+        var isOneObjectSelected = selectedItems.Count == 1 && selectedItems.ObjectVersionsAndProperties.Count == 1;
+
+        // We can render one only.
+        if (isOneObjectSelected)
+            renderer.render(selectedItems.ObjectVersionsAndProperties[0]);
+        else
+        {
+            $("body").css({ "background-color": "red" });
+        }
     }
 }
 
 function OnNewDashboard(dashboard)
 {
-    (new Dashboard(dashboard)).render(dashboard.CustomData.selectedItem);
+    (new Dashboard(dashboard)).render(dashboard.CustomData.selectedItems);
 }

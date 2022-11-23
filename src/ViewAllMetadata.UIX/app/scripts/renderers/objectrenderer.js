@@ -110,10 +110,6 @@ function ObjectRenderer(dashboard)
         }
     }
 
-    // Pass a reference back to our handler.
-    if (renderer.dashboard.CustomData.registrationCallback)
-        renderer.dashboard.CustomData.registrationCallback(renderer.render);
-
     // When the body is clicked, undo any editing.
     $("body").click(function ()
     {

@@ -117,7 +117,7 @@
 			tabClosedCallback: t.close,
 			windowManager: orchestrator.getWindowManager(),
 			vaultStructureManager: orchestrator.getVaultStructureManager(),
-			selectedItem: orchestrator.getSelectedItem(),
+			selectedItems: orchestrator.getSelectedItems(),
 			configuration: orchestrator.getConfigurationManager().getConfiguration(),
 			currentLocation: currentLocation
 		};
@@ -128,11 +128,10 @@
 			try
 			{
 				// Show the item details.
-				var selectedItem = orchestrator.getSelectedItem()
-				if (null == selectedItem)
+				var selectedItems = orchestrator.getSelectedItems()
+				if (null == selectedItems)
 					return false;
-				console.log("Selecting item " + selectedItem.VersionData.Title);
-				registrationCallback(selectedItem);
+				registrationCallback(selectedItems);
 
 				switch (currentLocation)
 				{

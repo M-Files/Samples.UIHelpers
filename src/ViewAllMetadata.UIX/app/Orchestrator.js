@@ -7,14 +7,13 @@
     var windowManager = null;
     var vaultStructureManager = null;
 	var configurationManager = null;
-	var selectedItem = null;
+	var selectedItems = null;
 	var shellFrame = null;
 
     t.getWindowManager = function () { return windowManager; }
     t.getVaultStructureManager = function () { return vaultStructureManager; }
 	t.getConfigurationManager = function () { return configurationManager; }
-	t.getSelectedItem = function () { return selectedItem; }
-	t.setSelectedItem = function (i) { selectedItem = i; }
+	t.getSelectedItems = function () { return selectedItems; }
 	var eventListeners = {};
 	t.addEventListener = function (eventType, callback)
 	{
@@ -101,11 +100,14 @@
 			vaultStructureManager.populate();
 			configurationManager.populate();
 
+			// Register our handler for any custom commands.
 			shellFrame.Commands.Events.Register(Event_CustomCommand, customCommandHandler);
+
+			// When the shell frame starts nothing is selected, so close the window.
 			windowManager.close();
 		}
 
-		function selectionChangedHandler(selectedItems, shellListing)
+		function selectionChangedHandler(si, shellListing)
 		{
 			// Sanity.
 			if (false == shellListing.IsActive)
@@ -113,19 +115,11 @@
 				return false;
 			}
 
-			// Did we get one item?
-			selectedItem = null;
-			var isOneObjectSelected = selectedItems.Count == 1 && selectedItems.ObjectVersionsAndProperties.Count == 1;
-			if (isOneObjectSelected)
-			{
-				selectedItem = selectedItems.ObjectVersionsAndProperties[0];
-			}
-			if (false == isOneObjectSelected)
-			{
-				windowManager.close();
-				return false;
-			}
-			windowManager.show(false);
+			// Store the selected items.
+			selectedItems = si;
+
+			// Raise any events.
+			t.dispatchEvent(Orchestrator.EventTypes.SelectionChanged, si, shellListing);
 
 		}
 		function shellListingStartedHandler(shellListing)
@@ -134,11 +128,13 @@
 			shellListing.Events.Register
 				(
 					Event_ShowContextMenu,
-					function (selectedItems)
+					function (si)
 					{
 						// Sanity.
 						if (false == shellListing.IsActive)
 							return false;
+
+						selectedItems = si;
 
 						// Run each command.
 						for (var i = 0; i < customCommands.length; i++)
@@ -147,7 +143,7 @@
 
 							// If we can, call it.
 							if ((typeof command.handlers.showContextMenu) == "function")
-								command.handlers.showContextMenu.call(t, shellFrame, selectedItems);
+								command.handlers.showContextMenu.call(t, shellFrame, si);
 						}
 
 						return true;
@@ -173,5 +169,6 @@
 }
 Orchestrator.EventTypes = {
 	Started: 1,
-	ConfigurationLoaded: 2
+	ConfigurationLoaded: 2,
+	SelectionChanged: 3
 };

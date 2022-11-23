@@ -10,6 +10,29 @@ function OnNewShellUI(shellUI)
 
 	// The orchestrator orchestrates everything, so let it start up.
 	var orchestrator = new Orchestrator(shellUI);
+
+	// When the user selects different items, show/hide the window.
+	orchestrator.addEventListener
+		(
+			Orchestrator.EventTypes.SelectionChanged,
+			function (selectedItems, shellListing)
+			{
+				// Did we get one item?
+				var isOneObjectSelected = selectedItems.Count == 1 && selectedItems.ObjectVersionsAndProperties.Count == 1;
+				if (isOneObjectSelected)
+				{
+					selectedItem = selectedItems.ObjectVersionsAndProperties[0];
+				}
+				if (false == isOneObjectSelected)
+				{
+					orchestrator.getWindowManager().close();
+					return false;
+				}
+				orchestrator.getWindowManager().show(false);
+			}
+		)
+
+	// When the configuration is loaded, we can add our command.
 	orchestrator.addEventListener
 		(
 			Orchestrator.EventTypes.ConfigurationLoaded,
@@ -26,22 +49,21 @@ function OnNewShellUI(shellUI)
 						{
 							click: function ()
 							{
-								var selectedItem = orchestrator.getSelectedItem();
-								if (null == selectedItem)
+								var selectedItems = orchestrator.getSelectedItems();
+								if (null == selectedItems)
 									return;
 
+								// Was there only one item selected (and is it an object version)?
+								var isOneObjectSelected = selectedItems.Count == 1 && selectedItems.ObjectVersionsAndProperties.Count == 1;
+
 								// Tell the window manager to show the window.
-								orchestrator.getWindowManager().show(true);
+								if(isOneObjectSelected)
+									orchestrator.getWindowManager().show(true);
 							},
 							showContextMenu: function (shellFrame, selectedItems)
 							{
 								// Was there only one item selected (and is it an object version)?
-								orchestrator.setSelectedItem(null);
 								var isOneObjectSelected = selectedItems.Count == 1 && selectedItems.ObjectVersionsAndProperties.Count == 1;
-								if (isOneObjectSelected)
-								{
-									orchestrator.setSelectedItem(selectedItems.ObjectVersionsAndProperties[0]);
-								}
 
 								// Show the context menu item only if there is 1 object selected.
 								shellFrame.Commands.SetCommandState(
