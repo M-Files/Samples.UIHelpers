@@ -69,7 +69,7 @@ namespace UIHelpers.ViewAllMetadata
                     )
                     ?? new ResourceStrings(),
                 EnableEditing = this.Configuration?.EnableEditing ?? false,
-                DefaultLocation = this.Configuration?.AdvancedConfiguration?.DefaultLocation ?? Location.BottomPane
+                DefaultLocation = this.Configuration?.AdvancedConfiguration?.DefaultLocation ?? WindowLocation.BottomPane
             };
             if (this.Configuration?.AdvancedConfiguration?.AllowedLocations?.Any() ?? false)
             {

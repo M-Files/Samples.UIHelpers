@@ -17,11 +17,11 @@ namespace UIHelpers.ViewAllMetadata
         (
             Label = ResourceMarker.Id + nameof(Resources.Configuration.DefaultLocation_Label),
             HelpText = ResourceMarker.Id + nameof(Resources.Configuration.DefaultLocation_HelpText),
-            DefaultValue = Location.BottomPane
+            DefaultValue = WindowLocation.BottomPane
         )]
         [ValueOptions(typeof(LocationProvider.UIHelpersLocationProvider))]
-        public Location DefaultLocation { get; set; }
-            = Location.BottomPane;
+        public WindowLocation DefaultLocation { get; set; }
+            = WindowLocation.BottomPane;
 
         [DataMember]
         [JsonConfEditor
@@ -43,13 +43,13 @@ namespace UIHelpers.ViewAllMetadata
         public Dictionary<string, LanguageOverride> LanguageOverrides { get; set; }
             = new Dictionary<string, LanguageOverride>();
 
-        public IEnumerable<Location> AllowedLocations
+        public IEnumerable<WindowLocation> AllowedLocations
         {
             get
             {
                 var provider = new LocationProvider.UIHelpersLocationProvider();
-                return Enum.GetNames(typeof(Location))
-                  .Select(n => new Tuple<string, Location, bool?>(n, (Location)Enum.Parse(typeof(Location), n), null))
+                return Enum.GetNames(typeof(WindowLocation))
+                  .Select(n => new Tuple<string, WindowLocation, bool?>(n, (WindowLocation)Enum.Parse(typeof(WindowLocation), n), null))
                   .Where(n =>
                   {
                       // Is it explicitly configured?

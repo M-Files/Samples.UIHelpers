@@ -57,15 +57,16 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Configuration\Configuration.cs" />
-    <Compile Include="ModuleBase.cs" />
-    <Compile Include="ViewAllMetadata\Configuration\AccessRestrictionType.cs" />
-    <Compile Include="ViewAllMetadata\Configuration\AdvancedConfiguration.cs" />
-    <Compile Include="ViewAllMetadata\Configuration\Configuration.cs" />
-    <Compile Include="ViewAllMetadata\Configuration\CustomAccessRestrictionTypeConfiguration.cs" />
-    <Compile Include="ViewAllMetadata\Configuration\ICanPerformCustomValidation.cs" />
+    <Compile Include="Locations\LocationProvider.cs" />
+    <Compile Include="Modules\ModuleBase.cs" />
+    <Compile Include="Modules\ViewAllMetadata\Configuration\AccessRestrictionType.cs" />
+    <Compile Include="Modules\ViewAllMetadata\Configuration\AdvancedConfiguration.cs" />
+    <Compile Include="Modules\ViewAllMetadata\Configuration\Configuration.cs" />
+    <Compile Include="Modules\ViewAllMetadata\Configuration\CustomAccessRestrictionTypeConfiguration.cs" />
+    <Compile Include="Modules\ViewAllMetadata\Configuration\ICanPerformCustomValidation.cs" />
     <Compile Include="Languages\LanguageOverride.cs" />
     <Compile Include="Languages\LanguageProvider.cs" />
-    <Compile Include="Location.cs" />
+    <Compile Include="Locations\WindowLocation.cs" />
     <Compile Include="Configuration\UsesResourcesAttribute.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Resources\Configuration.Designer.cs">
@@ -84,8 +85,8 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>UIResources.resx</DependentUpon>
     </Compile>
-    <Compile Include="ViewAllMetadata\Module.cs" />
-    <Compile Include="ViewAllMetadata\UIXConfiguration\UIXConfiguration.cs" />
+    <Compile Include="Modules\ViewAllMetadata\Module.cs" />
+    <Compile Include="Modules\ViewAllMetadata\UIXConfiguration\UIXConfiguration.cs" />
     <Compile Include="VaultApplication.cs" />
   </ItemGroup>
   <ItemGroup>

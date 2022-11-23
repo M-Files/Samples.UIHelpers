@@ -9,18 +9,6 @@ using System.Resources;
 
 namespace UIHelpers
 {
-    public enum Location
-    {
-        [JsonConfEditor(Label = ResourceMarker.Id + nameof(Resources.Configuration.Location_BottomPane))]
-        BottomPane = 0,
-
-        [JsonConfEditor(Label = ResourceMarker.Id + nameof(Resources.Configuration.Location_NewTab))]
-        NewTab = 1,
-
-        [JsonConfEditor(Label = ResourceMarker.Id + nameof(Resources.Configuration.Location_PopOut))]
-        PopOut = 2
-    }
-
     public class LocationProvider
         : IObjectEditorMembersProvider, IStableValueOptionsProvider
     {
@@ -30,31 +18,31 @@ namespace UIHelpers
             public UIHelpersLocationProvider()
                 : base
                 (
-                    new[] { Location.BottomPane, Location.NewTab, Location.PopOut },
-                    new Location[0]
+                    new[] { WindowLocation.BottomPane, WindowLocation.NewTab, WindowLocation.PopOut },
+                    new WindowLocation[0]
                 )
             {
 
             }
         }
-        public Dictionary<Location, bool> EnabledByDefault { get; }
-            = new Dictionary<Location, bool>();
-        public HashSet<Location> HiddenLocations { get; }
-            = new HashSet<Location>();
+        public Dictionary<WindowLocation, bool> EnabledByDefault { get; }
+            = new Dictionary<WindowLocation, bool>();
+        public HashSet<WindowLocation> HiddenLocations { get; }
+            = new HashSet<WindowLocation>();
 
         public LocationProvider() { }
         public LocationProvider
         (
-            IEnumerable<Location> enabledByDefault,
-            IEnumerable<Location> hiddenLocations
+            IEnumerable<WindowLocation> enabledByDefault,
+            IEnumerable<WindowLocation> hiddenLocations
         )
             : this()
         {
-            foreach (var l in enabledByDefault ?? Enumerable.Empty<Location>())
+            foreach (var l in enabledByDefault ?? Enumerable.Empty<WindowLocation>())
             {
                 this.EnabledByDefault.Add(l, true);
             }
-            foreach (var l in hiddenLocations ?? Enumerable.Empty<Location>())
+            foreach (var l in hiddenLocations ?? Enumerable.Empty<WindowLocation>())
             {
                 this.HiddenLocations.Add(l);
             }
@@ -68,7 +56,7 @@ namespace UIHelpers
         )
         {
             var members = new SortedList<string, ObjectEditorMember>();
-            foreach (Location v in Enum.GetValues(typeof(Location)))
+            foreach (WindowLocation v in Enum.GetValues(typeof(WindowLocation)))
             {
                 // Skip hidden ones.
                 if (this.HiddenLocations.Contains(v))
@@ -77,7 +65,7 @@ namespace UIHelpers
                 var label = v.ToString();
                 try
                 {
-                    var jsonConfAttribute = typeof(Location)
+                    var jsonConfAttribute = typeof(WindowLocation)
                         .GetMember(label)?
                         .FirstOrDefault()?
                         .GetCustomAttribute<JsonConfEditorAttribute>();
@@ -112,10 +100,10 @@ namespace UIHelpers
 
         public IEnumerable<ValueOption> GetOptions(IConfigurationRequestContext context)
         {
-            foreach (var m in this.GetMembers(typeof(Location), context, null))
+            foreach (var m in this.GetMembers(typeof(WindowLocation), context, null))
             {
                 var jsonConfEditorAttribute = m.Attributes.Where(a => a is JsonConfEditorAttribute).FirstOrDefault() as JsonConfEditorAttribute;
-                var l = (Location)Enum.Parse(typeof(Location), m.Key);
+                var l = (WindowLocation)Enum.Parse(typeof(WindowLocation), m.Key);
                 yield return new ValueOption()
                 {
                     Value = l,

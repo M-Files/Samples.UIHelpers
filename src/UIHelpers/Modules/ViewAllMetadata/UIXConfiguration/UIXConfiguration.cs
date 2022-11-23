@@ -15,13 +15,13 @@ namespace UIHelpers.ViewAllMetadata
         public bool EnableEditing { get; set; }
 
         [DataMember]
-        public Location DefaultLocation { get; set; }
-            = Location.BottomPane;
+        public WindowLocation DefaultLocation { get; set; }
+            = WindowLocation.BottomPane;
         [DataMember]
-        public Location[] AllowedLocations { get; set; } 
+        public WindowLocation[] AllowedLocations { get; set; } 
             = new []
             {
-                Location.BottomPane
+                WindowLocation.BottomPane
             };
     }
 }
