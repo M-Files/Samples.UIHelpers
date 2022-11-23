@@ -6,6 +6,7 @@
 	var registrationCallback = null;
 	var bottomTab;
 	var sideTab;
+	var shown = false;
 	var tabClosedExplicitly = false;
 	var shellFrame = null;
 
@@ -38,6 +39,9 @@
 		if (currentLocation == newLocation)
 			return;
 
+		// Was it shown?
+		var s = shown;
+
 		// Close.
 		t.close(true);
 
@@ -46,7 +50,8 @@
 		registrationCallback = null;
 
 		// Show.
-		t.show(true);
+		if(s)
+			t.show(true);
 	};
 
 	var allowedLocations = [0];
@@ -60,6 +65,7 @@
 
 	t.close = function (explicit)
 	{
+		shown = false;
 		tabClosedExplicitly = explicit;
 
 		switch (currentLocation)
@@ -162,6 +168,7 @@
 
 						break;
 				}
+				shown = true;
 				return true;
 			}
 			catch (e)
@@ -240,6 +247,8 @@
 
 				break;
 		}
+		shown = true;
+		return true;
 	};
 
 	function newNormalShellFrameHandler(sf)
