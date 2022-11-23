@@ -19,7 +19,7 @@ namespace UIHelpers.ShowPreview
             HelpText = ResourceMarker.Id + nameof(Resources.Configuration.DefaultLocation_HelpText),
             DefaultValue = WindowLocation.BottomPane
         )]
-        [ValueOptions(typeof(LocationProvider.UIHelpersLocationProvider))]
+        [ValueOptions(typeof(LocationProvider.ViewAllMetadataLocationProvider))]
         public WindowLocation DefaultLocation { get; set; }
             = WindowLocation.BottomPane;
 
@@ -29,7 +29,7 @@ namespace UIHelpers.ShowPreview
             Label = ResourceMarker.Id + nameof(Resources.Configuration.ConfiguredLocations_Label),
             HelpText = ResourceMarker.Id + nameof(Resources.Configuration.ConfiguredLocations_HelpText)
         )]
-        [ObjectMembers(typeof(LocationProvider.UIHelpersLocationProvider))]
+        [ObjectMembers(typeof(LocationProvider.ShowPreviewLocationProvider))]
         public Dictionary<string, bool> ConfiguredLocations { get; set; }
             = new Dictionary<string, bool>();
 
@@ -47,7 +47,7 @@ namespace UIHelpers.ShowPreview
         {
             get
             {
-                var provider = new LocationProvider.UIHelpersLocationProvider();
+                var provider = new LocationProvider.ShowPreviewLocationProvider();
                 return Enum.GetNames(typeof(WindowLocation))
                   .Select(n => new Tuple<string, WindowLocation, bool?>(n, (WindowLocation)Enum.Parse(typeof(WindowLocation), n), null))
                   .Where(n =>

@@ -31,7 +31,9 @@
 			Commands_ShowAllMetadata: "Show all metadata",
 			Buttons_Close: "Close",
 			Buttons_Discard: "Discard",
-			Buttons_Save: "Save"
+			Buttons_Save: "Save",
+			TabIDs_RawMetadata: "showAllMetadata",
+			TabTitles_RawMetadata: "Raw Metadata"
 		},
 		EnableEditing: false,
 		DefaultLocation: 0,
@@ -55,19 +57,19 @@
 		{
 			shellUI.Vault.Async.ExtensionMethodOperations.DoesActiveVaultExtensionMethodExist
 			(
-				"ViewAllMetadata.ShouldShowAllMetadata",
+				"ViewAllMetadata.ShouldShow",
 				function (result)
 				{
 					// If we didn't find it then fail.
 					if (!result)
 					{
-						console.error("VEM ViewAllMetadata.ShouldShowAllMetadata not found.");
+						console.error("VEM ViewAllMetadata.ShouldShow not found.");
 						return;
 					}
 
 					shellUI.Vault.Async.ExtensionMethodOperations.ExecuteVaultExtensionMethod
 					(
-						"ViewAllMetadata.ShouldShowAllMetadata",
+						"ViewAllMetadata.ShouldShow",
 						"",
 						function (output)
 						{

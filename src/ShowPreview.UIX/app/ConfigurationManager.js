@@ -31,9 +31,10 @@
 			Commands_ShowAllMetadata: "Show all metadata",
 			Buttons_Close: "Close",
 			Buttons_Discard: "Discard",
-			Buttons_Save: "Save"
+			Buttons_Save: "Save",
+			TabIDs_ShowPreview: "showPreview",
+			TabTitles_ShowPreview: "Show Preview"
 		},
-		EnableEditing: false,
 		DefaultLocation: 0,
 		AllowedLocations: []
 	}
@@ -55,19 +56,19 @@
 		{
 			shellUI.Vault.Async.ExtensionMethodOperations.DoesActiveVaultExtensionMethodExist
 			(
-				"ViewAllMetadata.ShouldShowAllMetadata",
+				"ShowPreview.ShouldShow",
 				function (result)
 				{
 					// If we didn't find it then fail.
 					if (!result)
 					{
-						console.error("VEM ViewAllMetadata.ShouldShowAllMetadata not found.");
+						console.error("VEM ShowPreview.ShouldShow not found.");
 						return;
 					}
 
 					shellUI.Vault.Async.ExtensionMethodOperations.ExecuteVaultExtensionMethod
 					(
-						"ViewAllMetadata.ShouldShowAllMetadata",
+						"ShowPreview.ShouldShow",
 						"",
 						function (output)
 						{
@@ -76,20 +77,20 @@
 								return;
 							shellUI.Vault.Async.ExtensionMethodOperations.DoesActiveVaultExtensionMethodExist
 							(
-								"ViewAllMetadata.GetUIXConfiguration",
+								"ShowPreview.GetUIXConfiguration",
 								function (result)
 								{
 									// If we didn't find it then fail.
 									if (!result)
 									{
-										console.error("VEM ViewAllMetadata.GetUIXConfiguration not found.");
+										console.error("VEM ShowPreview.GetUIXConfiguration not found.");
 										return;
 									}
 
 									// Pass the language to the server to get the translations.
 									shellUI.Vault.Async.ExtensionMethodOperations.ExecuteVaultExtensionMethod
 										(
-											"ViewAllMetadata.GetUIXConfiguration",
+											"ShowPreview.GetUIXConfiguration",
 											lang,
 											function (output)
 											{

@@ -31,15 +31,6 @@ namespace UIHelpers.ShowPreview
         public AccessRestrictionType AccessRestrictionType { get; set; }
             = AccessRestrictionType.ByVaultRights;
 
-        // TODO: Editing
-        //[DataMember]
-        //[JsonConfEditor
-        //(
-        //    Label = ResourceMarker.Id + nameof(Resources.Configuration.EnableEditing_Label),
-        //    DefaultValue = false
-        //)]
-        public bool EnableEditing{ get; set; }
-
         [DataMember]
         [JsonConfEditor
         (
@@ -128,6 +119,8 @@ namespace UIHelpers.ShowPreview
                     }
                 default:
                     {
+                        if (this.RequiredAccessRights == MFVaultAccess.MFVaultAccessNone)
+                            return true;
                         return sessionInfo.CheckVaultAccess(this.RequiredAccessRights);
                     }
             }

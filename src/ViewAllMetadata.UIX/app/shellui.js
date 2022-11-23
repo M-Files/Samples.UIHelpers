@@ -38,8 +38,13 @@ function OnNewShellUI(shellUI)
 			Orchestrator.EventTypes.ConfigurationLoaded,
 			function (config)
 			{
-				var showAllMetadataCommandId = null;
-				showAllMetadataCommandId = orchestrator.createCustomCommand
+				// Set the tab IDs and title.
+				orchestrator.getWindowManager().setTabId(config.ResourceStrings.TabIDs_RawMetadata);
+				orchestrator.getWindowManager().setTabTitle(config.ResourceStrings.TabTitles_RawMetadata);
+
+				// Create our command.
+				var commandId = null;
+				commandId = orchestrator.createCustomCommand
 					(
 						{
 							text: config.ResourceStrings.Commands_ShowAllMetadata,
@@ -67,7 +72,7 @@ function OnNewShellUI(shellUI)
 
 								// Show the context menu item only if there is 1 object selected.
 								shellFrame.Commands.SetCommandState(
-									showAllMetadataCommandId,
+									commandId,
 									CommandLocation_All,
 									isOneObjectSelected ? CommandState_Active : CommandState_Hidden
 								);

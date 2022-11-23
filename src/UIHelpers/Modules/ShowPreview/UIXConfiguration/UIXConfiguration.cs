@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 
-namespace UIHelpers.ViewAllMetadata
+namespace UIHelpers.ShowPreview
 {
     [DataContract]
     public class UIXConfiguration
@@ -10,9 +10,6 @@ namespace UIHelpers.ViewAllMetadata
         [DataMember]
         public ResourceStrings ResourceStrings { get; set; }
             = new ResourceStrings();
-
-        [DataMember]
-        public bool EnableEditing { get; set; }
 
         [DataMember]
         public WindowLocation DefaultLocation { get; set; }
@@ -23,7 +20,6 @@ namespace UIHelpers.ViewAllMetadata
             = new []
             {
                 WindowLocation.BottomPane,
-                WindowLocation.NewTab,
                 WindowLocation.PopOut
             };
     }

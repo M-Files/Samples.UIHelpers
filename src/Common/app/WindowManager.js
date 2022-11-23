@@ -2,6 +2,8 @@
 {
     console.log("Window manager activated");
 
+	var tabId = null;
+	var tabTitle = null;
 	var t = this;
 	var registrationCallback = null;
 	var bottomTab;
@@ -9,6 +11,8 @@
 	var shown = false;
 	var tabClosedExplicitly = false;
 	var shellFrame = null;
+	t.setTabId = function (v) { tabId = v; }
+	t.setTabTitle = function (v) { tabTitle = v; }
 
 	var eventListeners = {};
 	t.addEventListener = function (eventType, callback)
@@ -101,6 +105,13 @@
     
 	t.show = function (allowUICreation)
 	{
+		// If we don't have a tab id or title then fail (can happen before config loaded)
+		if (null == tabId || null == tabTitle)
+		{
+			console.warn("tab ID and title not yet loaded.")
+			return;
+		}
+
 		// If the tab were closed, but we can re-create the UI, then set it to false.
 		if (tabClosedExplicitly && allowUICreation)
 		{
@@ -193,7 +204,7 @@
 				if (null == bottomTab)
 				{
 					console.log("Creating bottom tab");
-					bottomTab = shellFrame.BottomPane.AddTab("showAllMetadata", "Raw Metadata", "");
+					bottomTab = shellFrame.BottomPane.AddTab(tabId, tabTitle, "");
 				}
 
 				// Show the bottom pane.
@@ -217,7 +228,7 @@
 				if (null == sideTab)
 				{
 					console.log("Creating bottom tab");
-					sideTab = shellFrame.RightPane.AddTab("showAllMetadata", "Raw Metadata", "");
+					sideTab = shellFrame.RightPane.AddTab(tabId, tabTitle, "");
 				}
 
 				// Show the side pane.

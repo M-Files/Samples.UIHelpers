@@ -175,25 +175,25 @@
     <value>The text shown on the "close" button in the dashboard</value>
   </data>
   <data name="UI_Commands_Buttons_Close_Label" xml:space="preserve">
-    <value>Close</value>
+    <value>Close (button)</value>
   </data>
   <data name="UI_Commands_Buttons_Discard_HelpText" xml:space="preserve">
     <value>The text shown on the "discard" button in the dashboard</value>
   </data>
   <data name="UI_Commands_Buttons_Discard_Label" xml:space="preserve">
-    <value>Discard</value>
+    <value>Discard (button)</value>
   </data>
   <data name="UI_Commands_Buttons_Save_HelpText" xml:space="preserve">
     <value>The text shown on the "save" button in the dashboard</value>
   </data>
   <data name="UI_Commands_Buttons_Save_Label" xml:space="preserve">
-    <value>Save</value>
+    <value>Save (button)</value>
   </data>
   <data name="UI_Commands_ShowAllMetadata_HelpText" xml:space="preserve">
     <value>Command button text, shown in the context menu</value>
   </data>
   <data name="UI_Commands_ShowAllMetadata_Label" xml:space="preserve">
-    <value>Show all metadata</value>
+    <value>Show all metadata (Command text)</value>
   </data>
   <data name="UI_Commands_ShowBelowListing_HelpText" xml:space="preserve">
     <value>The text shown when hovering over the "show below listing" icon</value>
@@ -212,6 +212,24 @@
   </data>
   <data name="UI_Commands_ShowInTabOnRight_Label" xml:space="preserve">
     <value>Show in tab on right</value>
+  </data>
+  <data name="UI_Commands_ShowPreview_HelpText" xml:space="preserve">
+    <value />
+  </data>
+  <data name="UI_Commands_ShowPreview_Label" xml:space="preserve">
+    <value>Show preview (Command text)</value>
+  </data>
+  <data name="UI_TabTitles_RawMetadata_HelpText" xml:space="preserve">
+    <value />
+  </data>
+  <data name="UI_TabTitles_RawMetadata_Label" xml:space="preserve">
+    <value>Tab title (Raw metadata)</value>
+  </data>
+  <data name="UI_TabTitles_ShowPreview_HelpText" xml:space="preserve">
+    <value />
+  </data>
+  <data name="UI_TabTitles_ShowPreview_Label" xml:space="preserve">
+    <value>Tab title (Show preview)</value>
   </data>
   <data name="UserConfiguration_Label" xml:space="preserve">
     <value>User Configuration</value>

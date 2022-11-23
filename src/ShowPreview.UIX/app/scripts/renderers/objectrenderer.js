@@ -3,57 +3,14 @@ function ObjectRenderer(dashboard)
 {
     var renderer = this;
     renderer.dashboard = dashboard;
-    var propertyValueRenderers = [];
-    function getOrderedProperties(objectClass, objectProperties)
-    {
-        var renderedPropertyDefs = [];
-        var properties = [];
 
-        // Class is always first.
-        properties.push({ propertyDef: 100, isRequired: true, isRemovable: false });
-        renderedPropertyDefs.push(100);
+    // Add the previewer.
+    $(".preview")
+        .append($("<object id='previewer' classid='clsid:" + MFiles.CLSID.PreviewerCtrl + "'></object>"));
+    var previewerDomElement = $("body #previewer").get(0);
 
-        // Then properties from the class, in the order they
-        // appear in the associated property defs collection.
-        for (var i = 0; i < objectClass.AssociatedPropertyDefs.Count; i++)
-        {
-            var associatedPropertyDef = objectClass.AssociatedPropertyDefs[i];
-
-            // Skip built-in properties.
-            if (associatedPropertyDef.PropertyDef < 1000 && associatedPropertyDef.PropertyDef != 0 && associatedPropertyDef.PropertyDef != 100)
-                continue;
-
-            // Add in the property.
-            properties.push({ propertyDef: associatedPropertyDef.PropertyDef, isRequired: associatedPropertyDef.Required, isRemovable: false });
-            renderedPropertyDefs.push(associatedPropertyDef.PropertyDef);
-        }
-
-        // Then anything else.
-        for (var i = 0; i < objectProperties.Count; i++)
-        {
-            var p = objectProperties[i];
-
-            // Skip rendered ones.
-            if (renderedPropertyDefs.indexOf(p.PropertyDef) > -1)
-                continue;
-
-            // Skip built-in properties.
-            if (p.PropertyDef < 1000 && p.PropertyDef != 0 && p.PropertyDef != 100)
-                continue;
-
-            // If this is the name or title and we have another property set for that on the class then skip.
-            if (p.propertyDef == 0 && objectClass.NamePropertyDef > 0)
-                continue;
-
-            // Add in the property.
-            properties.push({ propertyDef: p.PropertyDef, isRequired: false, isRemovable: true });
-            renderedPropertyDefs.push(p.PropertyDef);
-        }
-
-        // Return the array of properties to render.
-        return properties;
-    }
     var originalObject = null;
+    var currentPath = null;
     renderer.render = function (selectedItem)
     {
         renderer.originalObject = selectedItem;
@@ -70,54 +27,35 @@ function ObjectRenderer(dashboard)
         // Set the title.
         $("#title").text(selectedItem.VersionData.Title)
 
-        // Clear the rendered properties.
-        var $propertiesList = $("ol.properties");
-        $propertiesList.empty();
-        propertyValueRenderers = [];
-
-        // Render the properties.
-        var properties = getOrderedProperties
-        (
-            dashboard.CustomData.vaultStructureManager.getObjectClass(selectedItem.VersionData.Class),
-            selectedItem.Properties
-        );
-        for (var i = 0; i < properties.length; i++)
+        // Get the files.
+        var files = dashboard.Vault.ObjectFileOperations.GetFiles(selectedItem.VersionData.ObjVer);
+        if (1 != files.Count)
         {
-            var property = properties[i];
+            return;
+        }
+        var file = files.Item(1);
 
-            // Get the property definition details.
-            var propertyDef = dashboard.CustomData.vaultStructureManager.getPropertyDefinition(property.propertyDef);
-            if (null == propertyDef)
-                continue;
+        // Get the path.
+        var newPath = dashboard.Vault.ObjectFileOperations.GetPathInDefaultView(selectedItem.VersionData.ObjVer.ObjID,
+            selectedItem.VersionData.ObjVer.Version,
+            file.ID,
+            file.Version,
+            0,
+            false);
 
-            // Get the property value.
-            var propertyIndex = selectedItem.Properties.IndexOf(propertyDef.ID);
-            if (-1 == propertyIndex)
-                continue;
-            var propertyValue = selectedItem.Properties[propertyIndex - 1];
+        if (currentPath == newPath)
+            return;
 
-            // Render.
-            var propertyValueRenderer = new PropertyValueRenderer
-                (
-                dashboard,
-                propertyDef,
-                propertyValue,
-                property.isRequired,
-                $propertiesList
-            );
-            propertyValueRenderer.render();
-            propertyValueRenderers.push(propertyValueRenderer);
+        // Set the previewer.
+        try
+        {
+            previewerDomElement.ShowFilePreview(newPath);
+            currentPath = newPath;
+        }
+        catch (e)
+        {
         }
     }
-
-    // When the body is clicked, undo any editing.
-    $("body").click(function ()
-    {
-        for (var i = 0; i < propertyValueRenderers.length; i++)
-        {
-            propertyValueRenderers[i].exitEditMode();
-        }
-    });
 
     // Configure the close button.
     $("#btnClose").click(function ()
@@ -127,18 +65,6 @@ function ObjectRenderer(dashboard)
         if(null != dashboard.Window)
             dashboard.Window.Close();
     }).text(dashboard.CustomData.configuration.ResourceStrings.Buttons_Close || "Close");
-
-    // Configure the save button.
-    $("#btnSave").click(function ()
-    {
-        alert("Save not done yet.");
-    }).text(dashboard.CustomData.configuration.ResourceStrings.Buttons_Save || "Save");
-
-    // Configure the discard button.
-    $("#btnDiscard").click(function ()
-    {
-        renderer.render(renderer.originalObject);
-    }).text(dashboard.CustomData.configuration.ResourceStrings.Buttons_Discard || "Discard");
 
     // Configure the locations buttons
     function isLocationAllowed(location)

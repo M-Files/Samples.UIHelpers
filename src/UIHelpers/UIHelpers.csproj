@@ -56,19 +56,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Configuration\AdvancedConfiguration.cs" />
     <Compile Include="Configuration\Configuration.cs" />
     <Compile Include="Locations\LocationProvider.cs" />
     <Compile Include="Modules\ModuleBase.cs" />
     <Compile Include="Modules\ShowPreview\Configuration\AdvancedConfiguration.cs" />
     <Compile Include="Modules\ShowPreview\Configuration\Configuration.cs" />
-    <Compile Include="Modules\ShowPreview\Configuration\LanguageOverride.cs" />
+    <Compile Include="Modules\ShowPreview\UIXConfiguration\UIXConfiguration.cs" />
     <Compile Include="Modules\ShowPreview\Module.cs" />
     <Compile Include="Configuration\AccessRestrictionType.cs" />
     <Compile Include="Modules\ViewAllMetadata\Configuration\AdvancedConfiguration.cs" />
     <Compile Include="Modules\ViewAllMetadata\Configuration\Configuration.cs" />
     <Compile Include="Configuration\CustomAccessRestrictionTypeConfiguration.cs" />
     <Compile Include="ICanPerformCustomValidation.cs" />
-    <Compile Include="Modules\ViewAllMetadata\Configuration\LanguageOverride.cs" />
+    <Compile Include="Configuration\LanguageOverride.cs" />
     <Compile Include="Languages\LanguageProvider.cs" />
     <Compile Include="Locations\WindowLocation.cs" />
     <Compile Include="Configuration\UsesResourcesAttribute.cs" />

@@ -31,6 +31,18 @@
     <Content Include="..\Common\app\console-shellui.js">
       <Link>app\console-shellui.js</Link>
     </Content>
+    <Content Include="..\Common\app\images\bottom-pane.png">
+      <Link>app\images\bottom-pane.png</Link>
+    </Content>
+    <Content Include="..\Common\app\images\icon-edit.png">
+      <Link>app\images\icon-edit.png</Link>
+    </Content>
+    <Content Include="..\Common\app\images\new-window.png">
+      <Link>app\images\new-window.png</Link>
+    </Content>
+    <Content Include="..\Common\app\images\right-tab.png">
+      <Link>app\images\right-tab.png</Link>
+    </Content>
     <Content Include="..\Common\app\json2.js">
       <Link>app\json2.js</Link>
     </Content>
@@ -50,10 +62,6 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="app\dashboard\dashboard.css" />
-    <Content Include="app\images\bottom-pane.png" />
-    <Content Include="app\images\right-tab.png" />
-    <Content Include="app\images\icon-edit.png" />
-    <Content Include="app\images\new-window.png" />
     <Content Include="app\ConfigurationManager.js" />
     <Content Include="app\scripts\renderers\objectrenderer.js" />
     <Content Include="app\scripts\renderers\propertyvaluerenderer.js" />

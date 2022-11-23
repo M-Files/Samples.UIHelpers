@@ -27,7 +27,7 @@
 	</modules>
 	<dashboards>
 		<dashboard id="Dashboard">
-			<content>dashboard/my-dashboard.html</content>
+			<content>dashboard/dashboard.html</content>
 			<allow-selection>true</allow-selection>
 		</dashboard>
 	</dashboards>

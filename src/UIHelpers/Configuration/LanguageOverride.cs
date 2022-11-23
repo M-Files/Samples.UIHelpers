@@ -1,7 +1,7 @@
 ﻿using MFiles.VAF.Configuration;
 using System.Runtime.Serialization;
 
-namespace UIHelpers.ViewAllMetadata
+namespace UIHelpers
 {
     [DataContract]
     [UsesResources(typeof(Resources.Configuration))]
@@ -11,11 +11,38 @@ namespace UIHelpers.ViewAllMetadata
         [DataMember]
         [JsonConfEditor
         (
+            Label = ResourceMarker.Id + nameof(Resources.Configuration.UI_TabTitles_RawMetadata_Label),
+            HelpText = ResourceMarker.Id + nameof(Resources.Configuration.UI_TabTitles_RawMetadata_HelpText),
+            DefaultValue = "Raw metadata"
+        )]
+        public string TabTitles_RawMetadata { get; set; } = "Raw metadata";
+
+        [DataMember]
+        [JsonConfEditor
+        (
+            Label = ResourceMarker.Id + nameof(Resources.Configuration.UI_TabTitles_ShowPreview_Label),
+            HelpText = ResourceMarker.Id + nameof(Resources.Configuration.UI_TabTitles_ShowPreview_HelpText),
+            DefaultValue = "Preview"
+        )]
+        public string TabTitles_ShowPreview { get; set; } = "Preview";
+
+        [DataMember]
+        [JsonConfEditor
+        (
             Label = ResourceMarker.Id + nameof(Resources.Configuration.UI_Commands_ShowAllMetadata_Label),
             HelpText = ResourceMarker.Id + nameof(Resources.Configuration.UI_Commands_ShowAllMetadata_HelpText),
             DefaultValue = "Show all metadata"
         )]
-        public string Commands_ShowAllMetadata { get; set; }
+        public string Commands_ShowAllMetadata { get; set; } = "Show all metadata";
+
+        [DataMember]
+        [JsonConfEditor
+        (
+            Label = ResourceMarker.Id + nameof(Resources.Configuration.UI_Commands_ShowPreview_Label),
+            HelpText = ResourceMarker.Id + nameof(Resources.Configuration.UI_Commands_ShowPreview_HelpText),
+            DefaultValue = "Show (separate) preview"
+        )]
+        public string Commands_ShowPreview { get; set; } = "Show (separate) preview";
 
         [DataMember]
         [JsonConfEditor

@@ -81,15 +81,15 @@ namespace UIHelpers.ViewAllMetadata
         }
 
         /// <summary>
-        /// Registers a Vault Extension Method with name "ViewAllMetadata.ShouldShowAllMetadata".
+        /// Registers a Vault Extension Method with name "ViewAllMetadata.ShouldShow".
         /// Users must have at least MFVaultAccess.MFVaultAccessNone access to execute the method.
         /// </summary>
         /// <param name="env">The vault/object environment.</param>
         /// <returns>The any output from the vault extension method execution.</returns>
         /// <remarks>The input to the vault extension method is available in <see cref="EventHandlerEnvironment.Input"/>.</remarks>
-        [VaultExtensionMethod("ViewAllMetadata.ShouldShowAllMetadata",
+        [VaultExtensionMethod("ViewAllMetadata.ShouldShow",
             RequiredVaultAccess = MFVaultAccess.MFVaultAccessNone)]
-        private string ShouldShowAllMetadata(EventHandlerEnvironment env)
+        private string ShouldShow(EventHandlerEnvironment env)
         {
             // If the module is disabled then return disabled.
             if (false == (this.Configuration?.Enabled ?? false))

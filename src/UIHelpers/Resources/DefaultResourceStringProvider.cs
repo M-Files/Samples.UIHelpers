@@ -26,6 +26,10 @@ namespace UIHelpers
             // Create the instance.
             var resourceStrings = new ResourceStrings();
 
+            // Add the tab IDs.
+            resourceStrings.Add("TabIDs_RawMetadata", "rawMetadata");
+            resourceStrings.Add("TabIDs_ShowPreview", "showPreview");
+
             // Ensure that we have a valid value.
             var cultureCode = this.ConvertUILanguageToLanguageCode(languageCode);
 
@@ -75,6 +79,10 @@ namespace UIHelpers
                         resourceStrings.AddOrUpdate(nameof(languageOverride.Location_ShowInTabOnRight), languageOverride.Location_ShowInTabOnRight);
                     if (false == string.IsNullOrWhiteSpace(languageOverride.Location_ShowInPopOutWindow))
                         resourceStrings.AddOrUpdate(nameof(languageOverride.Location_ShowInPopOutWindow), languageOverride.Location_ShowInPopOutWindow);
+                    if (false == string.IsNullOrWhiteSpace(languageOverride.TabTitles_RawMetadata))
+                        resourceStrings.AddOrUpdate(nameof(languageOverride.TabTitles_RawMetadata), languageOverride.TabTitles_RawMetadata);
+                    if (false == string.IsNullOrWhiteSpace(languageOverride.TabTitles_ShowPreview))
+                        resourceStrings.AddOrUpdate(nameof(languageOverride.TabTitles_ShowPreview), languageOverride.TabTitles_ShowPreview);
                 }
             }
 

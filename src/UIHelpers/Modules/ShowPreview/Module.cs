@@ -46,61 +46,60 @@ namespace UIHelpers.ShowPreview
             base.InitializeApplication(vault);
         }
 
-        ///// <summary>
-        ///// Registers a Vault Extension Method with name "ViewAllMetadata.GetUIXConfiguration".
-        ///// Users must have at least MFVaultAccess.MFVaultAccessNone access to execute the method.
-        ///// </summary>
-        ///// <param name="env">The vault/object environment.</param>
-        ///// <returns>The any output from the vault extension method execution.</returns>
-        ///// <remarks>The input to the vault extension method is available in <see cref="EventHandlerEnvironment.Input"/>.</remarks>
-        //[VaultExtensionMethod("ViewAllMetadata.GetUIXConfiguration",
-        //    RequiredVaultAccess = MFVaultAccess.MFVaultAccessNone)]
-        //private string GetUIXConfiguration(EventHandlerEnvironment env)
-        //{
-        //    // Create and populate the configuration.
-        //    var configuration = new UIXConfiguration()
-        //    {
-        //        // Create the resource strings from the provider, or default to none.
-        //        ResourceStrings =
-        //            this.VaultApplication.ResourceStringProvider?.Create
-        //            (
-        //                env.Input.ToLower(),
-        //                this.Configuration?.AdvancedConfiguration?.LanguageOverrides
-        //            )
-        //            ?? new ResourceStrings(),
-        //        EnableEditing = this.Configuration?.EnableEditing ?? false,
-        //        DefaultLocation = this.Configuration?.AdvancedConfiguration?.DefaultLocation ?? WindowLocation.BottomPane
-        //    };
-        //    if (this.Configuration?.AdvancedConfiguration?.AllowedLocations?.Any() ?? false)
-        //    {
-        //        configuration.AllowedLocations = this.Configuration.AdvancedConfiguration.AllowedLocations.ToArray();
-        //    }
+        /// <summary>
+        /// Registers a Vault Extension Method with name "ShowPreview.GetUIXConfiguration".
+        /// Users must have at least MFVaultAccess.MFVaultAccessNone access to execute the method.
+        /// </summary>
+        /// <param name="env">The vault/object environment.</param>
+        /// <returns>The any output from the vault extension method execution.</returns>
+        /// <remarks>The input to the vault extension method is available in <see cref="EventHandlerEnvironment.Input"/>.</remarks>
+        [VaultExtensionMethod("ShowPreview.GetUIXConfiguration",
+            RequiredVaultAccess = MFVaultAccess.MFVaultAccessNone)]
+        private string GetUIXConfiguration(EventHandlerEnvironment env)
+        {
+            // Create and populate the configuration.
+            var configuration = new UIXConfiguration()
+            {
+                // Create the resource strings from the provider, or default to none.
+                ResourceStrings =
+                    this.VaultApplication.ResourceStringProvider?.Create
+                    (
+                        env.Input.ToLower(),
+                        this.Configuration?.AdvancedConfiguration?.LanguageOverrides
+                    )
+                    ?? new ResourceStrings(),
+                DefaultLocation = this.Configuration?.AdvancedConfiguration?.DefaultLocation ?? WindowLocation.BottomPane
+            };
+            if (this.Configuration?.AdvancedConfiguration?.AllowedLocations?.Any() ?? false)
+            {
+                configuration.AllowedLocations = this.Configuration.AdvancedConfiguration.AllowedLocations.ToArray();
+            }
 
-        //    // Serialize the configuration for use in the UIX application.
-        //    return Newtonsoft.Json.JsonConvert.SerializeObject(configuration);
-        //}
+            // Serialize the configuration for use in the UIX application.
+            return Newtonsoft.Json.JsonConvert.SerializeObject(configuration);
+        }
 
-        ///// <summary>
-        ///// Registers a Vault Extension Method with name "ViewAllMetadata.ShouldShowAllMetadata".
-        ///// Users must have at least MFVaultAccess.MFVaultAccessNone access to execute the method.
-        ///// </summary>
-        ///// <param name="env">The vault/object environment.</param>
-        ///// <returns>The any output from the vault extension method execution.</returns>
-        ///// <remarks>The input to the vault extension method is available in <see cref="EventHandlerEnvironment.Input"/>.</remarks>
-        //[VaultExtensionMethod("ViewAllMetadata.ShouldShowAllMetadata",
-        //    RequiredVaultAccess = MFVaultAccess.MFVaultAccessNone)]
-        //private string ShouldShowAllMetadata(EventHandlerEnvironment env)
-        //{
-        //    // If the module is disabled then return disabled.
-        //    if (false == (this.Configuration?.Enabled ?? false))
-        //        return "false";
-        //    return
-        //    (
-        //        this.Configuration?
-        //            .UserIsAllowedAccess(env.Vault, env.CurrentUserSessionInfo) ?? false
-        //    )
-        //        .ToString()
-        //        .ToLower();
-        //}
+        /// <summary>
+        /// Registers a Vault Extension Method with name "ShowPreview.ShouldShow".
+        /// Users must have at least MFVaultAccess.MFVaultAccessNone access to execute the method.
+        /// </summary>
+        /// <param name="env">The vault/object environment.</param>
+        /// <returns>The any output from the vault extension method execution.</returns>
+        /// <remarks>The input to the vault extension method is available in <see cref="EventHandlerEnvironment.Input"/>.</remarks>
+        [VaultExtensionMethod("ShowPreview.ShouldShow",
+            RequiredVaultAccess = MFVaultAccess.MFVaultAccessNone)]
+        private string ShouldShow(EventHandlerEnvironment env)
+        {
+            // If the module is disabled then return disabled.
+            if (false == (this.Configuration?.Enabled ?? false))
+                return "false";
+            return
+            (
+                this.Configuration?
+                    .UserIsAllowedAccess(env.Vault, env.CurrentUserSessionInfo) ?? false
+            )
+                .ToString()
+                .ToLower();
+        }
     }
 }

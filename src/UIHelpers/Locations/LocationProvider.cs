@@ -12,10 +12,23 @@ namespace UIHelpers
     public class LocationProvider
         : IObjectEditorMembersProvider, IStableValueOptionsProvider
     {
-        public class UIHelpersLocationProvider
+        public class ShowPreviewLocationProvider
             : LocationProvider
         {
-            public UIHelpersLocationProvider()
+            public ShowPreviewLocationProvider()
+                : base
+                (
+                    new[] { WindowLocation.BottomPane, WindowLocation.PopOut },
+                    new WindowLocation[0]
+                )
+            {
+
+            }
+        }
+        public class ViewAllMetadataLocationProvider
+            : LocationProvider
+        {
+            public ViewAllMetadataLocationProvider()
                 : base
                 (
                     new[] { WindowLocation.BottomPane, WindowLocation.NewTab, WindowLocation.PopOut },

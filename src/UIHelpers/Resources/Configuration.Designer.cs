@@ -232,7 +232,7 @@ namespace UIHelpers.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Close.
+        ///   Looks up a localized string similar to Close (button).
         /// </summary>
         internal static string UI_Commands_Buttons_Close_Label {
             get {
@@ -250,7 +250,7 @@ namespace UIHelpers.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Discard.
+        ///   Looks up a localized string similar to Discard (button).
         /// </summary>
         internal static string UI_Commands_Buttons_Discard_Label {
             get {
@@ -268,7 +268,7 @@ namespace UIHelpers.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Save.
+        ///   Looks up a localized string similar to Save (button).
         /// </summary>
         internal static string UI_Commands_Buttons_Save_Label {
             get {
@@ -286,7 +286,7 @@ namespace UIHelpers.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Show all metadata.
+        ///   Looks up a localized string similar to Show all metadata (Command text).
         /// </summary>
         internal static string UI_Commands_ShowAllMetadata_Label {
             get {
@@ -345,6 +345,60 @@ namespace UIHelpers.Resources {
         internal static string UI_Commands_ShowInTabOnRight_Label {
             get {
                 return ResourceManager.GetString("UI_Commands_ShowInTabOnRight_Label", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        internal static string UI_Commands_ShowPreview_HelpText {
+            get {
+                return ResourceManager.GetString("UI_Commands_ShowPreview_HelpText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show preview (Command text).
+        /// </summary>
+        internal static string UI_Commands_ShowPreview_Label {
+            get {
+                return ResourceManager.GetString("UI_Commands_ShowPreview_Label", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        internal static string UI_TabTitles_RawMetadata_HelpText {
+            get {
+                return ResourceManager.GetString("UI_TabTitles_RawMetadata_HelpText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tab title (Raw metadata).
+        /// </summary>
+        internal static string UI_TabTitles_RawMetadata_Label {
+            get {
+                return ResourceManager.GetString("UI_TabTitles_RawMetadata_Label", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        internal static string UI_TabTitles_ShowPreview_HelpText {
+            get {
+                return ResourceManager.GetString("UI_TabTitles_ShowPreview_HelpText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tab title (Show preview).
+        /// </summary>
+        internal static string UI_TabTitles_ShowPreview_Label {
+            get {
+                return ResourceManager.GetString("UI_TabTitles_ShowPreview_Label", resourceCulture);
             }
         }
         

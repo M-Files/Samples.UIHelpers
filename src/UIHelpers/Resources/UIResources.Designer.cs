@@ -97,6 +97,15 @@ namespace UIHelpers.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Show preview.
+        /// </summary>
+        internal static string Commands_ShowPreview {
+            get {
+                return ResourceManager.GetString("Commands_ShowPreview", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Show below the listing.
         /// </summary>
         internal static string Location_ShowBelowListing {
@@ -120,6 +129,24 @@ namespace UIHelpers.Resources {
         internal static string Location_ShowInTabOnRight {
             get {
                 return ResourceManager.GetString("Location_ShowInTabOnRight", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Raw metadata.
+        /// </summary>
+        internal static string TabTitles_RawMetadata {
+            get {
+                return ResourceManager.GetString("TabTitles_RawMetadata", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show preview.
+        /// </summary>
+        internal static string TabTitles_ShowPreview {
+            get {
+                return ResourceManager.GetString("TabTitles_ShowPreview", resourceCulture);
             }
         }
     }

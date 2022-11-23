@@ -129,6 +129,9 @@
   <data name="Commands_ShowAllMetadata" xml:space="preserve">
     <value>Show all metadata</value>
   </data>
+  <data name="Commands_ShowPreview" xml:space="preserve">
+    <value>Show preview</value>
+  </data>
   <data name="Location_ShowBelowListing" xml:space="preserve">
     <value>Show below the listing</value>
   </data>
@@ -137,5 +140,11 @@
   </data>
   <data name="Location_ShowInTabOnRight" xml:space="preserve">
     <value>Show in tab on right</value>
+  </data>
+  <data name="TabTitles_RawMetadata" xml:space="preserve">
+    <value>Raw metadata</value>
+  </data>
+  <data name="TabTitles_ShowPreview" xml:space="preserve">
+    <value>Show preview</value>
   </data>
 </root>
