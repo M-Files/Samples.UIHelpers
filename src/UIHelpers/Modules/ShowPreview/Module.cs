@@ -65,7 +65,7 @@ namespace UIHelpers.ShowPreview
                     this.VaultApplication.ResourceStringProvider?.Create
                     (
                         env.Input.ToLower(),
-                        this.Configuration?.AdvancedConfiguration?.LanguageOverrides
+                        this.VaultApplication?.Configuration?.AdvancedConfiguration?.LanguageOverrides
                     )
                     ?? new ResourceStrings(),
                 DefaultLocation = this.Configuration?.AdvancedConfiguration?.DefaultLocation ?? WindowLocation.BottomPane

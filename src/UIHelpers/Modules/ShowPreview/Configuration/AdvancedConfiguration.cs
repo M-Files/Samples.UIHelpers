@@ -33,16 +33,6 @@ namespace UIHelpers.ShowPreview
         public Dictionary<string, bool> ConfiguredLocations { get; set; }
             = new Dictionary<string, bool>();
 
-        [DataMember]
-        [JsonConfEditor
-        (
-            Label = ResourceMarker.Id + nameof(Resources.Configuration.Languages_Label),
-            ChildName = ResourceMarker.Id + nameof(Resources.Configuration.Languages_ChildName)
-        )]
-        [ObjectMembers(typeof(LanguageProvider))]
-        public Dictionary<string, LanguageOverride> LanguageOverrides { get; set; }
-            = new Dictionary<string, LanguageOverride>();
-
         public IEnumerable<WindowLocation> AllowedLocations
         {
             get
