@@ -9,7 +9,7 @@ function OnNewShellUI(shellUI)
 	console.initialize(shellUI, "Show preview");
 
 	// The orchestrator orchestrates everything, so let it start up.
-	var orchestrator = new Orchestrator(shellUI, "showPreview", "Preview");
+	var orchestrator = new Orchestrator(shellUI);
 
 	// When the user selects different items, show/hide the window.
 	orchestrator.addEventListener
