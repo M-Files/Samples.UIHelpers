@@ -18,6 +18,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ViewAllMetadata.UIX", "View
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShowPreview.UIX", "ShowPreview.UIX\ShowPreview.UIX.csproj", "{639A0C1F-B95B-4060-987E-24E6536A2593}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "Common\Common.csproj", "{53441909-BBB8-4AAB-AEEE-E22427BCC947}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -43,6 +45,12 @@ Global
 		{639A0C1F-B95B-4060-987E-24E6536A2593}.DebugWithoutDeployment|Any CPU.Build.0 = Debug|Any CPU
 		{639A0C1F-B95B-4060-987E-24E6536A2593}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{639A0C1F-B95B-4060-987E-24E6536A2593}.Release|Any CPU.Build.0 = Release|Any CPU
+		{53441909-BBB8-4AAB-AEEE-E22427BCC947}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{53441909-BBB8-4AAB-AEEE-E22427BCC947}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{53441909-BBB8-4AAB-AEEE-E22427BCC947}.DebugWithoutDeployment|Any CPU.ActiveCfg = Debug|Any CPU
+		{53441909-BBB8-4AAB-AEEE-E22427BCC947}.DebugWithoutDeployment|Any CPU.Build.0 = Debug|Any CPU
+		{53441909-BBB8-4AAB-AEEE-E22427BCC947}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{53441909-BBB8-4AAB-AEEE-E22427BCC947}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

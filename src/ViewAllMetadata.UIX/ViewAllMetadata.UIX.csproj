@@ -22,10 +22,27 @@
     <OutputPath>bin\</OutputPath>
   </PropertyGroup>
   <ItemGroup>
+    <Content Include="..\Common\app\console-dashboard.js">
+      <Link>app\dashboard\console-dashboard.js</Link>
+    </Content>
+    <Content Include="..\Common\app\console-shellui.js">
+      <Link>app\console-shellui.js</Link>
+    </Content>
+    <Content Include="..\Common\app\json2.js">
+      <Link>app\json2.js</Link>
+    </Content>
+    <Content Include="..\Common\app\scripts\jquery-1.12.4.min.js">
+      <Link>app\scripts\jquery-1.12.4.min.js</Link>
+    </Content>
+    <Content Include="..\Common\app\VaultStructureManager.js">
+      <Link>app\VaultStructureManager.js</Link>
+    </Content>
+    <Content Include="..\Common\app\WindowManager.js">
+      <Link>app\WindowManager.js</Link>
+    </Content>
     <Content Include="app\appdef.xml">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="app\console-shellui.js" />
     <Content Include="app\dashboard\dashboard.css" />
     <Content Include="app\images\bottom-pane.png" />
     <Content Include="app\images\right-tab.png" />
@@ -34,14 +51,9 @@
     <Content Include="app\ConfigurationManager.js" />
     <Content Include="app\scripts\renderers\objectrenderer.js" />
     <Content Include="app\scripts\renderers\propertyvaluerenderer.js" />
-    <Content Include="app\json2.js" />
-    <Content Include="app\scripts\jquery-1.12.4.min.js" />
     <Content Include="app\shellui.js" />
     <Content Include="app\dashboard\dashboard.html" />
-    <Content Include="app\dashboard\console-dashboard.js" />
     <Content Include="app\dashboard\dashboard.js" />
-    <Content Include="app\VaultStructureManager.js" />
-    <Content Include="app\WindowManager.js" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -53,36 +65,26 @@
     <RemoveDir Directories="out" />
   </Target>
   <Target Name="Build">
-  
-  <!-- pull through linked content -->
-	<CreateItem Include="@(Content)" Condition="'%(Content.Link)' != ''">
-		<Output ItemName="LinkedContent" TaskParameter="Include" />
-	</CreateItem>
-	<CreateItem Include="@(LinkedContent->'%(Identity)')">
-		<Output ItemName="LinkedSourceFiles" TaskParameter="Include" />
-	</CreateItem>
-	<CreateItem Include="@(LinkedContent->'obj\%(Link)')">
-		<Output ItemName="LinkedTargetFiles" TaskParameter="Include" />
-	</CreateItem>
-	<Copy SourceFiles="@(LinkedSourceFiles)"
-		DestinationFiles="@(LinkedTargetFiles)"
-		SkipUnchangedFiles="true"
-		OverwriteReadOnlyFiles="true" />
+    <!-- pull through linked content -->
+    <CreateItem Include="@(Content)" Condition="'%(Content.Link)' != ''">
+      <Output ItemName="LinkedContent" TaskParameter="Include" />
+    </CreateItem>
+    <CreateItem Include="@(LinkedContent->'%(Identity)')">
+      <Output ItemName="LinkedSourceFiles" TaskParameter="Include" />
+    </CreateItem>
+    <CreateItem Include="@(LinkedContent->'obj\%(Link)')">
+      <Output ItemName="LinkedTargetFiles" TaskParameter="Include" />
+    </CreateItem>
+    <Copy SourceFiles="@(LinkedSourceFiles)" DestinationFiles="@(LinkedTargetFiles)" SkipUnchangedFiles="true" OverwriteReadOnlyFiles="true" />
     <CreateItem Include="app\**">
       <Output ItemName="ApplicationFiles" TaskParameter="Include" />
     </CreateItem>
-	<Copy SourceFiles="@(ApplicationFiles)" 
-		DestinationFolder="obj\app\%(RecursiveDir)" 
-		SkipUnchangedFiles="true" 
-		OverwriteReadOnlyFiles="true" />
-		
+    <Copy SourceFiles="@(ApplicationFiles)" DestinationFolder="obj\app\%(RecursiveDir)" SkipUnchangedFiles="true" OverwriteReadOnlyFiles="true" />
     <CreateItem Include="obj\app\**">
       <Output ItemName="AllFiles" TaskParameter="Include" />
     </CreateItem>
-	
     <Zip ZipFileName="..\UIHelpers\$(AssemblyName).mfappx" WorkingDirectory="$(MSBuildProjectDirectory)\obj\app" Files="@(AllFiles)" />
     <RemoveDir Directories="bin;obj" />
-  
   </Target>
   <Target Name="Rebuild" DependsOnTargets="Clean;Build" />
   <Import Project="..\packages\MSBuildTasks.1.5.0.196\build\MSBuildTasks.targets" Condition="Exists('..\packages\MSBuildTasks.1.5.0.196\build\MSBuildTasks.targets')" />
