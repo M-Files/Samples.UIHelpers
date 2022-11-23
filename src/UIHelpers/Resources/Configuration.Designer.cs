@@ -214,6 +214,15 @@ namespace UIHelpers.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Show Preview.
+        /// </summary>
+        internal static string ShowPreview_Label {
+            get {
+                return ResourceManager.GetString("ShowPreview_Label", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The text shown on the &quot;close&quot; button in the dashboard.
         /// </summary>
         internal static string UI_Commands_Buttons_Close_HelpText {

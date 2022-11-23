@@ -1,6 +1,6 @@
 ﻿using MFiles.VAF.Configuration;
 
-namespace UIHelpers.ViewAllMetadata
+namespace UIHelpers
 {
     [UsesResources(typeof(Resources.Configuration))]
     public enum AccessRestrictionType

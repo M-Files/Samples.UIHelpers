@@ -40,7 +40,7 @@ namespace UIHelpers.ViewAllMetadata
             catch (Exception ex)
             {
                 if (!MFUtils.IsMFilesAlreadyExistsError(ex))
-                    this.Logger?.Fatal(ex, $"Could not install  View all Metadata UIX application.");
+                    this.Logger?.Fatal(ex, $"Could not install View all Metadata UIX application.");
             }
 
             base.InitializeApplication(vault);

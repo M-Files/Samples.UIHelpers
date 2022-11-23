@@ -28,11 +28,22 @@ namespace UIHelpers
         public ViewAllMetadata.Configuration ViewAllMetadata { get; set; }
             = new ViewAllMetadata.Configuration();
 
+        [DataMember]
+        [JsonConfEditor
+        (
+            Label = ResourceMarker.Id + nameof(Resources.Configuration.ShowPreview_Label),
+            DefaultValue = "Disabled"
+        )]
+        public ShowPreview.Configuration ShowPreview { get; set; }
+            = new ShowPreview.Configuration();
+
         /// <inheritdoc />
         /// <remarks>Delegates to <see cref="AdvancedConfiguration.CustomValidation(Vault)"/></remarks>
         public IEnumerable<ValidationFinding> CustomValidation(Vault vault)
         {
             foreach (var vf in this.ViewAllMetadata?.CustomValidation(vault) ?? Enumerable.Empty<ValidationFinding>())
+                yield return vf;
+            foreach (var vf in this.ShowPreview?.CustomValidation(vault) ?? Enumerable.Empty<ValidationFinding>())
                 yield return vf;
         }
     }

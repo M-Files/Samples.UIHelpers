@@ -168,6 +168,9 @@
   <data name="RequiredAccessRights_Label" xml:space="preserve">
     <value>Required Access Rights</value>
   </data>
+  <data name="ShowPreview_Label" xml:space="preserve">
+    <value>Show Preview</value>
+  </data>
   <data name="UI_Commands_Buttons_Close_HelpText" xml:space="preserve">
     <value>The text shown on the "close" button in the dashboard</value>
   </data>

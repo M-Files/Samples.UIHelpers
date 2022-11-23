@@ -7,7 +7,6 @@
     var windowManager = null;
     var vaultStructureManager = null;
 	var configurationManager = null;
-	var showAllMetadataCommandId = null;
 	var selectedItem = null;
 	var shellFrame = null;
 
@@ -15,49 +14,78 @@
     t.getVaultStructureManager = function () { return vaultStructureManager; }
 	t.getConfigurationManager = function () { return configurationManager; }
 	t.getSelectedItem = function () { return selectedItem; }
-	t.notifyConfigurationChanged = function (config)
+	t.setSelectedItem = function (i) { selectedItem = i; }
+	var eventListeners = {};
+	t.addEventListener = function (eventType, callback)
 	{
-		windowManager.configurationChanged(config);
-		vaultStructureManager.configurationChanged(config);
+		if (null == eventType || null == callback)
+			return null;
+		if (typeof (eventListeners[eventType]) == "undefined")
+			eventListeners[eventType] = [];
+		eventListeners[eventType].push(callback);
+	}
+	t.dispatchEvent = function ()
+	{
+		if (arguments.length == 0)
+			return;
+		var eventType = arguments[0];
+		if (typeof (eventListeners[eventType]) == "undefined")
+			eventListeners[eventType] = [];
+		for (var i = 0; i < eventListeners[eventType].length; i++)
+			if (typeof (eventListeners[eventType][i]) == "function")
+				eventListeners[eventType][i].apply(t, Array.prototype.slice.call(arguments, 1));
+	}
+
+	var customCommands = [];
+	t.createCustomCommand = function (commandDetails, handlers)
+	{
+		if (null == commandDetails)
+			return null;
+
+		// Let's create a button.
+		var commandId = shellFrame.Commands.CreateCustomCommand(commandDetails.text);
+
+		// Let's add it to the context menu.
+		shellFrame.Commands.AddCustomCommandToMenu(commandId, commandDetails.location, commandDetails.priority);
+
+		customCommands.push({
+			commandId: commandId,
+			handlers: handlers
+		});
+
+		return commandId;
 	}
 
     function shellUIStartedHandler()
     {
-        // Create and populate the vault structure manager.
+        // Create the vault structure manager.
         vaultStructureManager = new VaultStructureManager(t, shellUI);
-        vaultStructureManager.populate();
 
-        // Ensure the configuration is loaded before anything else.
-        configurationManager = new ConfigurationManager(t, shellUI);
-		configurationManager.populate();
+        // Create the configuration manager.
+		configurationManager = new ConfigurationManager(t, shellUI);
+
+		// When the configuration is loaded, push it everywhere.
+		configurationManager.addEventListener(ConfigurationManager.EventTypes.Populated, function (config)
+		{
+			t.dispatchEvent(Orchestrator.EventTypes.ConfigurationLoaded, config);
+		})
 
         // Create the window manager.
-        windowManager = new WindowManager(t, shellUI);
+		windowManager = new WindowManager(t, shellUI);
 	}
 
-	t.enableShowAllMetadataCommand = function()
+	function customCommandHandler(commandId)
 	{
-		// Let's create a button.
-		showAllMetadataCommandId = shellFrame.Commands.CreateCustomCommand
-			(
-				configurationManager.getConfiguration().ResourceStrings.Commands_ShowAllMetadata
-			);
-
-		// Let's add it to the context menu.
-		shellFrame.Commands.AddCustomCommandToMenu(showAllMetadataCommandId, MenuLocation_ContextMenu_Top, 1);
-
-		// Register to respond to events.
-		shellFrame.Commands.Events.Register(Event_CustomCommand, function (command)
+		for (var i = 0; i < customCommands.length; i++)
 		{
-			// We only care about our command.
-			if (command != showAllMetadataCommandId)
-				return;
-			if (null == selectedItem)
-				return;
+			var command = customCommands[i];
+			if (command.commandId != commandId)
+				continue;
 
-			// Tell the window manager to show the window.
-			windowManager.show(true);
-		})
+			// If we can, call it.
+			if ((typeof command.handlers.click) == "function")
+				command.handlers.click.call(t);
+		}
 	}
 
 	function newNormalShellFrameHandler(sf)
@@ -65,11 +93,15 @@
 		/// <summary>Handles the OnNewShellFrame event.</summary>
 		/// <param name="shellFrame" type="MFiles.ShellFrame">The new shell frame object.</param>
 
-		var showAllMetadataCommandId = null;
 		shellFrame = sf;
 
 		function shellFrameStartedHandler()
 		{
+			// Populate everything.
+			vaultStructureManager.populate();
+			configurationManager.populate();
+
+			shellFrame.Commands.Events.Register(Event_CustomCommand, customCommandHandler);
 			windowManager.close();
 		}
 
@@ -105,24 +137,18 @@
 					function (selectedItems)
 					{
 						// Sanity.
-						if (false == shellListing.IsActive
-							|| null == showAllMetadataCommandId)
+						if (false == shellListing.IsActive)
 							return false;
 
-						// Was there only one item selected (and is it an object version)?
-						selectedItem = null;
-						var isOneObjectSelected = selectedItems.Count == 1 && selectedItems.ObjectVersionsAndProperties.Count == 1;
-						if (isOneObjectSelected)
+						// Run each command.
+						for (var i = 0; i < customCommands.length; i++)
 						{
-							selectedItem = selectedItems.ObjectVersionsAndProperties[0];
-						}
+							var command = customCommands[i];
 
-						// Show the context menu item only if there is 1 object selected.
-						shellFrame.Commands.SetCommandState(
-							showAllMetadataCommandId,
-							CommandLocation_All,
-							isOneObjectSelected ? CommandState_Active : CommandState_Hidden
-						);
+							// If we can, call it.
+							if ((typeof command.handlers.showContextMenu) == "function")
+								command.handlers.showContextMenu.call(t, shellFrame, selectedItems);
+						}
 
 						return true;
 					}
@@ -137,7 +163,7 @@
 		shellFrame.Events.Register(Event_ViewLocationChangedAsync, windowManager.close);
 	}
 
-    // When the ShellUI starts, start all the handlers.
+	// When the ShellUI starts, start all the handlers.
 	shellUI.Events.Register(Event_Started, shellUIStartedHandler);
 
 	// Register to listen new shell frame creation event.
@@ -145,3 +171,7 @@
 
     return t;
 }
+Orchestrator.EventTypes = {
+	Started: 1,
+	ConfigurationLoaded: 2
+};

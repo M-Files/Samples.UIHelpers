@@ -1,8 +1,7 @@
 ﻿using MFiles.VAF.Configuration;
 using System.Runtime.Serialization;
-using UIHelpers.ViewAllMetadata;
 
-namespace UIHelpers
+namespace UIHelpers.ViewAllMetadata
 {
     [DataContract]
     [UsesResources(typeof(Resources.Configuration))]

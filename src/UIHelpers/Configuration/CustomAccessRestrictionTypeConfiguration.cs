@@ -3,7 +3,7 @@ using MFilesAPI;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 
-namespace UIHelpers.ViewAllMetadata
+namespace UIHelpers
 {
     [DataContract]
     [UsesResources(typeof(Resources.Configuration))]

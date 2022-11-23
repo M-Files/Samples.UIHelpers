@@ -2,7 +2,7 @@
 using MFilesAPI;
 using System.Collections.Generic;
 
-namespace UIHelpers.ViewAllMetadata
+namespace UIHelpers
 {
     /// <summary>
     /// This instance can validate itself.
