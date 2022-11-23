@@ -1,21 +1,50 @@
-using MFiles.VAF;
-using MFiles.VAF.AppTasks;
-using MFiles.VAF.Common;
-using MFiles.VAF.Configuration;
-using MFiles.VAF.Configuration.AdminConfigurations;
-using MFiles.VAF.Configuration.Domain.Dashboards;
+﻿using MFiles.VAF.Common;
 using MFiles.VAF.Core;
 using MFilesAPI;
 using System;
-using System.Diagnostics;
+using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace UIHelpers
+namespace UIHelpers.ViewAllMetadata
 {
-    public partial class VaultApplication
-        : MFiles.VAF.Extensions.ConfigurableVaultApplicationBase<Configuration>
+    internal class Module
+        : ModuleBase<Configuration>
     {
+        protected override Configuration Configuration
+        {
+            get => this.VaultApplication?.Configuration?.ViewAllMetadata;
+        }
+        public Module(VaultApplication vaultApplication) 
+            : base(vaultApplication)
+        {
+        }
+
+        /// <inheritdoc />
+        /// <remarks>Installs the UIX application.</remarks>
+        public override void InitializeApplication(Vault vault)
+        {
+            try
+            {
+                string appPath = "ViewAllMetadata.UIX.mfappx";
+                if (System.IO.File.Exists(appPath))
+                {
+                    vault.CustomApplicationManagementOperations.InstallCustomApplication(appPath);
+                }
+                else
+                {
+                    this.Logger?.Fatal($"Could not install View all Metadata UIX application; {appPath} does not exist.");
+                }
+            }
+            catch (Exception ex)
+            {
+                if (!MFUtils.IsMFilesAlreadyExistsError(ex))
+                    this.Logger?.Fatal(ex, $"Could not install  View all Metadata UIX application.");
+            }
+
+            base.InitializeApplication(vault);
+        }
 
         /// <summary>
         /// Registers a Vault Extension Method with name "ViewAllMetadata.GetUIXConfiguration".
@@ -29,22 +58,22 @@ namespace UIHelpers
         private string GetUIXConfiguration(EventHandlerEnvironment env)
         {
             // Create and populate the configuration.
-            var configuration = new ViewAllMetadata.UIXConfiguration()
+            var configuration = new UIXConfiguration()
             {
                 // Create the resource strings from the provider, or default to none.
                 ResourceStrings =
-                    this.ResourceStringProvider?.Create
+                    this.VaultApplication.ResourceStringProvider?.Create
                     (
                         env.Input.ToLower(),
-                        this.Configuration?.ViewAllMetadata?.AdvancedConfiguration?.LanguageOverrides
+                        this.Configuration?.AdvancedConfiguration?.LanguageOverrides
                     )
                     ?? new ResourceStrings(),
-                EnableEditing = this.Configuration?.ViewAllMetadata?.EnableEditing ?? false,
-                DefaultLocation = this.Configuration?.ViewAllMetadata?.AdvancedConfiguration?.DefaultLocation ?? Location.BottomPane
+                EnableEditing = this.Configuration?.EnableEditing ?? false,
+                DefaultLocation = this.Configuration?.AdvancedConfiguration?.DefaultLocation ?? Location.BottomPane
             };
-            if (this.Configuration?.ViewAllMetadata?.AdvancedConfiguration?.AllowedLocations?.Any() ?? false)
+            if (this.Configuration?.AdvancedConfiguration?.AllowedLocations?.Any() ?? false)
             {
-                configuration.AllowedLocations = this.Configuration.ViewAllMetadata.AdvancedConfiguration.AllowedLocations.ToArray();
+                configuration.AllowedLocations = this.Configuration.AdvancedConfiguration.AllowedLocations.ToArray();
             }
 
             // Serialize the configuration for use in the UIX application.
@@ -63,18 +92,15 @@ namespace UIHelpers
         private string ShouldShowAllMetadata(EventHandlerEnvironment env)
         {
             // If the module is disabled then return disabled.
-            if (false == (this.Configuration?.ViewAllMetadata?.Enabled ?? false))
+            if (false == (this.Configuration?.Enabled ?? false))
                 return "false";
             return
             (
-                this
-                    .Configuration?
-                    .ViewAllMetadata?
+                this.Configuration?
                     .UserIsAllowedAccess(env.Vault, env.CurrentUserSessionInfo) ?? false
             )
                 .ToString()
                 .ToLower();
         }
-
     }
 }

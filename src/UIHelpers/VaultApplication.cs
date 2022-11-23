@@ -21,34 +21,48 @@ namespace UIHelpers
         /// <summary>
         /// The resource string provider to use.
         /// </summary>
-        protected IResourceStringProvider ResourceStringProvider { get; set; }
+        protected internal IResourceStringProvider ResourceStringProvider { get; set; }
             = new DefaultResourceStringProvider();
 
-        #region Install the UIX application
+        /// <summary>
+        /// Expose the configuration for internal use too.
+        /// </summary>
+        protected internal new Configuration Configuration
+        {
+            get => base.Configuration;
+            set => base.Configuration = value;
+        }
+
+        public VaultApplication()
+        {
+            this.Modules.Add(new ViewAllMetadata.Module(this));
+        }
+
+        #region Deal with modules
+
+        internal List<ModuleBase> Modules { get; }
+            = new List<ModuleBase>();
 
         /// <inheritdoc />
         /// <remarks>Installs the UIX application.</remarks>
         protected override void InitializeApplication(Vault vault)
         {
-            try
-            {
-                string appPath = "ViewAllMetadata.UIX.mfappx";
-                if (System.IO.File.Exists(appPath))
-                {
-                    vault.CustomApplicationManagementOperations.InstallCustomApplication(appPath);
-                }
-                else
-                {
-                    this.Logger?.Fatal($"Could not install View all Metadata UIX application; {appPath} does not exist.");
-                }
-            }
-            catch (Exception ex)
-            {
-                if (!MFUtils.IsMFilesAlreadyExistsError(ex))
-                    this.Logger?.Fatal(ex, $"Could not install  View all Metadata UIX application.");
-            }
+            // Initialise each module.
+            foreach (var module in this.Modules)
+                module?.InitializeApplication(vault);
 
             base.InitializeApplication(vault);
+        }
+
+        protected override void RegisterMethodsFromSource(IMethodSource source, Vault vault)
+        {
+            // Register our ones.
+            base.RegisterMethodsFromSource(source, vault);
+
+            // Register ones from each module.
+            foreach (var module in this.Modules)
+                if (null != module)
+                    base.RegisterMethodsFromSource(module, vault);
         }
 
         #endregion
@@ -68,6 +82,12 @@ namespace UIHelpers
             if(null != config)
                 foreach (var vf in config?.CustomValidation(vault) ?? Enumerable.Empty<ValidationFinding>())
                     yield return vf;
+
+            // Validate any modules.
+            foreach(var m in this.Modules)
+                if(null != m)
+                    foreach(var vf in m.CustomValidation(vault, config))
+                        yield return vf;
         }
 
     }

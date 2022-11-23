@@ -57,6 +57,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Configuration\Configuration.cs" />
+    <Compile Include="ModuleBase.cs" />
     <Compile Include="ViewAllMetadata\Configuration\AccessRestrictionType.cs" />
     <Compile Include="ViewAllMetadata\Configuration\AdvancedConfiguration.cs" />
     <Compile Include="ViewAllMetadata\Configuration\Configuration.cs" />
@@ -83,8 +84,8 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>UIResources.resx</DependentUpon>
     </Compile>
+    <Compile Include="ViewAllMetadata\Module.cs" />
     <Compile Include="ViewAllMetadata\UIXConfiguration\UIXConfiguration.cs" />
-    <Compile Include="VaultApplication.VaultExtensionMethods.cs" />
     <Compile Include="VaultApplication.cs" />
   </ItemGroup>
   <ItemGroup>
