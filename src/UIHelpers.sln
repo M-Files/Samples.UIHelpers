@@ -4,6 +4,10 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 17.3.32922.545
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UIHelpers", "UIHelpers\UIHelpers.csproj", "{DBEA0E20-7C3A-49E2-B2B5-832DE0A3B113}"
+	ProjectSection(ProjectDependencies) = postProject
+		{323AB008-79E3-45BA-AFA2-1CA98DC35F9E} = {323AB008-79E3-45BA-AFA2-1CA98DC35F9E}
+		{639A0C1F-B95B-4060-987E-24E6536A2593} = {639A0C1F-B95B-4060-987E-24E6536A2593}
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentation", "Documentation", "{8C0C8E41-6662-434C-986E-68E13B760A0E}"
 	ProjectSection(SolutionItems) = preProject

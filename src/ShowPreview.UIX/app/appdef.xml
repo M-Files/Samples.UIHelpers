@@ -3,19 +3,21 @@
              xsi:noNamespaceSchemaLocation="http://www.m-files.com/schemas/appdef-client-v4.xsd">
 	<guid>3bb694b2-383e-4576-a42b-85ec7035951a</guid>
 	<name>ShowPreview.UIX</name>
-	<version>1.0</version>
-	<description></description>
+	<version>0.1</version>
+	<description>The UI component of the 'Show preview' module</description>
 	<publisher></publisher>	
 	<copyright></copyright>
-	<required-mfiles-version>20.12.0.0</required-mfiles-version>
+	<required-mfiles-version>22.11.0.0</required-mfiles-version>
 	<optional>true</optional>
 	<enabled-by-default>true</enabled-by-default>
+	<master-application-guid>f27a149d-d754-48ac-a547-b6c5917a6c91</master-application-guid>
   <platforms>
     <platform>Desktop</platform>
   </platforms>
 	<modules>
 		<module environment="shellui" fast-browsing-compatible="false">
       <file>console-shellui.js</file>
+			<file>Orchestrator.js</file>
 			<file>shellui.js</file>
 		</module>
 	</modules>

@@ -95,6 +95,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="install-application.ps1" />
+    <None Include="ShowPreview.UIX.mfappx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="ViewAllMetadata.UIX.mfappx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

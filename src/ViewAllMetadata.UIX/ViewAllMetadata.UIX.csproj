@@ -53,14 +53,36 @@
     <RemoveDir Directories="out" />
   </Target>
   <Target Name="Build">
-    <RemoveDir Directories="bin;obj" />
+  
+  <!-- pull through linked content -->
+	<CreateItem Include="@(Content)" Condition="'%(Content.Link)' != ''">
+		<Output ItemName="LinkedContent" TaskParameter="Include" />
+	</CreateItem>
+	<CreateItem Include="@(LinkedContent->'%(Identity)')">
+		<Output ItemName="LinkedSourceFiles" TaskParameter="Include" />
+	</CreateItem>
+	<CreateItem Include="@(LinkedContent->'obj\%(Link)')">
+		<Output ItemName="LinkedTargetFiles" TaskParameter="Include" />
+	</CreateItem>
+	<Copy SourceFiles="@(LinkedSourceFiles)"
+		DestinationFiles="@(LinkedTargetFiles)"
+		SkipUnchangedFiles="true"
+		OverwriteReadOnlyFiles="true" />
     <CreateItem Include="app\**">
       <Output ItemName="ApplicationFiles" TaskParameter="Include" />
     </CreateItem>
-    <Zip ZipFileName="..\ViewAllMetadata\$(AssemblyName).mfappx" WorkingDirectory="$(MSBuildProjectDirectory)\app" Files="@(ApplicationFiles)" />
-    <!-- Modify and uncomment the following line to enable development time installation to sysapps folder.
-         Visual Studio needs to run in Administrative mode. -->
-    <!-- <Unzip ZipFileName="out\$(AssemblyName).mfappx" TargetDirectory="C:\Program Files\M-Files\<Version>\Client\Apps\<VaultGuid>\sysapps\$(AssemblyName)" /> -->
+	<Copy SourceFiles="@(ApplicationFiles)" 
+		DestinationFolder="obj\app\%(RecursiveDir)" 
+		SkipUnchangedFiles="true" 
+		OverwriteReadOnlyFiles="true" />
+		
+    <CreateItem Include="obj\app\**">
+      <Output ItemName="AllFiles" TaskParameter="Include" />
+    </CreateItem>
+	
+    <Zip ZipFileName="..\UIHelpers\$(AssemblyName).mfappx" WorkingDirectory="$(MSBuildProjectDirectory)\obj\app" Files="@(AllFiles)" />
+    <RemoveDir Directories="bin;obj" />
+  
   </Target>
   <Target Name="Rebuild" DependsOnTargets="Clean;Build" />
   <Import Project="..\packages\MSBuildTasks.1.5.0.196\build\MSBuildTasks.targets" Condition="Exists('..\packages\MSBuildTasks.1.5.0.196\build\MSBuildTasks.targets')" />

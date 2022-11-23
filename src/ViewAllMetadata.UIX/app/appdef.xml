@@ -3,7 +3,7 @@
 	<guid>1B9552B3-C1C5-44b9-9A5F-D4ABAC5E8AE2</guid>	
 	<name>View all metadata UIX</name>
 	<version>0.1</version>
-	<description>The UI component of the 'View all metadata' application</description>
+	<description>The UI component of the 'View all metadata' module</description>
 	<publisher>M-Files Corporation (open-source)</publisher>
 	<copyright>M-Files Corporation 2022 onwards</copyright>
 	<required-mfiles-version>22.11.0.0</required-mfiles-version>
