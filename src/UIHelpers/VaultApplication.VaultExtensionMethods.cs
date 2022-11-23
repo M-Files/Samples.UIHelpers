@@ -62,6 +62,9 @@ namespace UIHelpers
             RequiredVaultAccess = MFVaultAccess.MFVaultAccessNone)]
         private string ShouldShowAllMetadata(EventHandlerEnvironment env)
         {
+            // If the module is disabled then return disabled.
+            if (false == (this.Configuration?.ViewAllMetadata?.Enabled ?? false))
+                return "false";
             return
             (
                 this

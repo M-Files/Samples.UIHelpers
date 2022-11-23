@@ -16,8 +16,12 @@ namespace UIHelpers.ViewAllMetadata
     [UsesResources(typeof(Resources.Configuration))]
     [UsesResources(typeof(Resources.UIResources))]
     public class Configuration
-        : ConfigurationBase, ICanPerformCustomValidation
+        : ICanPerformCustomValidation
     {
+
+        [DataMember]
+        public bool Enabled { get; set; }
+
         [DataMember]
         [JsonConfEditor
         (

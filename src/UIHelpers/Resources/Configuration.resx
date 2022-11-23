@@ -213,7 +213,7 @@
   <data name="UserConfiguration_Label" xml:space="preserve">
     <value>User Configuration</value>
   </data>
-  <data name="ViewAllMetadata" xml:space="preserve">
+  <data name="ViewAllMetadata_Label" xml:space="preserve">
     <value>View All Metadata</value>
   </data>
 </root>

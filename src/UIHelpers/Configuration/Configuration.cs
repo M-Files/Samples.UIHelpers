@@ -23,7 +23,7 @@ namespace UIHelpers
         [JsonConfEditor
         (
             Label = ResourceMarker.Id + nameof(Resources.Configuration.ViewAllMetadata_Label),
-            DefaultValue = AccessRestrictionType.ByVaultRights
+            DefaultValue = "Disabled"
         )]
         public ViewAllMetadata.Configuration ViewAllMetadata { get; set; }
             = new ViewAllMetadata.Configuration();

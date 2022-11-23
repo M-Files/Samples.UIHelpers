@@ -351,9 +351,9 @@ namespace UIHelpers.Resources {
         /// <summary>
         ///   Looks up a localized string similar to View All Metadata.
         /// </summary>
-        internal static string ViewAllMetadata {
+        internal static string ViewAllMetadata_Label {
             get {
-                return ResourceManager.GetString("ViewAllMetadata", resourceCulture);
+                return ResourceManager.GetString("ViewAllMetadata_Label", resourceCulture);
             }
         }
     }
