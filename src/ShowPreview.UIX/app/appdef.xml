@@ -18,16 +18,16 @@
 		<module environment="shellui" fast-browsing-compatible="true">
 			<file>console-shellui.js</file>
 			<file>json2.js</file>
-			<!--<file>Orchestrator.js</file>
-			<file>ConfigurationManager.js</file>-->
+			<file>Orchestrator.js</file>
+			<file>ConfigurationManager.js</file>
 			<file>VaultStructureManager.js</file>
 			<file>WindowManager.js</file>
 			<file>shellui.js</file>
 		</module>
 	</modules>
 	<dashboards>
-		<dashboard id="my-dashboard">
-			<content>my-dashboard/my-dashboard.html</content>
+		<dashboard id="Dashboard">
+			<content>dashboard/my-dashboard.html</content>
 			<allow-selection>true</allow-selection>
 		</dashboard>
 	</dashboards>

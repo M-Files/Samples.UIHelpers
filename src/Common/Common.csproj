@@ -26,9 +26,11 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
+    <Content Include="app\base-dashboard.css" />
     <Content Include="app\console-dashboard.js" />
     <Content Include="app\console-shellui.js" />
     <Content Include="app\json2.js" />
+    <Content Include="app\Orchestrator.js" />
     <Content Include="app\scripts\jquery-1.12.4.min.js" />
     <Content Include="app\VaultStructureManager.js" />
     <Content Include="app\WindowManager.js" />

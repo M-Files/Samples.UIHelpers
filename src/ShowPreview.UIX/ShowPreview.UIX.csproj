@@ -22,6 +22,9 @@
     <OutputPath>bin\</OutputPath>
   </PropertyGroup>
   <ItemGroup>
+    <Content Include="..\Common\app\base-dashboard.css">
+      <Link>app\dashboard\base-dashboard.css</Link>
+    </Content>
     <Content Include="..\Common\app\console-dashboard.js">
       <Link>app\my-dashboard\console-dashboard.js</Link>
     </Content>
@@ -30,6 +33,9 @@
     </Content>
     <Content Include="..\Common\app\json2.js">
       <Link>app\json2.js</Link>
+    </Content>
+    <Content Include="..\Common\app\Orchestrator.js">
+      <Link>app\Orchestrator.js</Link>
     </Content>
     <Content Include="..\Common\app\scripts\jquery-1.12.4.min.js">
       <Link>app\scripts\jquery-1.12.4.min.js</Link>
@@ -43,9 +49,12 @@
     <Content Include="app\appdef.xml">
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="app\ConfigurationManager.js" />
+    <Content Include="app\dashboard\dashboard.css" />
+    <Content Include="app\scripts\renderers\objectrenderer.js" />
     <Content Include="app\shellui.js" />
-    <Content Include="app\my-dashboard\my-dashboard.html" />
-    <Content Include="app\my-dashboard\my-dashboard.js" />
+    <Content Include="app\dashboard\dashboard.html" />
+    <Content Include="app\dashboard\dashboard.js" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

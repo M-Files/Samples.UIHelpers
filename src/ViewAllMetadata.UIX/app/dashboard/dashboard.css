@@ -1,44 +1,4 @@
-﻿/* basic */
-
-head, body {
-    padding: 0px;
-    margin: 0px;
-    height: 100%;
-}
-
-body {
-    padding: 10px;
-    font-family: Lato;
-    color: #767676;
-}
-
-h1 {
-    font-size: 20px;
-    color: #363A40;
-    padding: 0px 20px;
-    font-weight: normal;
-    margin-right: 110px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-div.menu.top {
-    background-color: #F4F4F4;
-    height: 32px;
-    position: absolute;
-    left: 0px;
-    right: 0px;
-    padding: 0px 25px 5px 5px;
-    text-align: right;
-    z-index: 1000;
-}
-div.menu.top .button{
-    padding: 10px 7px;
-    cursor: pointer;
-}
-
-/* properties list */
+﻿/* properties list */
 div.properties {
     position: fixed;
     top: 80px;
@@ -138,53 +98,6 @@ ol.properties li.editable.editing .editing-value {
         height: 14px;
         border: 1px solid #767676;
     }
-
-/* buttons */
-
-button {
-    border: 1px solid #ABABAB;
-    border-radius: 2px;
-    background-color: white;
-    color: #363A40;
-    padding: 5px 10px;
-    cursor: pointer;
-    min-width: 100px;
-    font-size: 13px;
-    font-family: 'Segoe UI', Arial, sans-serif;
-    text-align: center;
-}
-button:hover, button:active, button.save:active, button.save:hover
-{
-    border-color: #318CCC;
-    background-color: #318CCC;
-    color: white;
-}
-button.save {
-    border-color: #318CCC;
-    color: #318CCC;
-}
-
-.buttonGroup.top {
-    position: fixed;
-    top: 10px;
-    left: 0px;
-    right: 0px;
-    box-sizing: content-box;
-    padding: 10px 20px;
-    text-align: right;
-}
-.buttonGroup.bottom {
-    position: fixed;
-    bottom: 0px;
-    left: 0px;
-    right: 0px;
-    box-sizing: content-box;
-    padding: 10px 20px;
-    text-align: right;
-    border-top: 2px solid #EEE;
-    height: 30px;
-    background-color: white;
-}
 
 /* more columns on wider screens */
 

@@ -36,7 +36,7 @@ namespace UIHelpers
         public VaultApplication()
         {
             this.Modules.Add(new ViewAllMetadata.Module(this));
-            //this.Modules.Add(new ShowPreview.Module(this));
+            this.Modules.Add(new ShowPreview.Module(this));
         }
 
         #region Deal with modules
