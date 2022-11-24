@@ -25,6 +25,9 @@
     <Content Include="..\Common\app\base-dashboard.css">
       <Link>app\dashboard\base-dashboard.css</Link>
     </Content>
+    <Content Include="..\Common\app\ConfigurationManager.js">
+      <Link>app\ConfigurationManager.js</Link>
+    </Content>
     <Content Include="..\Common\app\console-dashboard.js">
       <Link>app\dashboard\console-dashboard.js</Link>
     </Content>
@@ -65,7 +68,6 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="app\dashboard\dashboard.css" />
-    <Content Include="app\ConfigurationManager.js" />
     <Content Include="app\scripts\renderers\objectrenderer.js" />
     <Content Include="app\scripts\renderers\propertyvaluerenderer.js" />
     <Content Include="app\shellui.js" />

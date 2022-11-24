@@ -1,6 +1,7 @@
-﻿function ConfigurationManager(orchestrator, shellUI)
+﻿function ConfigurationManager(orchestrator, shellUI, moduleName, defaultConfiguration)
 {
-    console.log("Configuration manager activated");
+	console.log("Configuration manager activated for module " + moduleName);
+	defaultConfiguration = defaultConfiguration || {};
 
 	var t = this;
 
@@ -9,19 +10,7 @@
 	t.dispatchEvent = events.dispatchEvent;
 
 	// Set up the default configuration.
-	var configuration = {
-		ResourceStrings: {
-			Commands_ShowAllMetadata: "Show all metadata",
-			Buttons_Close: "Close",
-			Buttons_Discard: "Discard",
-			Buttons_Save: "Save",
-			TabIDs_ShowPreview: "showPreview",
-			TabTitles_ShowPreview: "Show Preview"
-		},
-		DefaultLocation: 0,
-		AllowedLocations: []
-	}
-	configuration.AllowedLocations.push(0); // Allow bottom pane by default.
+	var configuration = defaultConfiguration;
 
 	t.getConfiguration = function ()
 	{
@@ -39,20 +28,25 @@
 		{
 			shellUI.Vault.Async.ExtensionMethodOperations.DoesActiveVaultExtensionMethodExist
 			(
-				"ShowPreview.ShouldShow",
+				"UIHelpers.ShouldShow",
 				function (result)
 				{
 					// If we didn't find it then fail.
 					if (!result)
 					{
-						console.error("VEM ShowPreview.ShouldShow not found.");
+						console.error("VEM UIHelpers.ShouldShow not found.");
 						return;
 					}
 
 					shellUI.Vault.Async.ExtensionMethodOperations.ExecuteVaultExtensionMethod
 					(
-						"ShowPreview.ShouldShow",
-						"",
+						"UIHelpers.ShouldShow",
+						JSON.stringify
+							(
+								{
+									Module: moduleName
+								}
+							),
 						function (output)
 						{
 							// If they should not see it then die here.
@@ -73,11 +67,11 @@
 									// Pass the language to the server to get the translations.
 									shellUI.Vault.Async.ExtensionMethodOperations.ExecuteVaultExtensionMethod
 										(
-											"ShowPreview.GetUIXConfiguration",
+											"UIHelpers.GetUIXConfiguration",
 											JSON.stringify
 												(
 													{
-														Module: "UIHelpers.Modules.ShowPreview.Module",
+														Module: moduleName,
 														Language: lang
 													}
 												),

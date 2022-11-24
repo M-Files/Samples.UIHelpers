@@ -161,6 +161,17 @@ namespace UIHelpers.Modules.Base
         }
         public abstract TUIXConfiguration GetUIXConfiguration(string language);
 
+        public virtual bool ShouldShow(Vault vault, SessionInfo sessionInfo)
+        {
+            // If the module is disabled then return disabled.
+            if (false == (this.Configuration?.Enabled ?? false))
+                return false;
+            return
+            (
+                this.Configuration?
+                    .UserIsAllowedAccess(vault, sessionInfo) ?? false
+            );
+        }
         object ISuppliesUIXConfiguration.GetUIXConfiguration(string language) => this.GetUIXConfiguration(language);
     }
 }

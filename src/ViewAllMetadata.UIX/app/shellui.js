@@ -9,7 +9,7 @@ function OnNewShellUI(shellUI)
 	console.initialize(shellUI, "View all metadata");
 
 	// The orchestrator orchestrates everything, so let it start up.
-	var orchestrator = new Orchestrator(shellUI);
+	var orchestrator = new Orchestrator(shellUI, "UIHelpers.Modules.ViewAllMetadata.Module");
 
 	// When the user selects different items, show/hide the window.
 	orchestrator.addEventListener

@@ -27,6 +27,7 @@
   <ItemGroup />
   <ItemGroup>
     <Content Include="app\base-dashboard.css" />
+    <Content Include="app\ConfigurationManager.js" />
     <Content Include="app\console-dashboard.js" />
     <Content Include="app\console-shellui.js" />
     <Content Include="app\Events.js" />

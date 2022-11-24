@@ -1,4 +1,4 @@
-﻿function Orchestrator(shellUI)
+﻿function Orchestrator(shellUI, moduleName, defaultConfiguration)
 {
     console.log("Orchestrator activated");
 
@@ -45,7 +45,7 @@
         vaultStructureManager = new VaultStructureManager(t, shellUI);
 
         // Create the configuration manager.
-		configurationManager = new ConfigurationManager(t, shellUI);
+		configurationManager = new ConfigurationManager(t, shellUI, moduleName, defaultConfiguration);
 
 		// When the configuration is loaded, push it everywhere.
 		configurationManager.addEventListener(ConfigurationManager.EventTypes.Populated, function (config)

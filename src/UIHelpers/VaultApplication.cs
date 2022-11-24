@@ -125,7 +125,40 @@ namespace UIHelpers
             return "Invalid input";
         }
 
-        private abstract class VEMInputBase
+        /// <summary>
+        /// Registers a Vault Extension Method with name "UIHelpers.ShouldShow".
+        /// Users must have at least MFVaultAccess.MFVaultAccessNone access to execute the method.
+        /// This method retrieves whether a specific module should be shown.
+        /// </summary>
+        /// <param name="env">The vault/object environment.</param>
+        /// <returns>The any output from the vault extension method execution.</returns>
+        /// <remarks>The input to the vault extension method is available in <see cref="EventHandlerEnvironment.Input"/>.</remarks>
+        [VaultExtensionMethod("UIHelpers.ShouldShow",
+            RequiredVaultAccess = MFVaultAccess.MFVaultAccessNone)]
+        private string ShouldShow(EventHandlerEnvironment env)
+        {
+            try
+            {
+                var input = Newtonsoft.Json.JsonConvert.DeserializeObject<VEMInputBase>(env.Input);
+                if (null == input)
+                    throw new ArgumentException("Environment input invalid");
+                foreach (var m in this.Modules)
+                {
+                    if (input.Module == m.GetType().FullName)
+                    {
+                        if (m is ISuppliesUIXConfiguration c)
+                            return c.ShouldShow(env.Vault, env.CurrentUserSessionInfo).ToString()?.ToLower();
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                this.Logger?.Error(e, $"Could not get confirm user status from input.");
+            }
+            return "Invalid input";
+        }
+
+        private class VEMInputBase
         {
             public string Module { get; set; }
         }
