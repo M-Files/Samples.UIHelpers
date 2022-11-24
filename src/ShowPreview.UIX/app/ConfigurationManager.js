@@ -60,13 +60,13 @@
 								return;
 							shellUI.Vault.Async.ExtensionMethodOperations.DoesActiveVaultExtensionMethodExist
 							(
-								"ShowPreview.GetUIXConfiguration",
+								"UIHelpers.GetUIXConfiguration",
 								function (result)
 								{
 									// If we didn't find it then fail.
 									if (!result)
 									{
-										console.error("VEM ShowPreview.GetUIXConfiguration not found.");
+										console.error("VEM UIHelpers.GetUIXConfiguration not found.");
 										return;
 									}
 
@@ -74,7 +74,13 @@
 									shellUI.Vault.Async.ExtensionMethodOperations.ExecuteVaultExtensionMethod
 										(
 											"ShowPreview.GetUIXConfiguration",
-											lang,
+											JSON.stringify
+												(
+													{
+														Module: "UIHelpers.Modules.ShowPreview.Module",
+														Language: lang
+													}
+												),
 											function (output)
 											{
 												try

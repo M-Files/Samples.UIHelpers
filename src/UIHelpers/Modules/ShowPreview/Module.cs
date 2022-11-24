@@ -6,7 +6,7 @@ using UIHelpers.Modules.Base;
 namespace UIHelpers.Modules.ShowPreview
 {
     internal class Module
-        : ModuleBase<Configuration>
+        : ModuleBase<Configuration, UIXConfiguration>
     {
         /// <inheritdoc />
         protected override Configuration Configuration
@@ -16,39 +16,6 @@ namespace UIHelpers.Modules.ShowPreview
             : base(vaultApplication)
         {
             this.UIXApplicationPaths.Add("ShowPreview.UIX.mfappx");
-        }
-
-        /// <summary>
-        /// Registers a Vault Extension Method with name "ShowPreview.GetUIXConfiguration".
-        /// Users must have at least MFVaultAccess.MFVaultAccessNone access to execute the method.
-        /// </summary>
-        /// <param name="env">The vault/object environment.</param>
-        /// <returns>The any output from the vault extension method execution.</returns>
-        /// <remarks>The input to the vault extension method is available in <see cref="EventHandlerEnvironment.Input"/>.</remarks>
-        [VaultExtensionMethod("ShowPreview.GetUIXConfiguration",
-            RequiredVaultAccess = MFVaultAccess.MFVaultAccessNone)]
-        private string GetUIXConfiguration(EventHandlerEnvironment env)
-        {
-            // Create and populate the configuration.
-            var configuration = new UIXConfiguration()
-            {
-                // Create the resource strings from the provider, or default to none.
-                ResourceStrings =
-                    this.VaultApplication.ResourceStringProvider?.Create
-                    (
-                        env.Input.ToLower(),
-                        this.VaultApplication?.Configuration?.AdvancedConfiguration?.LanguageOverrides
-                    )
-                    ?? new ResourceStrings(),
-                DefaultLocation = this.Configuration?.AdvancedConfiguration?.DefaultLocation ?? WindowLocation.BottomPane
-            };
-            if (this.Configuration?.AdvancedConfiguration?.AllowedLocations?.Any() ?? false)
-            {
-                configuration.AllowedLocations = this.Configuration.AdvancedConfiguration.AllowedLocations.ToArray();
-            }
-
-            // Serialize the configuration for use in the UIX application.
-            return Newtonsoft.Json.JsonConvert.SerializeObject(configuration);
         }
 
         /// <summary>
@@ -72,6 +39,30 @@ namespace UIHelpers.Modules.ShowPreview
             )
                 .ToString()
                 .ToLower();
+        }
+
+        public override UIXConfiguration GetUIXConfiguration(string language)
+        {
+            // Create and populate the configuration.
+            var configuration = new UIXConfiguration()
+            {
+                // Create the resource strings from the provider, or default to none.
+                ResourceStrings =
+                    this.VaultApplication.ResourceStringProvider?.Create
+                    (
+                        language?.Trim()?.ToLower(),
+                        this.VaultApplication?.Configuration?.AdvancedConfiguration?.LanguageOverrides
+                    )
+                    ?? new ResourceStrings(),
+                DefaultLocation = this.Configuration?.AdvancedConfiguration?.DefaultLocation ?? WindowLocation.BottomPane
+            };
+            if (this.Configuration?.AdvancedConfiguration?.AllowedLocations?.Any() ?? false)
+            {
+                configuration.AllowedLocations = this.Configuration.AdvancedConfiguration.AllowedLocations.ToArray();
+            }
+
+            // Serialize the configuration for use in the UIX application.
+            return configuration;
         }
     }
 }

@@ -151,4 +151,16 @@ namespace UIHelpers.Modules.Base
             return Enumerable.Empty<ValidationFinding>();
         }
     }
+    internal abstract class ModuleBase<TConfigurationType, TUIXConfiguration>
+        : ModuleBase<TConfigurationType>, ISuppliesUIXConfiguration
+        where TConfigurationType : ConfigurationBase, new()
+    {
+        public ModuleBase(VaultApplication vaultApplication)
+            : base(vaultApplication)
+        {
+        }
+        public abstract TUIXConfiguration GetUIXConfiguration(string language);
+
+        object ISuppliesUIXConfiguration.GetUIXConfiguration(string language) => this.GetUIXConfiguration(language);
+    }
 }

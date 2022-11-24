@@ -61,21 +61,27 @@
 								return;
 							shellUI.Vault.Async.ExtensionMethodOperations.DoesActiveVaultExtensionMethodExist
 							(
-								"ViewAllMetadata.GetUIXConfiguration",
+								"UIHelpers.GetUIXConfiguration",
 								function (result)
 								{
 									// If we didn't find it then fail.
 									if (!result)
 									{
-										console.error("VEM ViewAllMetadata.GetUIXConfiguration not found.");
+										console.error("VEM UIHelpers.GetUIXConfiguration not found.");
 										return;
 									}
 
 									// Pass the language to the server to get the translations.
 									shellUI.Vault.Async.ExtensionMethodOperations.ExecuteVaultExtensionMethod
 										(
-											"ViewAllMetadata.GetUIXConfiguration",
-											lang,
+											"UIHelpers.GetUIXConfiguration",
+											JSON.stringify
+												(
+													{
+														Module: "UIHelpers.Modules.ViewAllMetadata.Module",
+														Language: lang
+													}
+												),
 											function (output)
 											{
 												try

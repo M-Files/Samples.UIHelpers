@@ -3,6 +3,7 @@ using MFiles.VAF.Configuration;
 using MFiles.VAF.Configuration.AdminConfigurations;
 using MFiles.VAF.Configuration.Domain.Dashboards;
 using MFilesAPI;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UIHelpers.Modules.Base;
@@ -89,6 +90,49 @@ namespace UIHelpers
                 if(null != m)
                     foreach(var vf in m.CustomValidation(vault, config))
                         yield return vf;
+        }
+
+        /// <summary>
+        /// Registers a Vault Extension Method with name "UIHelpers.GetUIXConfiguration".
+        /// Users must have at least MFVaultAccess.MFVaultAccessNone access to execute the method.
+        /// This method retrieves the UIX configuration for a specific module.
+        /// </summary>
+        /// <param name="env">The vault/object environment.</param>
+        /// <returns>The any output from the vault extension method execution.</returns>
+        /// <remarks>The input to the vault extension method is available in <see cref="EventHandlerEnvironment.Input"/>.</remarks>
+        [VaultExtensionMethod("UIHelpers.GetUIXConfiguration",
+            RequiredVaultAccess = MFVaultAccess.MFVaultAccessNone)]
+        private string GetUIXConfiguration(EventHandlerEnvironment env)
+        {
+            try
+            {
+                var input = Newtonsoft.Json.JsonConvert.DeserializeObject<GetUIXConfigurationVEMInput>(env.Input);
+                if (null == input)
+                    throw new ArgumentException("Environment input invalid");
+                foreach(var m in this.Modules)
+                {
+                    if(input.Module == m.GetType().FullName)
+                    {
+                        if (m is ISuppliesUIXConfiguration c)
+                            return Newtonsoft.Json.JsonConvert.SerializeObject(c.GetUIXConfiguration(input.Language));
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                this.Logger?.Error(e, $"Could not get UIX configuration from input.");
+            }
+            return "Invalid input";
+        }
+
+        private abstract class VEMInputBase
+        {
+            public string Module { get; set; }
+        }
+        private class GetUIXConfigurationVEMInput
+            : VEMInputBase
+        {
+            public string Language { get; set; }
         }
 
     }
