@@ -1,17 +1,11 @@
-using MFiles.VAF;
-using MFiles.VAF.AppTasks;
 using MFiles.VAF.Common;
 using MFiles.VAF.Configuration;
 using MFiles.VAF.Configuration.AdminConfigurations;
 using MFiles.VAF.Configuration.Domain.Dashboards;
-using MFiles.VAF.Core;
 using MFilesAPI;
-using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
+using UIHelpers.Modules.Base;
 
 namespace UIHelpers
 {
@@ -35,12 +29,16 @@ namespace UIHelpers
 
         public VaultApplication()
         {
-            this.Modules.Add(new ViewAllMetadata.Module(this));
-            this.Modules.Add(new ShowPreview.Module(this));
+            // Add our modules.
+            this.Modules.Add(new Modules.ViewAllMetadata.Module(this));
+            this.Modules.Add(new Modules.ShowPreview.Module(this));
         }
 
         #region Deal with modules
 
+        /// <summary>
+        /// The current modules in the application.
+        /// </summary>
         internal List<ModuleBase> Modules { get; }
             = new List<ModuleBase>();
 
@@ -55,6 +53,8 @@ namespace UIHelpers
             base.InitializeApplication(vault);
         }
 
+        /// <inheritdoc />
+        /// <remarks>Allows us to use [VaultExtensionMethod] (etc.) within the modules themselves.</remarks>
         protected override void RegisterMethodsFromSource(IMethodSource source, Vault vault)
         {
             // Register our ones.

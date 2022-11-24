@@ -9,7 +9,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Resources;
 using System.Runtime.Serialization;
-using UIHelpers.ViewAllMetadata;
 
 namespace UIHelpers
 {
@@ -25,8 +24,8 @@ namespace UIHelpers
             Label = ResourceMarker.Id + nameof(Resources.Configuration.ViewAllMetadata_Label),
             DefaultValue = "Disabled"
         )]
-        public ViewAllMetadata.Configuration ViewAllMetadata { get; set; }
-            = new ViewAllMetadata.Configuration();
+        public Modules.ViewAllMetadata.Configuration ViewAllMetadata { get; set; }
+            = new Modules.ViewAllMetadata.Configuration();
 
         [DataMember]
         [JsonConfEditor
@@ -34,8 +33,8 @@ namespace UIHelpers
             Label = ResourceMarker.Id + nameof(Resources.Configuration.ShowPreview_Label),
             DefaultValue = "Disabled"
         )]
-        public ShowPreview.Configuration ShowPreview { get; set; }
-            = new ShowPreview.Configuration();
+        public Modules.ShowPreview.Configuration ShowPreview { get; set; }
+            = new Modules.ShowPreview.Configuration();
 
         [DataMember(Order = Int32.MaxValue)]
         [JsonConfEditor

@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using UIHelpers.ViewAllMetadata;
 
 namespace UIHelpers
 {

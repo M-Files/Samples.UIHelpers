@@ -1,8 +1,6 @@
 ﻿using MFiles.VAF.Configuration.Logging;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography;
-using UIHelpers.ViewAllMetadata;
 
 namespace UIHelpers
 {

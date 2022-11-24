@@ -114,7 +114,7 @@ namespace UIHelpers.Modules.Base
 
     internal abstract class ModuleBase<TConfigurationType>
         : ModuleBase
-        where TConfigurationType : class, new()
+        where TConfigurationType : ConfigurationBase, new()
     {
         /// <summary>
         /// The configuration of this module.
