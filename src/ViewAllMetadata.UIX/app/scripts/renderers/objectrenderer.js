@@ -67,6 +67,12 @@ function ObjectRenderer(dashboard)
         }
         renderer.originalObject = selectedItem.Clone();
 
+        // Are we editing?
+        if (dashboard.CustomData.configuration.EnableEditing)
+            $("body").addClass("editable");
+        else
+            $("body").removeClass("editable");
+
         // Set the title.
         $("#title").text(selectedItem.VersionData.Title)
 

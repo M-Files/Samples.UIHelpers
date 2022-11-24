@@ -1,12 +1,22 @@
-﻿/* properties list */
+﻿/* only show the bottom buttons if editing */
+div.buttonGroup.bottom {
+    display: none;
+}
+body.editable.changed div.buttonGroup.bottom {
+    display: block;
+}
+/* properties list */
 div.properties {
     position: fixed;
     top: 80px;
     left: 0px;
     right: 0px;
-    bottom: 51px;
+    bottom: 0px;
     overflow-y: auto;
     padding: 25px 20px 0px 20px;
+}
+body.editable.changed div.properties {
+    bottom: 51px;
 }
 
 ol.properties, ol.properties li {
