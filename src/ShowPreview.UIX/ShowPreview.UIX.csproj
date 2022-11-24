@@ -31,6 +31,9 @@
     <Content Include="..\Common\app\console-shellui.js">
       <Link>app\console-shellui.js</Link>
     </Content>
+    <Content Include="..\Common\app\Events.js">
+      <Link>app\Events.js</Link>
+    </Content>
     <Content Include="..\Common\app\images\bottom-pane.png">
       <Link>app\images\bottom-pane.png</Link>
     </Content>

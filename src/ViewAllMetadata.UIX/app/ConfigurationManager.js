@@ -4,26 +4,9 @@
 
 	var t = this;
 
-	var eventListeners = {};
-	t.addEventListener = function (eventType, callback)
-	{
-		if (null == eventType || null == callback)
-			return null;
-		if (typeof (eventListeners[eventType]) == "undefined")
-			eventListeners[eventType] = [];
-		eventListeners[eventType].push(callback);
-	}
-	t.dispatchEvent = function (eventType)
-	{
-		if (arguments.length == 0)
-			return;
-		var eventType = arguments[0];
-		if (typeof (eventListeners[eventType]) == "undefined")
-			eventListeners[eventType] = [];
-		for (var i = 0; i < eventListeners[eventType].length; i++)
-			if (typeof (eventListeners[eventType][i]) == "function")
-				eventListeners[eventType][i].apply(t, Array.prototype.slice.call(arguments, 1));
-	}
+	var events = new Events();
+	t.addEventListener = events.addEventListener;
+	t.dispatchEvent = events.dispatchEvent;
 
 	// Set up the default configuration.
 	var configuration = {

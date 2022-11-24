@@ -29,6 +29,7 @@
     <Content Include="app\base-dashboard.css" />
     <Content Include="app\console-dashboard.js" />
     <Content Include="app\console-shellui.js" />
+    <Content Include="app\Events.js" />
     <Content Include="app\images\bottom-pane.png" />
     <Content Include="app\images\icon-edit.png" />
     <Content Include="app\images\new-window.png" />
