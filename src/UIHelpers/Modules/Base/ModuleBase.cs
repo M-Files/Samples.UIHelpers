@@ -5,10 +5,8 @@ using MFilesAPI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace UIHelpers
+namespace UIHelpers.Modules.Base
 {
     internal abstract class ModuleBase
         : MethodSource

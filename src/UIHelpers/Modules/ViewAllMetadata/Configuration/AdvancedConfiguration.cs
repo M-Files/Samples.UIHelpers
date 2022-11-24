@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 
-namespace UIHelpers.ViewAllMetadata
+namespace UIHelpers.Modules.ViewAllMetadata
 {
     [DataContract]
     [UsesResources(typeof(Resources.Configuration))]

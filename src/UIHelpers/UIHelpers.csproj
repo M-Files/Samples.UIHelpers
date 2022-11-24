@@ -59,7 +59,7 @@
     <Compile Include="Configuration\AdvancedConfiguration.cs" />
     <Compile Include="Configuration\Configuration.cs" />
     <Compile Include="Locations\LocationProvider.cs" />
-    <Compile Include="Modules\ModuleBase.cs" />
+    <Compile Include="Modules\Base\ModuleBase.cs" />
     <Compile Include="Modules\ShowPreview\Configuration\AdvancedConfiguration.cs" />
     <Compile Include="Modules\ShowPreview\Configuration\Configuration.cs" />
     <Compile Include="Modules\ShowPreview\UIXConfiguration\UIXConfiguration.cs" />

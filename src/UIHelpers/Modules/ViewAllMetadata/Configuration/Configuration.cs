@@ -1,16 +1,11 @@
 using MFiles.VAF.Configuration;
-using MFiles.VAF.Configuration.AdminConfigurations;
-using MFiles.VAF.Configuration.JsonAdaptor;
-using MFiles.VAF.Configuration.JsonEditor;
-using MFiles.VAF.Extensions.Configuration;
 using MFilesAPI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Resources;
 using System.Runtime.Serialization;
 
-namespace UIHelpers.ViewAllMetadata
+namespace UIHelpers.Modules.ViewAllMetadata
 {
     [DataContract]
     [UsesResources(typeof(Resources.Configuration))]

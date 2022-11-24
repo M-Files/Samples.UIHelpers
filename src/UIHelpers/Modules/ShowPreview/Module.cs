@@ -1,13 +1,9 @@
 ﻿using MFiles.VAF.Common;
-using MFiles.VAF.Core;
 using MFilesAPI;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using UIHelpers.Modules.Base;
 
-namespace UIHelpers.ShowPreview
+namespace UIHelpers.Modules.ShowPreview
 {
     internal class Module
         : ModuleBase<Configuration>
