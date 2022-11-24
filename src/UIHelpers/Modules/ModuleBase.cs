@@ -13,8 +13,16 @@ namespace UIHelpers
     internal abstract class ModuleBase
         : MethodSource
     {
+        /// <summary>
+        /// The logger for this class.
+        /// </summary>
         protected ILogger Logger { get; }
-        protected VaultApplication VaultApplication { get; set; }
+
+        /// <summary>
+        /// The vault application that this module is installed in.
+        /// </summary>
+        protected VaultApplication VaultApplication { get; }
+
         public ModuleBase(VaultApplication vaultApplication)
         {
             this.Logger = LogManager.GetLogger(this.GetType());
@@ -27,9 +35,79 @@ namespace UIHelpers
         /// InitializeApplication can be used to make changes to the vault structure.
         /// </summary>
         /// <param name="vault">A transactional vault, that has been cloned to this process.</param>
-        public virtual void InitializeApplication(Vault vault) { }
+        public virtual void InitializeApplication(Vault vault)
+        {
+            this.InstallUIXApplications(vault);
+        }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Installs all applications in <see cref="UIXApplicationPaths"/>
+        /// to the <paramref name="vault"/>.
+        /// </summary>
+        /// <param name="vault">The vault to install to.</param>
+        protected virtual void InstallUIXApplications(Vault vault)
+        {
+            if (!this.HasUIXApplications)
+                return;
+
+            foreach(var applicationPath in this.UIXApplicationPaths ?? Enumerable.Empty<string>())
+            {
+                this.InstallUIXApplication(vault, applicationPath);
+            }
+
+        }
+
+        /// <summary>
+        /// Installs a specific application at 
+        /// <paramref name="applicationPath"/>
+        /// to the <paramref name="vault"/>.
+        /// </summary>
+        /// <param name="vault">The vault to install to.</param>
+        /// <param name="applicationPath">The (relative) path to the application to install.</param>
+        protected virtual void InstallUIXApplication(Vault vault, string applicationPath)
+        {
+            if (string.IsNullOrWhiteSpace(applicationPath))
+                return;
+
+            try
+            {
+                if (System.IO.File.Exists(applicationPath))
+                {
+                    vault.CustomApplicationManagementOperations.InstallCustomApplication(applicationPath);
+                }
+                else
+                {
+                    this.Logger?.Fatal($"Could not install UIX application; {applicationPath} does not exist.");
+                }
+            }
+            catch (Exception ex)
+            {
+                if (!MFUtils.IsMFilesAlreadyExistsError(ex))
+                    this.Logger?.Fatal(ex, $"Could not install UIX application.");
+            }
+
+        }
+
+        /// <summary>
+        /// The path(s) to any child UIX application(s).
+        /// </summary>
+        protected List<string> UIXApplicationPaths { get; }
+            = new List<string>();
+
+        /// <summary>
+        /// Whether there are any UIX applications used by this module.
+        /// </summary>
+        public bool HasUIXApplications
+        {
+            get => (this.UIXApplicationPaths?.Count ?? 0) > 0;
+        }
+
+        /// <summary>
+        /// Performs any validation on the <paramref name="config"/>.
+        /// </summary>
+        /// <param name="vault">The vault in which the configuration is in.</param>
+        /// <param name="config">The new configuration.</param>
+        /// <returns>Any validation findings.</returns>
         public virtual IEnumerable<ValidationFinding> CustomValidation(Vault vault, object config)
         {
             return Enumerable.Empty<ValidationFinding>();
@@ -40,12 +118,17 @@ namespace UIHelpers
         : ModuleBase
         where TConfigurationType : class, new()
     {
+        /// <summary>
+        /// The configuration of this module.
+        /// </summary>
         protected abstract TConfigurationType Configuration { get; }
+
         public ModuleBase(VaultApplication vaultApplication)
             : base(vaultApplication)
         {
         }
 
+        /// <inheritdoc />
         public override IEnumerable<ValidationFinding> CustomValidation(Vault vault, object config)
         {
             // Add any base findings.
@@ -59,7 +142,12 @@ namespace UIHelpers
             return findings;
         }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Performs any validation on the <paramref name="config"/>.
+        /// </summary>
+        /// <param name="vault">The vault in which the configuration is in.</param>
+        /// <param name="config">The new configuration.</param>
+        /// <returns>Any validation findings.</returns>
         public virtual IEnumerable<ValidationFinding> CustomValidation(Vault vault, TConfigurationType config)
         {
             return Enumerable.Empty<ValidationFinding>();

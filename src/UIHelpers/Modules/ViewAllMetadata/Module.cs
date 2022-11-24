@@ -12,38 +12,14 @@ namespace UIHelpers.ViewAllMetadata
     internal class Module
         : ModuleBase<Configuration>
     {
+        /// <inheritdoc />
         protected override Configuration Configuration
-        {
-            get => this.VaultApplication?.Configuration?.ViewAllMetadata;
-        }
+            => this.VaultApplication?.Configuration?.ViewAllMetadata;
+
         public Module(VaultApplication vaultApplication) 
             : base(vaultApplication)
         {
-        }
-
-        /// <inheritdoc />
-        /// <remarks>Installs the UIX application.</remarks>
-        public override void InitializeApplication(Vault vault)
-        {
-            try
-            {
-                string appPath = "ViewAllMetadata.UIX.mfappx";
-                if (System.IO.File.Exists(appPath))
-                {
-                    vault.CustomApplicationManagementOperations.InstallCustomApplication(appPath);
-                }
-                else
-                {
-                    this.Logger?.Fatal($"Could not install View all Metadata UIX application; {appPath} does not exist.");
-                }
-            }
-            catch (Exception ex)
-            {
-                if (!MFUtils.IsMFilesAlreadyExistsError(ex))
-                    this.Logger?.Fatal(ex, $"Could not install View all Metadata UIX application.");
-            }
-
-            base.InitializeApplication(vault);
+            this.UIXApplicationPaths.Add("ViewAllMetadata.UIX.mfappx");
         }
 
         /// <summary>

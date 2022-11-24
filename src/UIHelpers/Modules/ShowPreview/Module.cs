@@ -12,38 +12,14 @@ namespace UIHelpers.ShowPreview
     internal class Module
         : ModuleBase<Configuration>
     {
+        /// <inheritdoc />
         protected override Configuration Configuration
-        {
-            get => this.VaultApplication?.Configuration?.ShowPreview;
-        }
+            => this.VaultApplication?.Configuration?.ShowPreview;
+
         public Module(VaultApplication vaultApplication) 
             : base(vaultApplication)
         {
-        }
-
-        /// <inheritdoc />
-        /// <remarks>Installs the UIX application.</remarks>
-        public override void InitializeApplication(Vault vault)
-        {
-            try
-            {
-                string appPath = "ShowPreview.UIX.mfappx";
-                if (System.IO.File.Exists(appPath))
-                {
-                    vault.CustomApplicationManagementOperations.InstallCustomApplication(appPath);
-                }
-                else
-                {
-                    this.Logger?.Fatal($"Could not install Show Preview UIX application; {appPath} does not exist.");
-                }
-            }
-            catch (Exception ex)
-            {
-                if (!MFUtils.IsMFilesAlreadyExistsError(ex))
-                    this.Logger?.Fatal(ex, $"Could not install Show Preview UIX application.");
-            }
-
-            base.InitializeApplication(vault);
+            this.UIXApplicationPaths.Add("ShowPreview.UIX.mfappx");
         }
 
         /// <summary>
