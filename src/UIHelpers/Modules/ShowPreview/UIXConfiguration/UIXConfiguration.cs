@@ -4,21 +4,15 @@ namespace UIHelpers.Modules.ShowPreview
 {
     [DataContract]
     public class UIXConfiguration
+        : Base.UIXConfigurationBase
     {
-        [DataMember]
-        public ResourceStrings ResourceStrings { get; set; }
-            = new ResourceStrings();
-
-        [DataMember]
-        public WindowLocation DefaultLocation { get; set; }
-            = WindowLocation.BottomPane;
-
-        [DataMember]
-        public WindowLocation[] AllowedLocations { get; set; } 
-            = new []
+        public UIXConfiguration()
+        {
+            base.AllowedLocations = new[]
             {
                 WindowLocation.BottomPane,
                 WindowLocation.PopOut
             };
+        }
     }
 }
