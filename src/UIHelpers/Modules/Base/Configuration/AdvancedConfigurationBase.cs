@@ -12,23 +12,61 @@ namespace UIHelpers.Modules.Base
     public abstract class AdvancedConfigurationBase
         : ICanPerformCustomValidation
     {
+        /// <summary>
+        /// The default for <see cref="DefaultLocation"/>.
+        /// </summary>
         public const WindowLocation DefaultLocationDefault = WindowLocation.BottomPane;
+
+        /// <summary>
+        /// Gets the location that this module will default to being displayed, unless the user moves it.
+        /// </summary>
         public abstract WindowLocation DefaultLocation { get; set; }
+
+        /// <summary>
+        /// Gets the locations that this module can be displayed. 
+        /// NOTE: TYPICALLY USE <see cref="AllowedLocations"/> INSTEAD.
+        /// </summary>
         public abstract Dictionary<string, bool> ConfiguredLocations { get; set; }
 
+        /// <summary>
+        /// The default for <see cref="DefaultPopupWindowHeight"/>.
+        /// </summary>
         public const int DefaultPopupWindowHeightDefault = 800;
+
+        /// <summary>
+        /// The default height of the popup window.
+        /// </summary>
         [DataMember]
         [JsonConfIntegerEditor(DefaultValue = DefaultPopupWindowHeightDefault, Min = 500, Max = 4000)]
         public int DefaultPopupWindowHeight { get; set; } = DefaultPopupWindowHeightDefault;
 
+        /// <summary>
+        /// The default for <see cref="DefaultPopupWindowHeight"/>.
+        /// </summary>
         public const int DefaultPopupWindowWidthDefault = 550;
+
+        /// <summary>
+        /// The default width of the popup window.
+        /// </summary>
         [DataMember]
         [JsonConfIntegerEditor(DefaultValue = DefaultPopupWindowWidthDefault, Min = 400, Max = 4000)]
         public int DefaultPopupWindowWidth { get; set; } = DefaultPopupWindowWidthDefault;
 
+        /// <summary>
+        /// Returns a <see cref="IObjectEditorMembersProvider"/> for locations.
+        /// This may be different on different modules due to default values for things like the allowed locations.
+        /// </summary>
+        /// <returns></returns>
         protected virtual LocationProvider GetLocationProvider()
             => new LocationProvider();
 
+        /// <summary>
+        /// Gets the locations that this module can be displayed.
+        /// </summary>
+        /// <remarks>
+        /// Note that <see cref="ConfiguredLocations"/> only contains the data that has been explicitly configured.  
+        /// This property also takes into account the default values.
+        /// </remarks>
         public IEnumerable<WindowLocation> AllowedLocations
         {
             get
