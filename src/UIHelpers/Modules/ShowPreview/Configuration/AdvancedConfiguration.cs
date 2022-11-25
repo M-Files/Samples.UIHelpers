@@ -31,6 +31,16 @@ namespace UIHelpers.Modules.ShowPreview
         public override Dictionary<string, bool> ConfiguredLocations { get; set; }
             = new Dictionary<string, bool>();
 
+        [DataMember(Order = 4)]
+        [JsonConfIntegerEditor
+        (
+            Label = ResourceMarker.Id + nameof(Resources.Configuration.CommandPriority_Label),
+            HelpText = ResourceMarker.Id + nameof(Resources.Configuration.CommandPriority_HelpText),
+            DefaultValue = 2,
+            Min = 1
+        )]
+        public override int CommandPriority { get; set; } = 2;
+
         /// <inheritdoc />
         protected override LocationProvider GetLocationProvider()
             => new LocationProvider.ShowPreviewLocationProvider();

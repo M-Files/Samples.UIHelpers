@@ -1,6 +1,7 @@
 ﻿using MFiles.VAF.Configuration;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using UIHelpers.Locations;
 using UIHelpers.Modules.Base;
 
 namespace UIHelpers.Modules.ViewAllMetadata
@@ -30,6 +31,16 @@ namespace UIHelpers.Modules.ViewAllMetadata
         [ObjectMembers(typeof(LocationProvider.ViewAllMetadataLocationProvider))]
         public override Dictionary<string, bool> ConfiguredLocations { get; set; }
             = new Dictionary<string, bool>();
+
+        [DataMember(Order = 4)]
+        [JsonConfIntegerEditor
+        (
+            Label = ResourceMarker.Id + nameof(Resources.Configuration.CommandPriority_Label),
+            HelpText = ResourceMarker.Id + nameof(Resources.Configuration.CommandPriority_HelpText),
+            DefaultValue = 1,
+            Min = 1
+        )]
+        public override int CommandPriority { get; set; } = 1;
 
         /// <inheritdoc />
         protected override LocationProvider GetLocationProvider()

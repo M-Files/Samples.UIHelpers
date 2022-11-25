@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
+using UIHelpers.Locations;
 
 namespace UIHelpers.Modules.Base
 {
@@ -37,7 +38,14 @@ namespace UIHelpers.Modules.Base
         /// The default height of the popup window.
         /// </summary>
         [DataMember]
-        [JsonConfIntegerEditor(DefaultValue = DefaultPopupWindowHeightDefault, Min = 500, Max = 4000)]
+        [JsonConfIntegerEditor
+        (
+            Label = ResourceMarker.Id + nameof(Resources.Configuration.DefaultPopupWindowHeight_Label),
+            HelpText = ResourceMarker.Id + nameof(Resources.Configuration.DefaultPopupWindowHeight_HelpText),
+            DefaultValue = DefaultPopupWindowHeightDefault, 
+            Min = 500,
+            Max = 4000
+        )]
         public int DefaultPopupWindowHeight { get; set; } = DefaultPopupWindowHeightDefault;
 
         /// <summary>
@@ -49,8 +57,31 @@ namespace UIHelpers.Modules.Base
         /// The default width of the popup window.
         /// </summary>
         [DataMember]
-        [JsonConfIntegerEditor(DefaultValue = DefaultPopupWindowWidthDefault, Min = 400, Max = 4000)]
+        [JsonConfIntegerEditor
+        (
+            Label = ResourceMarker.Id + nameof(Resources.Configuration.DefaultPopupWindowWidth_Label),
+            HelpText = ResourceMarker.Id + nameof(Resources.Configuration.DefaultPopupWindowWidth_HelpText),
+            DefaultValue = DefaultPopupWindowWidthDefault, 
+            Min = 400,
+            Max = 4000
+        )]
         public int DefaultPopupWindowWidth { get; set; } = DefaultPopupWindowWidthDefault;
+
+        /// <summary>
+        /// The default for <see cref="CommandLocation"/>.
+        /// </summary>
+        public const MenuLocation CommandLocationDefault = MenuLocation.MenuLocation_ContextMenu_Top;
+
+        [DataMember(Order = 3)]
+        [JsonConfEditor
+        (
+            Label = ResourceMarker.Id + nameof(Resources.Configuration.CommandLocation_Label),
+            HelpText = ResourceMarker.Id + nameof(Resources.Configuration.CommandLocation_HelpText),
+            DefaultValue = CommandLocationDefault
+        )]
+        public MenuLocation CommandLocation { get; set; } = CommandLocationDefault;
+
+        public abstract int CommandPriority { get; set; }
 
         /// <summary>
         /// Returns a <see cref="IObjectEditorMembersProvider"/> for locations.

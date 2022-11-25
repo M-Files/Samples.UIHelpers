@@ -117,6 +117,42 @@ namespace UIHelpers.Resources {
         /// <summary>
         ///   Looks up a localized string similar to .
         /// </summary>
+        internal static string CommandLocation_HelpText {
+            get {
+                return ResourceManager.GetString("CommandLocation_HelpText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Command Location.
+        /// </summary>
+        internal static string CommandLocation_Label {
+            get {
+                return ResourceManager.GetString("CommandLocation_Label", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        internal static string CommandPriority_HelpText {
+            get {
+                return ResourceManager.GetString("CommandPriority_HelpText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Priority.
+        /// </summary>
+        internal static string CommandPriority_Label {
+            get {
+                return ResourceManager.GetString("CommandPriority_Label", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
         internal static string ConfiguredLocations_HelpText {
             get {
                 return ResourceManager.GetString("ConfiguredLocations_HelpText", resourceCulture);
@@ -147,6 +183,42 @@ namespace UIHelpers.Resources {
         internal static string DefaultLocation_Label {
             get {
                 return ResourceManager.GetString("DefaultLocation_Label", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        internal static string DefaultPopupWindowHeight_HelpText {
+            get {
+                return ResourceManager.GetString("DefaultPopupWindowHeight_HelpText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Default Popup Window Height.
+        /// </summary>
+        internal static string DefaultPopupWindowHeight_Label {
+            get {
+                return ResourceManager.GetString("DefaultPopupWindowHeight_Label", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        internal static string DefaultPopupWindowWidth_HelpText {
+            get {
+                return ResourceManager.GetString("DefaultPopupWindowWidth_HelpText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Default Popup Window Width.
+        /// </summary>
+        internal static string DefaultPopupWindowWidth_Label {
+            get {
+                return ResourceManager.GetString("DefaultPopupWindowWidth_Label", resourceCulture);
             }
         }
         

@@ -135,6 +135,18 @@
   <data name="AllowedUsers_Label" xml:space="preserve">
     <value>Allowed Users</value>
   </data>
+  <data name="CommandLocation_HelpText" xml:space="preserve">
+    <value />
+  </data>
+  <data name="CommandLocation_Label" xml:space="preserve">
+    <value>Command Location</value>
+  </data>
+  <data name="CommandPriority_HelpText" xml:space="preserve">
+    <value />
+  </data>
+  <data name="CommandPriority_Label" xml:space="preserve">
+    <value>Priority</value>
+  </data>
   <data name="ConfiguredLocations_HelpText" xml:space="preserve">
     <value />
   </data>
@@ -146,6 +158,18 @@
   </data>
   <data name="DefaultLocation_Label" xml:space="preserve">
     <value>Default location</value>
+  </data>
+  <data name="DefaultPopupWindowHeight_HelpText" xml:space="preserve">
+    <value />
+  </data>
+  <data name="DefaultPopupWindowHeight_Label" xml:space="preserve">
+    <value>Default Popup Window Height</value>
+  </data>
+  <data name="DefaultPopupWindowWidth_HelpText" xml:space="preserve">
+    <value />
+  </data>
+  <data name="DefaultPopupWindowWidth_Label" xml:space="preserve">
+    <value>Default Popup Window Width</value>
   </data>
   <data name="EnableEditing_Label" xml:space="preserve">
     <value>Enable Editing</value>

@@ -33,5 +33,11 @@ namespace UIHelpers.Modules.Base
         [DataMember]
         public int PopupWindowWidth { get; set; }
             = AdvancedConfigurationBase.DefaultPopupWindowWidthDefault;
+
+        [DataMember]
+        public int CommandLocation { get; set; }
+
+        [DataMember]
+        public int CommandPriority { get; set; }
     }
 }

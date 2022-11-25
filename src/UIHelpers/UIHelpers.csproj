@@ -59,6 +59,7 @@
     <Compile Include="Configuration\AdvancedConfiguration.cs" />
     <Compile Include="Configuration\Configuration.cs" />
     <Compile Include="Locations\LocationProvider.cs" />
+    <Compile Include="Locations\MenuLocation.cs" />
     <Compile Include="Modules\Base\Configuration\AdvancedConfigurationBase.cs" />
     <Compile Include="Modules\Base\Configuration\ConfigurationBase.cs" />
     <Compile Include="Modules\Base\ICanWriteWindowData.cs" />

@@ -114,7 +114,10 @@ namespace UIHelpers
                     if(input.Module == m.GetType().FullName)
                     {
                         if (m is ISuppliesUIXConfiguration c)
-                            return Newtonsoft.Json.JsonConvert.SerializeObject(c.GetUIXConfiguration(input.Language));
+                            return Newtonsoft.Json.JsonConvert.SerializeObject
+                            (
+                                c.GetUIXConfiguration(input.Language)
+                            );
                     }
                 }
             }

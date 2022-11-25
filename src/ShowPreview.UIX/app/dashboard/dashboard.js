@@ -49,16 +49,19 @@ function Dashboard(d)
         // On resize, save the location.
         // Resize fires continuously, so no point reporting back until they are done.
         // This waits until no changes in 0.5s then saves back.
-        var resizeTimeout = null;
-        window.addEventListener("resize", function ()
+        if (null != d.Window)
         {
-            if (null != resizeTimeout)
-                this.clearTimeout(resizeTimeout);
-            resizeTimeout = this.setTimeout(function ()
+            var resizeTimeout = null;
+            window.addEventListener("resize", function ()
             {
-                d.CustomData.windowManager.saveDefaultWindowSize(d.Window.Width, d.Window.Height);
-            }, 500);
-        });
+                if (null != resizeTimeout)
+                    this.clearTimeout(resizeTimeout);
+                resizeTimeout = this.setTimeout(function ()
+                {
+                    d.CustomData.windowManager.saveDefaultWindowSize(d.Window.Width, d.Window.Height);
+                }, 500);
+            });
+        }
     }
 }
 

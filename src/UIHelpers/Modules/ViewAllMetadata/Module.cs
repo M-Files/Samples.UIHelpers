@@ -9,7 +9,7 @@ namespace UIHelpers.Modules.ViewAllMetadata
         : ModuleBase<Configuration, UIXConfiguration>
     {
         /// <inheritdoc />
-        protected override Configuration Configuration
+        public override Configuration GetTypedConfiguration()
             => this.VaultApplication?.Configuration?.ViewAllMetadata;
 
         public Module(VaultApplication vaultApplication) 
@@ -18,41 +18,16 @@ namespace UIHelpers.Modules.ViewAllMetadata
             this.UIXApplicationPaths.Add("ViewAllMetadata.UIX.mfappx");
         }
 
-        public override UIXConfiguration GetUIXConfiguration(string language)
+        protected override void PopulateUIXConfiguration
+        (
+            string language,
+            UIXConfiguration uixConfiguration
+        )
         {
-            // Get where the default window should be.
-            this.GetWindowData
-            (
-                this.VaultApplication.PermanentVault,
-                this.Configuration?.AdvancedConfiguration,
-                out WindowLocation windowLocation,
-                out int windowHeight,
-                out int windowWidth
-            );
-
-            // Create and populate the configuration.
-            var configuration = new UIXConfiguration()
-            {
-                // Create the resource strings from the provider, or default to none.
-                ResourceStrings =
-                    this.VaultApplication.ResourceStringProvider?.Create
-                    (
-                        language?.Trim()?.ToLower(),
-                        this.VaultApplication?.Configuration?.AdvancedConfiguration?.LanguageOverrides
-                    )
-                    ?? new ResourceStrings(),
-                EnableEditing = this.Configuration?.EnableEditing ?? false,
-                DefaultLocation = windowLocation,
-                PopupWindowHeight = windowHeight,
-                PopupWindowWidth = windowWidth,
-            };
-            if (this.Configuration?.AdvancedConfiguration?.AllowedLocations?.Any() ?? false)
-            {
-                configuration.AllowedLocations = this.Configuration.AdvancedConfiguration.AllowedLocations.ToArray();
-            }
-
-            // Serialize the configuration for use in the UIX application.
-            return configuration;
+            var config = this.GetTypedConfiguration();
+            base.PopulateUIXConfiguration(language, uixConfiguration);
+            uixConfiguration.EnableEditing = config?.EnableEditing ?? false;
         }
+
     }
 }

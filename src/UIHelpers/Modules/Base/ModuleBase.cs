@@ -12,6 +12,11 @@ namespace UIHelpers.Modules.Base
         : MethodSource
     {
         /// <summary>
+        /// Gets the configuration of this module.
+        /// </summary>
+        public abstract ConfigurationBase GetConfiguration();
+
+        /// <summary>
         /// The logger for this class.
         /// </summary>
         protected ILogger Logger { get; }
@@ -116,10 +121,9 @@ namespace UIHelpers.Modules.Base
         : ModuleBase, ICanWriteWindowData, ICanReadWindowData
         where TConfigurationType : ConfigurationBase, new()
     {
-        /// <summary>
-        /// The configuration of this module.
-        /// </summary>
-        protected abstract TConfigurationType Configuration { get; }
+        public override ConfigurationBase GetConfiguration()
+            => this.GetTypedConfiguration();
+        public abstract TConfigurationType GetTypedConfiguration();
 
         public ModuleBase(VaultApplication vaultApplication)
             : base(vaultApplication)
@@ -185,7 +189,14 @@ namespace UIHelpers.Modules.Base
             );
         }
 
-        public void GetWindowData(Vault vault, AdvancedConfigurationBase advancedConfiguration, out WindowLocation location, out int height, out int width)
+        public void GetWindowData
+        (
+            Vault vault,
+            AdvancedConfigurationBase advancedConfiguration, 
+            out WindowLocation location, 
+            out int height, 
+            out int width
+        )
         {
             // Get the named values.
             var type = MFNamedValueType.MFUserDefinedValue;
@@ -217,24 +228,76 @@ namespace UIHelpers.Modules.Base
     internal abstract class ModuleBase<TConfigurationType, TUIXConfiguration>
         : ModuleBase<TConfigurationType>, ISuppliesUIXConfiguration
         where TConfigurationType : ConfigurationBase, new()
+        where TUIXConfiguration : UIXConfigurationBase, new()
     {
         public ModuleBase(VaultApplication vaultApplication)
             : base(vaultApplication)
         {
         }
-        public abstract TUIXConfiguration GetUIXConfiguration(string language);
+        protected virtual TUIXConfiguration CreateEmptyUIXConfiguration()
+            => new TUIXConfiguration();
+
+        protected virtual void PopulateUIXConfiguration
+        (
+            string language,
+            TUIXConfiguration uixConfiguration
+        )
+        {
+            var config = this.GetConfiguration();
+            // Get where the default window should be.
+            this.GetWindowData
+            (
+                this.VaultApplication.PermanentVault,
+                config?.AdvancedConfiguration,
+                out WindowLocation windowLocation,
+                out int windowHeight,
+                out int windowWidth
+            );
+
+            // Create the resource strings from the provider, or default to none.
+            uixConfiguration.
+                ResourceStrings =
+                    this.VaultApplication.ResourceStringProvider?.Create
+                    (
+                        language?.Trim()?.ToLower(),
+                        this.VaultApplication?.Configuration?.AdvancedConfiguration?.LanguageOverrides
+                    )
+                    ?? new ResourceStrings();
+            uixConfiguration.DefaultLocation = windowLocation;
+            uixConfiguration.PopupWindowHeight = windowHeight;
+            uixConfiguration.PopupWindowWidth = windowWidth;
+            uixConfiguration.CommandLocation = (int)(config?.AdvancedConfiguration?.CommandLocation ?? Locations.MenuLocation.MenuLocation_ContextMenu_Top);
+            uixConfiguration.CommandPriority= config?.AdvancedConfiguration?.CommandPriority ?? 1;
+            if (config?.AdvancedConfiguration?.AllowedLocations?.Any() ?? false)
+            {
+                uixConfiguration.AllowedLocations = config?.AdvancedConfiguration.AllowedLocations.ToArray();
+            }
+        }
+
+        public virtual TUIXConfiguration GetUIXConfiguration
+        (
+            string language
+        )
+        {
+            var c = this.CreateEmptyUIXConfiguration();
+            this.PopulateUIXConfiguration(language, c);
+            return c;
+        }
 
         public virtual bool ShouldShow(Vault vault, SessionInfo sessionInfo)
         {
+            var config = this.GetConfiguration();
+
             // If the module is disabled then return disabled.
-            if (false == (this.Configuration?.Enabled ?? false))
+            if (false == (config?.Enabled ?? false))
                 return false;
             return
             (
-                this.Configuration?
+                config?
                     .UserIsAllowedAccess(vault, sessionInfo) ?? false
             );
         }
-        object ISuppliesUIXConfiguration.GetUIXConfiguration(string language) => this.GetUIXConfiguration(language);
+        object ISuppliesUIXConfiguration.GetUIXConfiguration(string language) 
+            => this.GetUIXConfiguration(language);
     }
 }

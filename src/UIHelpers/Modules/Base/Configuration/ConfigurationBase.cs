@@ -47,6 +47,13 @@ namespace UIHelpers.Modules.Base
         public CustomAccessRestrictionTypeConfiguration CustomAccessRestrictionTypeConfiguration { get; set; } 
             = new CustomAccessRestrictionTypeConfiguration();
 
+        [DataMember(Order = Int32.MaxValue)]
+        [JsonConfEditor
+        (
+            Label = ResourceMarker.Id + nameof(Resources.Configuration.Advanced_Label)
+        )]
+        public AdvancedConfigurationBase AdvancedConfiguration { get; set; }
+
         /// <inheritdoc />
         /// <remarks>Delegates to <see cref="AdvancedConfigurationBase.CustomValidation(Vault)"/></remarks>
         public virtual IEnumerable<ValidationFinding> CustomValidation(Vault vault)
@@ -117,13 +124,21 @@ namespace UIHelpers.Modules.Base
         : ConfigurationBase
         where TAdvancedConfiguration : AdvancedConfigurationBase, new()
     {
+        public ConfigurationBase()
+        {
+            this.AdvancedConfiguration = new TAdvancedConfiguration();
+        }
+
         [DataMember(Order = Int32.MaxValue)]
         [JsonConfEditor
         (
             Label = ResourceMarker.Id + nameof(Resources.Configuration.Advanced_Label)
         )]
-        public TAdvancedConfiguration AdvancedConfiguration { get; set; }
-            = new TAdvancedConfiguration();
+        public new TAdvancedConfiguration AdvancedConfiguration
+        {
+            get => base.AdvancedConfiguration as TAdvancedConfiguration;
+            set => base.AdvancedConfiguration = value;
+        }
 
         /// <inheritdoc />
         /// <remarks>Delegates to <see cref="AdvancedConfigurationBase.CustomValidation(Vault)"/></remarks>

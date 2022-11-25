@@ -48,8 +48,8 @@ function OnNewShellUI(shellUI)
 					(
 						{
 							text: config.ResourceStrings.Commands_ShowPreview,
-							location: MenuLocation_ContextMenu_Top,
-							priority: 1
+							location: config.CommandLocation,
+							priority: CommandLocation.CommandPriority
 						},
 						{
 							click: function ()
