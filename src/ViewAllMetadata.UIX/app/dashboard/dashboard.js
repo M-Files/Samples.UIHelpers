@@ -44,22 +44,21 @@ function Dashboard(d)
         }
 
         // Do we need to resize?
-        switch (d.CustomData.currentLocation)
+        d.CustomData.windowManager.resizePopupWindow(d.Window);
+
+        // On resize, save the location.
+        // Resize fires continuously, so no point reporting back until they are done.
+        // This waits until no changes in 0.5s then saves back.
+        var resizeTimeout = null;
+        window.addEventListener("resize", function ()
         {
-            case 0: // Bottom pane;
-                break;
-            case 1: // Tab;
-                break;
-            case 2: // Popup;
-                var h = parseInt(d.CustomData.configuration.PopupWindowHeight);
-                if (isNaN(h))
-                    h = 800;
-                var w = parseInt(d.CustomData.configuration.PopupWindowWidth);
-                if (isNaN(w))
-                    w = 550;
-                d.Window.SetDefaultSize(w, h, true);
-                break;
-        }
+            if (null != resizeTimeout)
+                this.clearTimeout(resizeTimeout);
+            resizeTimeout = this.setTimeout(function ()
+            {
+                d.CustomData.windowManager.saveDefaultWindowSize(d.Window.Width, d.Window.Height);
+            }, 500);
+        });
     }
 }
 

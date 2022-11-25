@@ -20,6 +20,16 @@ namespace UIHelpers.Modules.ViewAllMetadata
 
         public override UIXConfiguration GetUIXConfiguration(string language)
         {
+            // Get where the default window should be.
+            this.GetWindowData
+            (
+                this.VaultApplication.PermanentVault,
+                this.Configuration?.AdvancedConfiguration,
+                out WindowLocation windowLocation,
+                out int windowHeight,
+                out int windowWidth
+            );
+
             // Create and populate the configuration.
             var configuration = new UIXConfiguration()
             {
@@ -32,12 +42,9 @@ namespace UIHelpers.Modules.ViewAllMetadata
                     )
                     ?? new ResourceStrings(),
                 EnableEditing = this.Configuration?.EnableEditing ?? false,
-                DefaultLocation = this.Configuration?.AdvancedConfiguration?.DefaultLocation
-                    ?? AdvancedConfigurationBase.DefaultLocationDefault,
-                PopupWindowHeight = this.Configuration?.AdvancedConfiguration?.DefaultPopupWindowHeight
-                    ?? AdvancedConfigurationBase.DefaultPopupWindowHeightDefault,
-                PopupWindowWidth = this.Configuration?.AdvancedConfiguration?.DefaultPopupWindowWidth
-                    ?? AdvancedConfigurationBase.DefaultPopupWindowWidthDefault,
+                DefaultLocation = windowLocation,
+                PopupWindowHeight = windowHeight,
+                PopupWindowWidth = windowWidth,
             };
             if (this.Configuration?.AdvancedConfiguration?.AllowedLocations?.Any() ?? false)
             {

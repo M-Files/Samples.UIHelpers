@@ -10,6 +10,7 @@
 	var selectedItems = null;
 	var shellFrame = null;
 
+	t.getModuleName = function () { return moduleName; }
     t.getWindowManager = function () { return windowManager; }
     t.getVaultStructureManager = function () { return vaultStructureManager; }
 	t.getConfigurationManager = function () { return configurationManager; }

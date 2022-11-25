@@ -146,7 +146,7 @@ namespace UIHelpers
                 {
                     if (input.Module == m.GetType().FullName)
                     {
-                        if (m is ICanPersistWindowData c)
+                        if (m is ICanWriteWindowData c)
                         {
                             c.PersistWindowData(env.Vault, input.Location, input.Height, input.Width);
                             return "true";

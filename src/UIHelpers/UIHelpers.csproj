@@ -61,7 +61,8 @@
     <Compile Include="Locations\LocationProvider.cs" />
     <Compile Include="Modules\Base\Configuration\AdvancedConfigurationBase.cs" />
     <Compile Include="Modules\Base\Configuration\ConfigurationBase.cs" />
-    <Compile Include="Modules\Base\ICanPersistWindowData.cs" />
+    <Compile Include="Modules\Base\ICanWriteWindowData.cs" />
+    <Compile Include="Modules\Base\ICanReadWindowData.cs" />
     <Compile Include="Modules\Base\ISuppliesUIXConfiguration.cs" />
     <Compile Include="Modules\Base\ModuleBase.cs" />
     <Compile Include="Modules\Base\UIXConfiguration\UIXConfigurationBase.cs" />

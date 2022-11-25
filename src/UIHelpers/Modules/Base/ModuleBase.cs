@@ -113,7 +113,7 @@ namespace UIHelpers.Modules.Base
     }
 
     internal abstract class ModuleBase<TConfigurationType>
-        : ModuleBase, ICanPersistWindowData, ICanSupplyWindowData
+        : ModuleBase, ICanWriteWindowData, ICanReadWindowData
         where TConfigurationType : ConfigurationBase, new()
     {
         /// <summary>
@@ -167,6 +167,14 @@ namespace UIHelpers.Modules.Base
             namedValues["Location"] = (int)location;
             namedValues["Height"] = height > 100 ? height : 100;
             namedValues["Width"] = width > 100 ? width : 100;
+
+            // If any are default then remove them.
+            if (location == AdvancedConfigurationBase.DefaultLocationDefault)
+                namedValues["Location"] = null;
+            if (height == AdvancedConfigurationBase.DefaultPopupWindowHeightDefault)
+                namedValues["Height"] = null;
+            if (width == AdvancedConfigurationBase.DefaultPopupWindowWidthDefault)
+                namedValues["Width"] = null;
 
             // Set the named values.
             vault.NamedValueStorageOperations.SetNamedValues

@@ -18,6 +18,13 @@
 	t.addEventListener = events.addEventListener;
 	t.dispatchEvent = events.dispatchEvent;
 
+	var sizes = {
+		popup: {
+			height: 800,
+			width: 550
+			}
+	};
+
 	var currentLocation = 0; // bottom.
 	t.getCurrentLocation = function () { return currentLocation; }
 	t.setCurrentLocation = function (newLocation)
@@ -36,16 +43,93 @@
 		currentLocation = newLocation;
 		registrationCallback = null;
 
+		// Update vault.
+		t.saveDefaultWindowSize();
+
 		// Show.
 		if(s)
 			t.show(true);
 	};
+
+	t.resizePopupWindow = function (window)
+	{
+		// Note: "window" is an M-Files window instance, not a DOM one.
+		switch (currentLocation)
+		{
+			case 0: // Bottom pane;
+				break;
+			case 1: // Tab;
+				break;
+			case 2: // Popup;
+				window.SetDefaultSize(sizes.popup.width, sizes.popup.height, true);
+				break;
+		}
+	};
+	t.saveDefaultWindowSize = function (width, height)
+	{
+		// Update the in-memory values.
+		sizes.popup.width = width || sizes.popup.width;
+		sizes.popup.height = height || sizes.popup.height;
+
+		// Save the values back to the vault.
+		if (typeof (shellUI.Vault.Async.ExtensionMethodOperations.DoesActiveVaultExtensionMethodExist) != "undefined")
+		{
+			shellUI.Vault.Async.ExtensionMethodOperations.DoesActiveVaultExtensionMethodExist
+				(
+					"UIHelpers.PersistWindowData",
+					function (result)
+					{
+						// If we didn't find it then fail.
+						if (!result)
+						{
+							console.error("VEM UIHelpers.PersistWindowData not found.");
+							return;
+						}
+
+						shellUI.Vault.Async.ExtensionMethodOperations.ExecuteVaultExtensionMethod
+							(
+								"UIHelpers.PersistWindowData",
+								JSON.stringify
+									(
+										{
+											Module: orchestrator.getModuleName(),
+											Location: currentLocation,
+											Height: height,
+											Width: width
+										}
+									),
+								function (output)
+								{
+									// If we worked then fantastic.
+									if (output == "true")
+										return;
+									shellUI.ShowMessage(output);
+								},
+								function (shorterror, longerror, errorobj)
+								{
+									MFiles.ReportException(errorobj);
+								}
+							)
+					},
+					function (shorterror, longerror, errorobj)
+					{
+						MFiles.ReportException(errorobj);
+					}
+				);
+		}
+	}
 
 	var allowedLocations = [0];
 
 	// When the config is updated, update our data.
 	orchestrator.addEventListener(Orchestrator.EventTypes.ConfigurationLoaded, function (config)
 	{
+		sizes.popup.height = config.PopupWindowHeight;
+		if (isNaN(parseInt(sizes.popup.height)))
+			sizes.popup.height = 800;
+		sizes.popup.width = config.PopupWindowWidth;
+		if (isNaN(parseInt(sizes.popup.width)))
+			sizes.popup.width = 550;
 		allowedLocations = config.AllowedLocations;
 		t.setCurrentLocation(config.DefaultLocation);
 	});
@@ -144,20 +228,15 @@
 
 						break;
 
-					case 1: // Bottom pane
+					case 1: // Side pane
 
 						// If we did not close explicitly then open again.
 						if (!tabClosedExplicitly)
 						{
 							console.log("Showing on side pane (re-using existing tab)");
 							sideTab.Visible = true;
+							sideTab.Select();
 						}
-
-						break;
-
-					default:
-
-						console.warn("Unhandled location type:" + currentLocation);
 
 						break;
 				}
