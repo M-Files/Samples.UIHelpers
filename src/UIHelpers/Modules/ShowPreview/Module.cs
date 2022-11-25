@@ -31,7 +31,12 @@ namespace UIHelpers.Modules.ShowPreview
                         this.VaultApplication?.Configuration?.AdvancedConfiguration?.LanguageOverrides
                     )
                     ?? new ResourceStrings(),
-                DefaultLocation = this.Configuration?.AdvancedConfiguration?.DefaultLocation ?? WindowLocation.BottomPane
+                DefaultLocation = this.Configuration?.AdvancedConfiguration?.DefaultLocation 
+                    ?? AdvancedConfigurationBase.DefaultLocationDefault,
+                PopupWindowHeight = this.Configuration?.AdvancedConfiguration?.DefaultPopupWindowHeight
+                    ?? AdvancedConfigurationBase.DefaultPopupWindowHeightDefault,
+                PopupWindowWidth = this.Configuration?.AdvancedConfiguration?.DefaultPopupWindowWidth
+                    ?? AdvancedConfigurationBase.DefaultPopupWindowWidthDefault,
             };
             if (this.Configuration?.AdvancedConfiguration?.AllowedLocations?.Any() ?? false)
             {

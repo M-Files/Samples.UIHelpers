@@ -126,6 +126,42 @@ namespace UIHelpers
         }
 
         /// <summary>
+        /// Registers a Vault Extension Method with name "UIHelpers.PersistWindowData".
+        /// Users must have at least MFVaultAccess.MFVaultAccessNone access to execute the method.
+        /// This method saves the current window data for the user so that it'll open again here next time.
+        /// </summary>
+        /// <param name="env">The vault/object environment.</param>
+        /// <returns>The any output from the vault extension method execution.</returns>
+        /// <remarks>The input to the vault extension method is available in <see cref="EventHandlerEnvironment.Input"/>.</remarks>
+        [VaultExtensionMethod("UIHelpers.PersistWindowData",
+            RequiredVaultAccess = MFVaultAccess.MFVaultAccessNone)]
+        private string PersistWindowData(EventHandlerEnvironment env)
+        {
+            try
+            {
+                var input = Newtonsoft.Json.JsonConvert.DeserializeObject<PersistWindowDataVEMInput>(env.Input);
+                if (null == input)
+                    throw new ArgumentException("Environment input invalid");
+                foreach (var m in this.Modules)
+                {
+                    if (input.Module == m.GetType().FullName)
+                    {
+                        if (m is ICanPersistWindowData c)
+                        {
+                            c.PersistWindowData(env.Vault, input.Location, input.Height, input.Width);
+                            return "true";
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                this.Logger?.Error(e, $"Could not get window data from input.");
+            }
+            return "Invalid input";
+        }
+
+        /// <summary>
         /// Registers a Vault Extension Method with name "UIHelpers.ShouldShow".
         /// Users must have at least MFVaultAccess.MFVaultAccessNone access to execute the method.
         /// This method retrieves whether a specific module should be shown.
@@ -153,7 +189,7 @@ namespace UIHelpers
             }
             catch (Exception e)
             {
-                this.Logger?.Error(e, $"Could not get confirm user status from input.");
+                this.Logger?.Error(e, $"Could not get data from input.");
             }
             return "Invalid input";
         }
@@ -166,6 +202,13 @@ namespace UIHelpers
             : VEMInputBase
         {
             public string Language { get; set; }
+        }
+        private class PersistWindowDataVEMInput
+            : VEMInputBase
+        {
+            public WindowLocation Location { get; set; }
+            public int Height { get; set; }
+            public int Width { get; set; }
         }
 
     }

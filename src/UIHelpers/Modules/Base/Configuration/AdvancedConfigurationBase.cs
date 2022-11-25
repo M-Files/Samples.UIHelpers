@@ -12,8 +12,19 @@ namespace UIHelpers.Modules.Base
     public abstract class AdvancedConfigurationBase
         : ICanPerformCustomValidation
     {
+        public const WindowLocation DefaultLocationDefault = WindowLocation.BottomPane;
         public abstract WindowLocation DefaultLocation { get; set; }
         public abstract Dictionary<string, bool> ConfiguredLocations { get; set; }
+
+        public const int DefaultPopupWindowHeightDefault = 800;
+        [DataMember]
+        [JsonConfIntegerEditor(DefaultValue = DefaultPopupWindowHeightDefault, Min = 500, Max = 4000)]
+        public int DefaultPopupWindowHeight { get; set; } = DefaultPopupWindowHeightDefault;
+
+        public const int DefaultPopupWindowWidthDefault = 550;
+        [DataMember]
+        [JsonConfIntegerEditor(DefaultValue = DefaultPopupWindowWidthDefault, Min = 400, Max = 4000)]
+        public int DefaultPopupWindowWidth { get; set; } = DefaultPopupWindowWidthDefault;
 
         protected virtual LocationProvider GetLocationProvider()
             => new LocationProvider();

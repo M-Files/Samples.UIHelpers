@@ -113,7 +113,7 @@ namespace UIHelpers.Modules.Base
     }
 
     internal abstract class ModuleBase<TConfigurationType>
-        : ModuleBase
+        : ModuleBase, ICanPersistWindowData, ICanSupplyWindowData
         where TConfigurationType : ConfigurationBase, new()
     {
         /// <summary>
@@ -149,6 +149,61 @@ namespace UIHelpers.Modules.Base
         public virtual IEnumerable<ValidationFinding> CustomValidation(Vault vault, TConfigurationType config)
         {
             return Enumerable.Empty<ValidationFinding>();
+        }
+
+        /// <inheritdoc />
+        public void PersistWindowData(Vault vault, WindowLocation location, int height, int width)
+        {
+            // Get the named values.
+            var type = MFNamedValueType.MFUserDefinedValue;
+            var ns = this.GetType().FullName + ".WindowData";
+            var namedValues = vault.NamedValueStorageOperations.GetNamedValues
+            (
+                type,
+                ns
+            ) ?? new NamedValues();
+
+            // Set the data.
+            namedValues["Location"] = (int)location;
+            namedValues["Height"] = height > 100 ? height : 100;
+            namedValues["Width"] = width > 100 ? width : 100;
+
+            // Set the named values.
+            vault.NamedValueStorageOperations.SetNamedValues
+            (
+                type,
+                ns,
+                namedValues
+            );
+        }
+
+        public void GetWindowData(Vault vault, AdvancedConfigurationBase advancedConfiguration, out WindowLocation location, out int height, out int width)
+        {
+            // Get the named values.
+            var type = MFNamedValueType.MFUserDefinedValue;
+            var ns = this.GetType().FullName + ".WindowData";
+            var namedValues = vault.NamedValueStorageOperations.GetNamedValues
+            (
+                type,
+                ns
+            ) ?? new NamedValues();
+
+            // Set the defaults.
+            location = advancedConfiguration?.DefaultLocation ?? AdvancedConfigurationBase.DefaultLocationDefault;
+            height = advancedConfiguration?.DefaultPopupWindowHeight ?? AdvancedConfigurationBase.DefaultPopupWindowHeightDefault;
+            width = advancedConfiguration?.DefaultPopupWindowWidth ?? AdvancedConfigurationBase.DefaultPopupWindowWidthDefault;
+
+            // Can we parse out the location?
+            if (namedValues.Contains("Location") && Enum.TryParse(namedValues["Location"]?.ToString(), out WindowLocation l))
+                location = l;
+
+            // Can we parse out the height?
+            if (namedValues.Contains("Height") && Int32.TryParse(namedValues["Height"]?.ToString(), out int h) && h > 100)
+                height = h;
+
+            // Can we parse out the width?
+            if (namedValues.Contains("Width") && Int32.TryParse(namedValues["Width"]?.ToString(), out int w) && w > 100)
+                width = w;
         }
     }
     internal abstract class ModuleBase<TConfigurationType, TUIXConfiguration>

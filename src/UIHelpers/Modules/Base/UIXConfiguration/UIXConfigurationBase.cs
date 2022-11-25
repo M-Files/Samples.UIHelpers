@@ -1,4 +1,5 @@
-﻿using System.Runtime.Serialization;
+﻿using NLog.Config;
+using System.Runtime.Serialization;
 
 namespace UIHelpers.Modules.Base
 {
@@ -14,7 +15,7 @@ namespace UIHelpers.Modules.Base
 
         [DataMember]
         public WindowLocation DefaultLocation { get; set; }
-            = WindowLocation.BottomPane;
+            = AdvancedConfigurationBase.DefaultLocationDefault;
 
         [DataMember]
         public WindowLocation[] AllowedLocations { get; set; } 
@@ -24,5 +25,13 @@ namespace UIHelpers.Modules.Base
                 WindowLocation.NewTab,
                 WindowLocation.PopOut
             };
+
+        [DataMember]
+        public int PopupWindowHeight { get; set; }
+            = AdvancedConfigurationBase.DefaultPopupWindowHeightDefault;
+
+        [DataMember]
+        public int PopupWindowWidth { get; set; }
+            = AdvancedConfigurationBase.DefaultPopupWindowWidthDefault;
     }
 }

@@ -42,6 +42,24 @@ function Dashboard(d)
         {
             $("body").css({ "background-color": "red" });
         }
+
+        // Do we need to resize?
+        switch (d.CustomData.currentLocation)
+        {
+            case 0: // Bottom pane;
+                break;
+            case 1: // Tab;
+                break;
+            case 2: // Popup;
+                var h = parseInt(d.CustomData.configuration.PopupWindowHeight);
+                if (isNaN(h))
+                    h = 800;
+                var w = parseInt(d.CustomData.configuration.PopupWindowWidth);
+                if (isNaN(w))
+                    w = 550;
+                d.Window.SetDefaultSize(w, h, true);
+                break;
+        }
     }
 }
 

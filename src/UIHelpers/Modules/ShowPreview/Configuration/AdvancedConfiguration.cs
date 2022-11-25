@@ -15,11 +15,11 @@ namespace UIHelpers.Modules.ShowPreview
         (
             Label = ResourceMarker.Id + nameof(Resources.Configuration.DefaultLocation_Label),
             HelpText = ResourceMarker.Id + nameof(Resources.Configuration.DefaultLocation_HelpText),
-            DefaultValue = WindowLocation.BottomPane
+            DefaultValue = DefaultLocationDefault
         )]
         [ValueOptions(typeof(LocationProvider.ShowPreviewLocationProvider))]
         public override WindowLocation DefaultLocation { get; set; }
-            = WindowLocation.BottomPane;
+            = DefaultLocationDefault;
 
         [DataMember(Order = 1)]
         [JsonConfEditor
