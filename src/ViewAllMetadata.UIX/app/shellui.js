@@ -19,15 +19,15 @@ function OnNewShellUI(shellUI)
 			{
 				// Did we get one item?
 				var isOneObjectSelected = selectedItems.Count == 1 && selectedItems.ObjectVersionsAndProperties.Count == 1;
-				if (isOneObjectSelected)
-				{
-					selectedItem = selectedItems.ObjectVersionsAndProperties[0];
-				}
-				if (false == isOneObjectSelected)
+
+				// If not one item then close.
+				if (!isOneObjectSelected)
 				{
 					orchestrator.getWindowManager().close();
 					return false;
 				}
+
+				// Show the single object.
 				orchestrator.getWindowManager().show(false);
 			}
 		)
