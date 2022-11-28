@@ -99,6 +99,7 @@
     </Compile>
     <Compile Include="Modules\ViewAllMetadata\Module.cs" />
     <Compile Include="Modules\ViewAllMetadata\UIXConfiguration\UIXConfiguration.cs" />
+    <Compile Include="VaultApplication.EntryPoints.cs" />
     <Compile Include="VaultApplication.cs" />
   </ItemGroup>
   <ItemGroup>

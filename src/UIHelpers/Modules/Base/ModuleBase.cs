@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace UIHelpers.Modules.Base
 {
-    internal abstract class ModuleBase
+    public abstract class ModuleBase
         : MethodSource
     {
         /// <summary>
@@ -32,6 +32,8 @@ namespace UIHelpers.Modules.Base
             this.VaultApplication = vaultApplication
                 ?? throw new ArgumentNullException(nameof(vaultApplication));
         }
+
+        #region Handle installing any UIX applications
 
         /// <summary>
         /// Protected overridable for the child classes to override instead of Initialize.
@@ -105,6 +107,10 @@ namespace UIHelpers.Modules.Base
             get => (this.UIXApplicationPaths?.Count ?? 0) > 0;
         }
 
+        #endregion
+
+        #region Any custom validation
+
         /// <summary>
         /// Performs any validation on the <paramref name="config"/>.
         /// </summary>
@@ -115,20 +121,31 @@ namespace UIHelpers.Modules.Base
         {
             return Enumerable.Empty<ValidationFinding>();
         }
+
+        #endregion
     }
 
-    internal abstract class ModuleBase<TConfigurationType>
+    public abstract class ModuleBase<TConfigurationType>
         : ModuleBase, ICanWriteWindowData, ICanReadWindowData
         where TConfigurationType : ConfigurationBase, new()
     {
+        /// <inheritdoc />
+        /// <remarks>Delegates to <see cref="GetTypedConfiguration"/>.</remarks>
         public override ConfigurationBase GetConfiguration()
             => this.GetTypedConfiguration();
+
+        /// <summary>
+        /// Gets the configuration of this module.
+        /// </summary>
+        /// <returns>The configuration.</returns>
         public abstract TConfigurationType GetTypedConfiguration();
 
         public ModuleBase(VaultApplication vaultApplication)
             : base(vaultApplication)
         {
         }
+
+        #region Any custom validation
 
         /// <inheritdoc />
         public override IEnumerable<ValidationFinding> CustomValidation(Vault vault, object config)
@@ -155,8 +172,12 @@ namespace UIHelpers.Modules.Base
             return Enumerable.Empty<ValidationFinding>();
         }
 
+        #endregion
+
+        #region ICanWriteWindowData
+
         /// <inheritdoc />
-        public void PersistWindowData(Vault vault, WindowLocation location, int height, int width)
+        public virtual void PersistWindowData(Vault vault, WindowLocation location, int height, int width)
         {
             // Get the named values.
             var type = MFNamedValueType.MFUserDefinedValue;
@@ -189,7 +210,12 @@ namespace UIHelpers.Modules.Base
             );
         }
 
-        public void GetWindowData
+        #endregion
+
+        #region ICanReadWindowData
+
+        /// <inheritdoc />
+        public virtual void GetWindowData
         (
             Vault vault,
             AdvancedConfigurationBase advancedConfiguration, 
@@ -224,8 +250,12 @@ namespace UIHelpers.Modules.Base
             if (namedValues.Contains("Width") && Int32.TryParse(namedValues["Width"]?.ToString(), out int w) && w > 100)
                 width = w;
         }
+
+        #endregion
+
     }
-    internal abstract class ModuleBase<TConfigurationType, TUIXConfiguration>
+
+    public abstract class ModuleBase<TConfigurationType, TUIXConfiguration>
         : ModuleBase<TConfigurationType>, ISuppliesUIXConfiguration
         where TConfigurationType : ConfigurationBase, new()
         where TUIXConfiguration : UIXConfigurationBase, new()

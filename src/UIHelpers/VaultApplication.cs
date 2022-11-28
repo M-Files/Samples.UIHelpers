@@ -40,7 +40,7 @@ namespace UIHelpers
         /// <summary>
         /// The current modules in the application.
         /// </summary>
-        internal List<ModuleBase> Modules { get; }
+        protected internal List<ModuleBase> Modules { get; }
             = new List<ModuleBase>();
 
         /// <inheritdoc />
@@ -67,12 +67,82 @@ namespace UIHelpers
                     base.RegisterMethodsFromSource(module, vault);
         }
 
+        /// <summary>
+        /// Returns the module for the given <paramref name="input"/>.
+        /// </summary>
+        /// <typeparam name="TExpectedType">The expected module type.</typeparam>
+        /// <param name="input">Data about the module.</param>
+        /// <returns>The module, or null.</returns>
+        protected virtual TExpectedType GetModule<TExpectedType>(VEMInputBase input)
+            where TExpectedType : class
+        {
+            return this.GetModule(input) as TExpectedType;
+        }
+
+        /// <summary>
+        /// Returns the module for the given <paramref name="input"/>.
+        /// </summary>
+        /// <param name="input">Data about the module.</param>
+        /// <returns>The module, or null.</returns>
+        protected virtual ModuleBase GetModule(VEMInputBase input)
+        {
+            // Sanity.
+            if (null == input)
+                return null;
+
+            // Use the other overload.
+            return this.GetModule(input.Module);
+        }
+
+        /// <summary>
+        /// Returns the module with the given <paramref name="moduleName"/>.
+        /// </summary>
+        /// <param name="moduleName">The name of the module.</param>
+        /// <returns>The module, or null.</returns>
+        protected virtual ModuleBase GetModule(string moduleName)
+        {
+            // Sanity.
+            if (null == this.Modules)
+                return null;
+
+            // Find the module.
+            foreach (var m in this.Modules)
+            {
+                if (null == m)
+                    continue;
+                if (moduleName == m.GetType().FullName)
+                    return m;
+            }
+
+            // None.
+            return null;
+
+        }
+
+        /// <summary>
+        /// Returns the module with the given <paramref name="moduleName"/>.
+        /// </summary>
+        /// <typeparam name="TExpectedType">The expected module type.</typeparam>
+        /// <param name="moduleName">The name of the module.</param>
+        /// <returns>The module, or null.</returns>
+        protected virtual TExpectedType GetModule<TExpectedType>(string moduleName)
+            where TExpectedType : class
+        {
+            return this.GetModule(moduleName) as TExpectedType;
+        }
+
         #endregion
+
+        #region Dashboard generation
 
         /// <inheritdoc />
         /// <remarks>This does not use any async operations, so hide it.</remarks>
         public override IDashboardContent GetAsynchronousOperationDashboardContent(IConfigurationRequestContext context)
             => null;
+
+        #endregion
+
+        #region Configuration validation
 
         /// <inheritdoc />
         protected override IEnumerable<ValidationFinding> CustomValidation(Vault vault, Configuration config)
@@ -92,121 +162,18 @@ namespace UIHelpers
                         yield return vf;
         }
 
-        /// <summary>
-        /// Registers a Vault Extension Method with name "UIHelpers.GetUIXConfiguration".
-        /// Users must have at least MFVaultAccess.MFVaultAccessNone access to execute the method.
-        /// This method retrieves the UIX configuration for a specific module.
-        /// </summary>
-        /// <param name="env">The vault/object environment.</param>
-        /// <returns>The any output from the vault extension method execution.</returns>
-        /// <remarks>The input to the vault extension method is available in <see cref="EventHandlerEnvironment.Input"/>.</remarks>
-        [VaultExtensionMethod("UIHelpers.GetUIXConfiguration",
-            RequiredVaultAccess = MFVaultAccess.MFVaultAccessNone)]
-        private string GetUIXConfiguration(EventHandlerEnvironment env)
-        {
-            try
-            {
-                var input = Newtonsoft.Json.JsonConvert.DeserializeObject<GetUIXConfigurationVEMInput>(env.Input);
-                if (null == input)
-                    throw new ArgumentException("Environment input invalid");
-                foreach(var m in this.Modules)
-                {
-                    if(input.Module == m.GetType().FullName)
-                    {
-                        if (m is ISuppliesUIXConfiguration c)
-                            return Newtonsoft.Json.JsonConvert.SerializeObject
-                            (
-                                c.GetUIXConfiguration(input.Language)
-                            );
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                this.Logger?.Error(e, $"Could not get UIX configuration from input.");
-            }
-            return "Invalid input";
-        }
+        #endregion
 
-        /// <summary>
-        /// Registers a Vault Extension Method with name "UIHelpers.PersistWindowData".
-        /// Users must have at least MFVaultAccess.MFVaultAccessNone access to execute the method.
-        /// This method saves the current window data for the user so that it'll open again here next time.
-        /// </summary>
-        /// <param name="env">The vault/object environment.</param>
-        /// <returns>The any output from the vault extension method execution.</returns>
-        /// <remarks>The input to the vault extension method is available in <see cref="EventHandlerEnvironment.Input"/>.</remarks>
-        [VaultExtensionMethod("UIHelpers.PersistWindowData",
-            RequiredVaultAccess = MFVaultAccess.MFVaultAccessNone)]
-        private string PersistWindowData(EventHandlerEnvironment env)
-        {
-            try
-            {
-                var input = Newtonsoft.Json.JsonConvert.DeserializeObject<PersistWindowDataVEMInput>(env.Input);
-                if (null == input)
-                    throw new ArgumentException("Environment input invalid");
-                foreach (var m in this.Modules)
-                {
-                    if (input.Module == m.GetType().FullName)
-                    {
-                        if (m is ICanWriteWindowData c)
-                        {
-                            c.PersistWindowData(env.Vault, input.Location, input.Height, input.Width);
-                            return "true";
-                        }
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                this.Logger?.Error(e, $"Could not get window data from input.");
-            }
-            return "Invalid input";
-        }
-
-        /// <summary>
-        /// Registers a Vault Extension Method with name "UIHelpers.ShouldShow".
-        /// Users must have at least MFVaultAccess.MFVaultAccessNone access to execute the method.
-        /// This method retrieves whether a specific module should be shown.
-        /// </summary>
-        /// <param name="env">The vault/object environment.</param>
-        /// <returns>The any output from the vault extension method execution.</returns>
-        /// <remarks>The input to the vault extension method is available in <see cref="EventHandlerEnvironment.Input"/>.</remarks>
-        [VaultExtensionMethod("UIHelpers.ShouldShow",
-            RequiredVaultAccess = MFVaultAccess.MFVaultAccessNone)]
-        private string ShouldShow(EventHandlerEnvironment env)
-        {
-            try
-            {
-                var input = Newtonsoft.Json.JsonConvert.DeserializeObject<VEMInputBase>(env.Input);
-                if (null == input)
-                    throw new ArgumentException("Environment input invalid");
-                foreach (var m in this.Modules)
-                {
-                    if (input.Module == m.GetType().FullName)
-                    {
-                        if (m is ISuppliesUIXConfiguration c)
-                            return c.ShouldShow(env.Vault, env.CurrentUserSessionInfo).ToString()?.ToLower();
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                this.Logger?.Error(e, $"Could not get data from input.");
-            }
-            return "Invalid input";
-        }
-
-        private class VEMInputBase
+        protected class VEMInputBase
         {
             public string Module { get; set; }
         }
-        private class GetUIXConfigurationVEMInput
+        protected class GetUIXConfigurationVEMInput
             : VEMInputBase
         {
             public string Language { get; set; }
         }
-        private class PersistWindowDataVEMInput
+        protected class PersistWindowDataVEMInput
             : VEMInputBase
         {
             public WindowLocation Location { get; set; }

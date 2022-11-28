@@ -24,5 +24,9 @@ namespace UIHelpers.Modules.ShowPreview
             get => base.RequiredAccessRights;
             set => base.RequiredAccessRights = value;
         }
+        public Configuration()
+        {
+            this.RequiredAccessRights = MFVaultAccess.MFVaultAccessNone;
+        }
     }
 }
