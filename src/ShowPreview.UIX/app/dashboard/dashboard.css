@@ -1,4 +1,5 @@
-﻿
+﻿@import url('common-dashboard.min.css');
+
 div.preview {
     position: fixed;
     top: 80px;

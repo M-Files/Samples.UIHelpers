@@ -22,47 +22,26 @@
     <OutputPath>bin\</OutputPath>
   </PropertyGroup>
   <ItemGroup>
-    <Content Include="..\Common\app\base-dashboard.css">
-      <Link>app\dashboard\base-dashboard.css</Link>
+    <Content Include="..\Common\bundles\common-dashboard.js">
+      <Link>app\dashboard\common-dashboard.js</Link>
     </Content>
-    <Content Include="..\Common\app\ConfigurationManager.js">
-      <Link>app\ConfigurationManager.js</Link>
+    <Content Include="..\Common\bundles\common-dashboard.min.css">
+      <Link>app\dashboard\common-dashboard.min.css</Link>
     </Content>
-    <Content Include="..\Common\app\console-dashboard.js">
-      <Link>app\dashboard\console-dashboard.js</Link>
+    <Content Include="..\Common\bundles\common-shellui.js">
+      <Link>app\common-shellui.js</Link>
     </Content>
-    <Content Include="..\Common\app\console-shellui.js">
-      <Link>app\console-shellui.js</Link>
-    </Content>
-    <Content Include="..\Common\app\Events.js">
-      <Link>app\Events.js</Link>
-    </Content>
-    <Content Include="..\Common\app\images\bottom-pane.png">
+    <Content Include="..\Common\src\dashboards\images\bottom-pane.png">
       <Link>app\images\bottom-pane.png</Link>
     </Content>
-    <Content Include="..\Common\app\images\icon-edit.png">
+    <Content Include="..\Common\src\dashboards\images\icon-edit.png">
       <Link>app\images\icon-edit.png</Link>
     </Content>
-    <Content Include="..\Common\app\images\new-window.png">
+    <Content Include="..\Common\src\dashboards\images\new-window.png">
       <Link>app\images\new-window.png</Link>
     </Content>
-    <Content Include="..\Common\app\images\right-tab.png">
+    <Content Include="..\Common\src\dashboards\images\right-tab.png">
       <Link>app\images\right-tab.png</Link>
-    </Content>
-    <Content Include="..\Common\app\json2.js">
-      <Link>app\json2.js</Link>
-    </Content>
-    <Content Include="..\Common\app\Orchestrator.js">
-      <Link>app\Orchestrator.js</Link>
-    </Content>
-    <Content Include="..\Common\app\scripts\jquery-1.12.4.min.js">
-      <Link>app\scripts\jquery-1.12.4.min.js</Link>
-    </Content>
-    <Content Include="..\Common\app\VaultStructureManager.js">
-      <Link>app\VaultStructureManager.js</Link>
-    </Content>
-    <Content Include="..\Common\app\WindowManager.js">
-      <Link>app\WindowManager.js</Link>
     </Content>
     <Content Include="app\appdef.xml">
       <SubType>Designer</SubType>

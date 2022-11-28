@@ -1,4 +1,6 @@
-﻿/* only show the bottom buttons if editing */
+﻿@import url('common-dashboard.min.css');
+
+/* only show the bottom buttons if editing */
 div.buttonGroup.bottom {
     display: none;
 }

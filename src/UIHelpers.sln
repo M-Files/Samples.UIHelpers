@@ -15,8 +15,14 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentation", "Documentat
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ViewAllMetadata.UIX", "ViewAllMetadata.UIX\ViewAllMetadata.UIX.csproj", "{323AB008-79E3-45BA-AFA2-1CA98DC35F9E}"
+	ProjectSection(ProjectDependencies) = postProject
+		{53441909-BBB8-4AAB-AEEE-E22427BCC947} = {53441909-BBB8-4AAB-AEEE-E22427BCC947}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShowPreview.UIX", "ShowPreview.UIX\ShowPreview.UIX.csproj", "{639A0C1F-B95B-4060-987E-24E6536A2593}"
+	ProjectSection(ProjectDependencies) = postProject
+		{53441909-BBB8-4AAB-AEEE-E22427BCC947} = {53441909-BBB8-4AAB-AEEE-E22427BCC947}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "Common\Common.csproj", "{53441909-BBB8-4AAB-AEEE-E22427BCC947}"
 EndProject

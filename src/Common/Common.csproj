@@ -1,4 +1,11 @@
-﻿<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" InitialTargets="CleanAll">
+  <Import Project="$(MSBuildExtensionsPath)$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <_BundlerMinifierTaskAssembly Condition="'$(MSBuildRuntimeType)' == 'Core'">..\packages\BuildBundlerMinifier.3.2.449\tools\netstandard1.3\BundlerMinifier.dll</_BundlerMinifierTaskAssembly>
+    <_BundlerMinifierTaskAssembly Condition="'$(MSBuildRuntimeType)' != 'Core'">..\packages\BuildBundlerMinifier.3.2.449\tools\net46\BundlerMinifier.dll</_BundlerMinifierTaskAssembly>
+  </PropertyGroup>
+  <UsingTask AssemblyFile="$(_BundlerMinifierTaskAssembly)" TaskName="BundlerMinifier.BundlerBuildTask" />
+  <UsingTask AssemblyFile="$(_BundlerMinifierTaskAssembly)" TaskName="BundlerMinifier.BundlerCleanTask" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -22,44 +29,51 @@
     <OutputPath>bin\</OutputPath>
   </PropertyGroup>
   <ItemGroup>
+    <Content Include="bundles\bundle-dashboard.js" />
+    <Content Include="bundles\bundle-dashboard.min.js">
+      <DependentUpon>bundle-dashboard.js</DependentUpon>
+    </Content>
+    <Content Include="bundles\common-dashboard.js" />
+    <Content Include="bundles\common-dashboard.min.js">
+      <DependentUpon>common-dashboard.js</DependentUpon>
+    </Content>
+    <Content Include="bundles\common-shellui.js" />
+    <Content Include="bundles\common-shellui.min.js">
+      <DependentUpon>common-shellui.js</DependentUpon>
+    </Content>
+    <Content Include="src\dashboards\base-dashboard.css" />
+    <Content Include="bundles\bundle-shellui.js" />
+    <Content Include="bundles\bundle-shellui.min.js">
+      <DependentUpon>bundle-shellui.js</DependentUpon>
+    </Content>
+    <Content Include="src\ConfigurationManager.js" />
+    <Content Include="src\dashboards\scripts\console-dashboard.js" />
+    <Content Include="src\console-shellui.js" />
+    <Content Include="src\Events.js" />
+    <Content Include="src\dashboards\images\bottom-pane.png" />
+    <Content Include="src\dashboards\images\icon-edit.png" />
+    <Content Include="src\dashboards\images\new-window.png" />
+    <Content Include="src\dashboards\images\right-tab.png" />
+    <Content Include="src\json2.js" />
+    <Content Include="src\Orchestrator.js" />
+    <Content Include="src\dashboards\scripts\jquery-1.12.4.min.js" />
+    <Content Include="src\VaultStructureManager.js" />
+    <Content Include="src\WindowManager.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bundleconfig.json" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
-  <ItemGroup>
-    <Content Include="app\base-dashboard.css" />
-    <Content Include="app\ConfigurationManager.js" />
-    <Content Include="app\console-dashboard.js" />
-    <Content Include="app\console-shellui.js" />
-    <Content Include="app\Events.js" />
-    <Content Include="app\images\bottom-pane.png" />
-    <Content Include="app\images\icon-edit.png" />
-    <Content Include="app\images\new-window.png" />
-    <Content Include="app\images\right-tab.png" />
-    <Content Include="app\json2.js" />
-    <Content Include="app\Orchestrator.js" />
-    <Content Include="app\scripts\jquery-1.12.4.min.js" />
-    <Content Include="app\VaultStructureManager.js" />
-    <Content Include="app\WindowManager.js" />
-  </ItemGroup>
-  <Target Name="Clean">
-    <RemoveDir Directories="out" />
+  <Target Name="CleanAll">
+    <RemoveDir Directories="out;bin;obj;bundles" />
+    <BundlerMinifier.BundlerBuildTask FileName="$(MSBuildProjectDirectory)\bundleconfig.json" />
   </Target>
   <Target Name="Build">
-    <RemoveDir Directories="bin;obj" />
-    <!-- DO NOTHING -->
-    <!-- <CreateItem Include="app\**"> -->
-    <!-- <Output ItemName="ApplicationFiles" TaskParameter="Include" /> -->
-    <!-- </CreateItem> -->
-    <!-- <Zip ZipFileName="out\$(AssemblyName).mfappx" WorkingDirectory="$(MSBuildProjectDirectory)\app" Files="@(ApplicationFiles)" /> -->
   </Target>
-  <Target Name="Rebuild" DependsOnTargets="Clean;Build" />
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('..\packages\MSBuildTasks.1.5.0.235\build\MSBuildTasks.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\MSBuildTasks.1.5.0.235\build\MSBuildTasks.targets'))" />
+  <Target Name="BundleMinifyClean" AfterTargets="CoreClean">
+    <BundlerMinifier.BundlerCleanTask FileName="$(MSBuildProjectDirectory)\bundleconfig.json" />
   </Target>
-  <Import Project="..\packages\MSBuildTasks.1.5.0.235\build\MSBuildTasks.targets" Condition="Exists('..\packages\MSBuildTasks.1.5.0.235\build\MSBuildTasks.targets')" />
+  <Target Name="Rebuild" DependsOnTargets="CleanAll" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

@@ -349,3 +349,4 @@ healthchecksdb
 /src/WebApp/wwwroot/cache
 src/ViewAllMetadata/ViewAllMetadata.UIX.mfappx
 *.mfappx
+/src/Common/bundles

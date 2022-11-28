@@ -1,0 +1,27 @@
+[
+  {
+    "outputFileName": "bundles/common-shellui.js",
+    "inputFiles": [
+      "src/console-shellui.js",
+      "src/json2.js",
+      "src/Events.js",
+      "src/Orchestrator.js",
+      "src/ConfigurationManager.js",
+      "src/VaultStructureManager.js",
+      "src/WindowManager.js"
+    ]
+  },
+  {
+    "outputFileName": "bundles/common-dashboard.js",
+    "inputFiles": [
+      "src/dashboards/scripts/console-dashboard.js",
+      "src/dashboards/scripts/jquery-1.12.4.min.js"
+    ]
+  },
+  {
+    "outputFileName": "bundles/common-dashboard.min.css",
+    "inputFiles": [
+      "src/dashboards/base-dashboard.css"
+    ]
+  }
+]
