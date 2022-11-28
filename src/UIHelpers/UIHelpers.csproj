@@ -58,9 +58,10 @@
   <ItemGroup>
     <Compile Include="Configuration\AdvancedConfiguration.cs" />
     <Compile Include="Configuration\Configuration.cs" />
+    <Compile Include="Locations\WindowLocations\VaultWindowLocationRepository.cs" />
     <Compile Include="Locations\WindowLocations\WindowLocationOptionsProvider.cs" />
     <Compile Include="Locations\CommandLocations\MenuLocation.cs" />
-    <Compile Include="Locations\WindowLocations\WindowLocationRepository.cs" />
+    <Compile Include="Locations\WindowLocations\IWindowLocationRepository.cs" />
     <Compile Include="Modules\Base\Configuration\AdvancedConfigurationBase.cs" />
     <Compile Include="Modules\Base\Configuration\ConfigurationBase.cs" />
     <Compile Include="Modules\Base\ISuppliesUIXConfiguration.cs" />

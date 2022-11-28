@@ -42,7 +42,7 @@ namespace UIHelpers
                 // Return the config data.
                 return Newtonsoft.Json.JsonConvert.SerializeObject
                 (
-                    module.GetUIXConfiguration(input.Language, this.GetWindowLocationRepository())
+                    module.GetUIXConfiguration(input.Language, this.GetWindowLocationRepository(env.Vault))
                 );
             }
             catch (Exception e)
@@ -60,8 +60,8 @@ namespace UIHelpers
         /// Gets the window location repository to use.
         /// </summary>
         /// <returns></returns>
-        internal virtual IWindowLocationRepository GetWindowLocationRepository()
-            => new WindowLocationRepository();
+        internal virtual IWindowLocationRepository GetWindowLocationRepository(Vault vault = null)
+            => new VaultWindowLocationRepository(vault ?? this.PermanentVault);
 
         /// <summary>
         /// Registers a Vault Extension Method with name "UIHelpers.PersistWindowData".
@@ -86,10 +86,9 @@ namespace UIHelpers
                     throw new ArgumentException($"Module {input.Module} not found", nameof(env));
 
                 // Persist the window data.
-                this.GetWindowLocationRepository()
+                this.GetWindowLocationRepository(env.Vault)
                     .SetWindowLocationForCurrentUser
                     (
-                        env.Vault,
                         module,
                         input.Location,
                         input.Height,

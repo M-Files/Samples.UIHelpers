@@ -205,7 +205,6 @@ namespace UIHelpers.Modules.Base
             // Get where the default window should be.
             windowLocationRepository.GetWindowLocationForCurrentUser
             (
-                this.VaultApplication.PermanentVault,
                 this,
                 config?.AdvancedConfiguration,
                 out WindowLocation windowLocation,
