@@ -31,17 +31,8 @@
     <Content Include="..\Common\bundles\common-shellui.js">
       <Link>app\common-shellui.js</Link>
     </Content>
-    <Content Include="..\Common\src\dashboards\images\bottom-pane.png">
-      <Link>app\images\bottom-pane.png</Link>
-    </Content>
     <Content Include="..\Common\src\dashboards\images\icon-edit.png">
       <Link>app\images\icon-edit.png</Link>
-    </Content>
-    <Content Include="..\Common\src\dashboards\images\new-window.png">
-      <Link>app\images\new-window.png</Link>
-    </Content>
-    <Content Include="..\Common\src\dashboards\images\right-tab.png">
-      <Link>app\images\right-tab.png</Link>
     </Content>
     <Content Include="app\appdef.xml">
       <SubType>Designer</SubType>
