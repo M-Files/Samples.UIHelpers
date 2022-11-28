@@ -69,6 +69,7 @@
     <Compile Include="Modules\Base\UIXConfiguration\UIXConfigurationBase.cs" />
     <Compile Include="Modules\ShowPreview\Configuration\AdvancedConfiguration.cs" />
     <Compile Include="Modules\ShowPreview\Configuration\Configuration.cs" />
+    <Compile Include="Modules\ShowPreview\Configuration\Translation.cs" />
     <Compile Include="Modules\ShowPreview\UIXConfiguration\UIXConfiguration.cs" />
     <Compile Include="Modules\ShowPreview\Module.cs" />
     <Compile Include="Configuration\AccessRestrictionType.cs" />
@@ -81,6 +82,7 @@
     <Compile Include="Locations\WindowLocations\WindowLocation.cs" />
     <Compile Include="Configuration\UsesResourcesAttribute.cs" />
     <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="Modules\ViewAllMetadata\Configuration\Translation.cs" />
     <Compile Include="Resources\Configuration.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

@@ -6,5 +6,7 @@ namespace UIHelpers.Modules.ViewAllMetadata
     public class UIXConfiguration
         : Base.UIXConfigurationBase
     {
+        [DataMember]
+        public bool EnableEditing { get; set; }
     }
 }

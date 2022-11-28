@@ -11,9 +11,6 @@ namespace UIHelpers.Modules.Base
             = new ResourceStrings();
 
         [DataMember]
-        public bool EnableEditing { get; set; }
-
-        [DataMember]
         public WindowLocation DefaultLocation { get; set; }
             = AdvancedConfigurationBase.DefaultLocationDefault;
 
