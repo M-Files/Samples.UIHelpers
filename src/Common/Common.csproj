@@ -29,11 +29,8 @@
     <OutputPath>bin\</OutputPath>
   </PropertyGroup>
   <ItemGroup>
-    <Content Include="bundles\bundle-dashboard.js" />
-    <Content Include="bundles\bundle-dashboard.min.js">
-      <DependentUpon>bundle-dashboard.js</DependentUpon>
-    </Content>
     <Content Include="bundles\common-dashboard.js" />
+    <Content Include="bundles\common-dashboard.min.css" />
     <Content Include="bundles\common-dashboard.min.js">
       <DependentUpon>common-dashboard.js</DependentUpon>
     </Content>
@@ -42,10 +39,6 @@
       <DependentUpon>common-shellui.js</DependentUpon>
     </Content>
     <Content Include="src\dashboards\base-dashboard.css" />
-    <Content Include="bundles\bundle-shellui.js" />
-    <Content Include="bundles\bundle-shellui.min.js">
-      <DependentUpon>bundle-shellui.js</DependentUpon>
-    </Content>
     <Content Include="src\ConfigurationManager.js" />
     <Content Include="src\dashboards\scripts\console-dashboard.js" />
     <Content Include="src\console-shellui.js" />
