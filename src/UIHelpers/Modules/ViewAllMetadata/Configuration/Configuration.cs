@@ -7,7 +7,7 @@ namespace UIHelpers.Modules.ViewAllMetadata
     [UsesResources(typeof(Resources.Configuration))]
     [UsesResources(typeof(Resources.UIResources))]
     public class Configuration
-        : ConfigurationBase<AdvancedConfiguration>
+        : ConfigurationBase<AdvancedConfiguration, Translation>
     {
         // TODO: Editing
         //[DataMember]

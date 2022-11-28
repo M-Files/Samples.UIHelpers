@@ -88,24 +88,6 @@ namespace UIHelpers.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Show all metadata.
-        /// </summary>
-        internal static string Commands_ShowAllMetadata {
-            get {
-                return ResourceManager.GetString("Commands_ShowAllMetadata", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Show preview.
-        /// </summary>
-        internal static string Commands_ShowPreview {
-            get {
-                return ResourceManager.GetString("Commands_ShowPreview", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Show below the listing.
         /// </summary>
         internal static string Location_ShowBelowListing {
@@ -133,20 +115,38 @@ namespace UIHelpers.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Raw metadata.
+        ///   Looks up a localized string similar to Show preview.
         /// </summary>
-        internal static string TabTitles_RawMetadata {
+        internal static string UIHelpers_Modules_ShowPreview_Module_CommandText {
             get {
-                return ResourceManager.GetString("TabTitles_RawMetadata", resourceCulture);
+                return ResourceManager.GetString("UIHelpers.Modules.ShowPreview.Module.CommandText", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Show preview.
         /// </summary>
-        internal static string TabTitles_ShowPreview {
+        internal static string UIHelpers_Modules_ShowPreview_Module_TabTitle {
             get {
-                return ResourceManager.GetString("TabTitles_ShowPreview", resourceCulture);
+                return ResourceManager.GetString("UIHelpers.Modules.ShowPreview.Module.TabTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show all metadata.
+        /// </summary>
+        internal static string UIHelpers_Modules_ViewAllMetadata_Module_CommandText {
+            get {
+                return ResourceManager.GetString("UIHelpers.Modules.ViewAllMetadata.Module.CommandText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Raw metadata.
+        /// </summary>
+        internal static string UIHelpers_Modules_ViewAllMetadata_Module_TabTitle {
+            get {
+                return ResourceManager.GetString("UIHelpers.Modules.ViewAllMetadata.Module.TabTitle", resourceCulture);
             }
         }
     }

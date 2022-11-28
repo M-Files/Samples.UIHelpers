@@ -8,7 +8,7 @@ namespace UIHelpers.Modules.ShowPreview
 {
     [DataContract]
     public class Configuration
-        : ConfigurationBase<AdvancedConfiguration>
+        : ConfigurationBase<AdvancedConfiguration, Translation>
     {
 
         [DataMember(Order = 2)]

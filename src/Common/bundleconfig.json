@@ -6,6 +6,7 @@
       "src/json2.js",
       "src/Events.js",
       "src/Orchestrator.js",
+      "src/SingleWindowOrchestrator.js",
       "src/ConfigurationManager.js",
       "src/VaultStructureManager.js",
       "src/WindowManager.js"

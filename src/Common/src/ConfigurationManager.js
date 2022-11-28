@@ -80,6 +80,7 @@
 												try
 												{
 													configuration = JSON.parse(output);
+													console.log(configuration);
 													t.dispatchEvent(ConfigurationManager.EventTypes.Populated, configuration);
 												}
 												catch (e)

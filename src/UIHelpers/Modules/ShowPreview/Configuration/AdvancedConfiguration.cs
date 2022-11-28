@@ -5,10 +5,11 @@ using UIHelpers.Modules.Base;
 
 namespace UIHelpers.Modules.ShowPreview
 {
+
     [DataContract]
     [UsesResources(typeof(Resources.Configuration))]
     public class AdvancedConfiguration
-        : AdvancedConfigurationBase
+        : AdvancedConfigurationBase<Translation>
     {
         /// <summary>
         /// An implementation of <see cref="WindowLocationOptionsProvider" that provides data
@@ -58,6 +59,16 @@ namespace UIHelpers.Modules.ShowPreview
             Min = 1
         )]
         public override int CommandPriority { get; set; } = 2;
+
+        [DataMember(Order = 10)]
+        [JsonConfEditor
+        (
+            Label = ResourceMarker.Id + nameof(Resources.Configuration.Translations_Label),
+            ChildName = ResourceMarker.Id + nameof(Resources.Configuration.Translations_ChildName)
+        )]
+        [ObjectMembers(typeof(LanguageProvider))]
+        public override Dictionary<string, Translation> Translations { get; set; }
+            = new Dictionary<string, Translation>();
 
         /// <inheritdoc />
         protected override WindowLocationOptionsProvider GetLocationProvider()

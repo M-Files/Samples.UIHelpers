@@ -3,6 +3,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Reflection;
+using System.Runtime.Serialization;
+using UIHelpers.Modules.Base;
 
 namespace UIHelpers
 {
@@ -15,18 +18,18 @@ namespace UIHelpers
     {
         /// <inheritdoc />
         /// <exception cref="ArgumentNullException"></exception>
-        public override ResourceStrings Create(string languageCode, Dictionary<string, LanguageOverride> languageOverrides)
+        public override ResourceStrings Create(string languageCode, ModuleBase module, Dictionary<string, TranslationBase> translations)
         {
             // Sanity.
             if (string.IsNullOrWhiteSpace(languageCode))
                 languageCode = DefaultResourceStringProvider.DefaultLanguageCode;
+            if(null == module)
+                throw new ArgumentNullException(nameof(module));
+            if(null == translations)
+                translations = new Dictionary<string, TranslationBase>();
 
             // Create the instance.
             var resourceStrings = new ResourceStrings();
-
-            // Add the tab IDs.
-            resourceStrings.Add("TabIDs_RawMetadata", "rawMetadata");
-            resourceStrings.Add("TabIDs_ShowPreview", "showPreview");
 
             // Ensure that we have a valid value.
             var cultureCode = this.ConvertUILanguageToLanguageCode(languageCode);
@@ -47,7 +50,10 @@ namespace UIHelpers
             {
                 try
                 {
-                    resourceStrings.AddOrUpdate(v.Key?.ToString(), v.Value?.ToString());
+                    var key = v.Key?.ToString();
+                    if (key.StartsWith(module.GetType().FullName + "."))
+                        key = key.Substring(module.GetType().FullName.Length + 1);
+                    resourceStrings.AddOrUpdate(key, v.Value?.ToString());
                 }
                 catch (Exception e)
                 {
@@ -57,30 +63,52 @@ namespace UIHelpers
 
             // If we have a valid language override then use that.
             {
-                var languageOverride = (languageOverrides?.ContainsKey(languageCode) ?? false)
-                    ? languageOverrides[languageCode]
+                var translation = (translations?.ContainsKey(languageCode) ?? false)
+                    ? translations[languageCode]
                     : null;
-                if (null != languageOverride)
+                if (null != translation)
                 {
-                    // We have to hard-code some of these values here, unlike in the resources.
-                    if(false == string.IsNullOrWhiteSpace(languageOverride.Commands_ShowAllMetadata))
-                        resourceStrings.AddOrUpdate(nameof(languageOverride.Commands_ShowAllMetadata), languageOverride.Commands_ShowAllMetadata);
-                    if (false == string.IsNullOrWhiteSpace(languageOverride.Buttons_Close))
-                        resourceStrings.AddOrUpdate(nameof(languageOverride.Buttons_Close), languageOverride.Buttons_Close);
-                    if (false == string.IsNullOrWhiteSpace(languageOverride.Buttons_Discard))
-                        resourceStrings.AddOrUpdate(nameof(languageOverride.Buttons_Discard), languageOverride.Buttons_Discard);
-                    if (false == string.IsNullOrWhiteSpace(languageOverride.Buttons_Save))
-                        resourceStrings.AddOrUpdate(nameof(languageOverride.Buttons_Save), languageOverride.Buttons_Save);
-                    if (false == string.IsNullOrWhiteSpace(languageOverride.Location_ShowBelowListing))
-                        resourceStrings.AddOrUpdate(nameof(languageOverride.Location_ShowBelowListing), languageOverride.Location_ShowBelowListing);
-                    if (false == string.IsNullOrWhiteSpace(languageOverride.Location_ShowInTabOnRight))
-                        resourceStrings.AddOrUpdate(nameof(languageOverride.Location_ShowInTabOnRight), languageOverride.Location_ShowInTabOnRight);
-                    if (false == string.IsNullOrWhiteSpace(languageOverride.Location_ShowInPopOutWindow))
-                        resourceStrings.AddOrUpdate(nameof(languageOverride.Location_ShowInPopOutWindow), languageOverride.Location_ShowInPopOutWindow);
-                    if (false == string.IsNullOrWhiteSpace(languageOverride.TabTitles_RawMetadata))
-                        resourceStrings.AddOrUpdate(nameof(languageOverride.TabTitles_RawMetadata), languageOverride.TabTitles_RawMetadata);
-                    if (false == string.IsNullOrWhiteSpace(languageOverride.TabTitles_ShowPreview))
-                        resourceStrings.AddOrUpdate(nameof(languageOverride.TabTitles_ShowPreview), languageOverride.TabTitles_ShowPreview);
+                    foreach(var member in translation.GetType().GetMembers())
+                    {
+                        // Skip those without data members.
+                        if (member.GetCustomAttribute<DataMemberAttribute>() == null)
+                            continue;
+
+                        // Get data from the member.
+                        string value;
+                        switch (member.MemberType)
+                        {
+                            case MemberTypes.Field:
+                                {
+                                    var f = member as FieldInfo;
+                                    if (f.IsStatic)
+                                        continue;
+                                    if (f.FieldType != typeof(string))
+                                        continue;
+                                    value = f.GetValue(translation) as string;
+                                }
+                                break;
+                            case MemberTypes.Property:
+                                {
+                                    var p = member as PropertyInfo;
+                                    if (!p.CanRead)
+                                        continue;
+                                    if (p.PropertyType != typeof(string))
+                                        continue;
+                                    value = p.GetValue(translation) as string;
+                                }
+                                break;
+                            default:
+                                continue;
+                        }
+
+                        // Skip empty.
+                        if (string.IsNullOrWhiteSpace(value))
+                            continue;
+
+                        // Add it to the resources.
+                        resourceStrings.AddOrUpdate(member.Name, value);
+                    }
                 }
             }
 

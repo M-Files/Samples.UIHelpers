@@ -51,6 +51,7 @@
     <Content Include="src\json2.js" />
     <Content Include="src\Orchestrator.js" />
     <Content Include="src\dashboards\scripts\jquery-1.12.4.min.js" />
+    <Content Include="src\SingleWindowOrchestrator.js" />
     <Content Include="src\VaultStructureManager.js" />
     <Content Include="src\WindowManager.js" />
   </ItemGroup>

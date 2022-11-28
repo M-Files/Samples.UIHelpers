@@ -221,7 +221,8 @@ namespace UIHelpers.Modules.Base
                     this.VaultApplication.ResourceStringProvider?.Create
                     (
                         language?.Trim()?.ToLower(),
-                        this.VaultApplication?.Configuration?.AdvancedConfiguration?.LanguageOverrides
+                        this,
+                        config?.AdvancedConfiguration?.GetTranslations()
                     )
                     ?? new ResourceStrings();
             uixConfiguration.CommandLocation = (int)(config?.AdvancedConfiguration?.CommandLocation ?? Locations.MenuLocation.MenuLocation_ContextMenu_Top);

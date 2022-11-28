@@ -144,16 +144,29 @@
 		shellFrame.Events.Register(Event_ViewLocationChangedAsync, windowManager.close);
 	}
 
-	// When the ShellUI starts, start all the handlers.
-	shellUI.Events.Register(Event_Started, shellUIStartedHandler);
+	t.addEventListener(Orchestrator.EventTypes.NewShellUI, function (s)
+	{
+		shellUI = s;
 
-	// Register to listen new shell frame creation event.
-	shellUI.Events.Register(Event_NewNormalShellFrame, newNormalShellFrameHandler);
+		// Initialize the console.
+		console.initialize(shellUI, moduleName);
+
+		// When the ShellUI starts, start all the handlers.
+		shellUI.Events.Register(Event_Started, shellUIStartedHandler);
+
+		// Register to listen new shell frame creation event.
+		shellUI.Events.Register(Event_NewNormalShellFrame, newNormalShellFrameHandler);
+	})
+
+	// When we start, fire the new shell ui event.
+	if (null != shellUI)
+		t.dispatchEvent(Orchestrator.EventTypes.NewShellUI, shellUI)
 
     return t;
 }
 Orchestrator.EventTypes = {
-	Started: 1,
-	ConfigurationLoaded: 2,
-	SelectionChanged: 3
+	NewShellUI: 1,
+	Started: 2,
+	ConfigurationLoaded: 3,
+	SelectionChanged: 4
 };

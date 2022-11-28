@@ -36,14 +36,6 @@ namespace UIHelpers
         public Modules.ShowPreview.Configuration ShowPreview { get; set; }
             = new Modules.ShowPreview.Configuration();
 
-        [DataMember(Order = Int32.MaxValue)]
-        [JsonConfEditor
-        (
-            Label = ResourceMarker.Id + nameof(Resources.Configuration.Advanced_Label)
-        )]
-        public AdvancedConfiguration AdvancedConfiguration { get; set; }
-            = new AdvancedConfiguration();
-
         /// <inheritdoc />
         /// <remarks>Delegates to <see cref="AdvancedConfiguration.CustomValidation(Vault)"/></remarks>
         public IEnumerable<ValidationFinding> CustomValidation(Vault vault)

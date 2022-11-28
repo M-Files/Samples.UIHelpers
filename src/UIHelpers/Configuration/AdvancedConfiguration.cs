@@ -11,16 +11,6 @@ namespace UIHelpers
     public class AdvancedConfiguration
         : ICanPerformCustomValidation
     {
-        [DataMember]
-        [JsonConfEditor
-        (
-            Label = ResourceMarker.Id + nameof(Resources.Configuration.Languages_Label),
-            ChildName = ResourceMarker.Id + nameof(Resources.Configuration.Languages_ChildName)
-        )]
-        [ObjectMembers(typeof(LanguageProvider))]
-        public Dictionary<string, LanguageOverride> LanguageOverrides { get; set; }
-            = new Dictionary<string, LanguageOverride>();
-
         /// <inheritdoc />
         public IEnumerable<ValidationFinding> CustomValidation(Vault vault)
         {

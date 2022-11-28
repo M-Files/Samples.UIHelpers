@@ -120,9 +120,10 @@ namespace UIHelpers.Modules.Base
     [DataContract]
     [UsesResources(typeof(Resources.Configuration))]
     [UsesResources(typeof(Resources.UIResources))]
-    public class ConfigurationBase<TAdvancedConfiguration>
+    public class ConfigurationBase<TAdvancedConfiguration, TTranslationType>
         : ConfigurationBase
-        where TAdvancedConfiguration : AdvancedConfigurationBase, new()
+        where TAdvancedConfiguration : AdvancedConfigurationBase<TTranslationType>, new()
+        where TTranslationType : TranslationBase, new()
     {
         public ConfigurationBase()
         {

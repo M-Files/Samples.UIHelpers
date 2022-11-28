@@ -2,7 +2,7 @@
 <application xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
              xsi:noNamespaceSchemaLocation="http://www.m-files.com/schemas/appdef-client-v4.xsd">
 	<guid>3bb694b2-383e-4576-a42b-85ec7035951a</guid>
-	<name>ShowPreview.UIX</name>
+	<name>Show Preview UIX</name>
 	<version>0.1</version>
 	<description>The UI component of the 'Show preview' module</description>
 	<publisher></publisher>	

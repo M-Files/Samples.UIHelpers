@@ -1,6 +1,7 @@
 ﻿using MFiles.VAF.Configuration.Logging;
 using System.Collections.Generic;
 using System.Linq;
+using UIHelpers.Modules.Base;
 
 namespace UIHelpers
 {
@@ -55,6 +56,6 @@ namespace UIHelpers
         }
 
 		/// <inheritdoc />
-        public abstract ResourceStrings Create(string language, Dictionary<string, LanguageOverride> languageOverrides);
+        public abstract ResourceStrings Create(string language, ModuleBase module, Dictionary<string, TranslationBase> translations);
     }
 }

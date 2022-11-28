@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using UIHelpers.Modules.Base;
 
 namespace UIHelpers
 {
@@ -9,7 +10,7 @@ namespace UIHelpers
         /// based on the input language of <paramref name="languageCode"/>.
         /// </summary>
         /// <param name="languageCode">The language code</param>
-        /// <param name="languageOverrides">If provided, strings that override the internal resource dictionary.</param>
-        ResourceStrings Create(string languageCode, Dictionary<string, LanguageOverride> languageOverrides);
+        /// <param name="translations">If provided, strings that override the internal resource dictionary.</param>
+        ResourceStrings Create(string languageCode, ModuleBase module, Dictionary<string, TranslationBase> translations);
     }
 }

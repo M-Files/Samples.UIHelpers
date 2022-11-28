@@ -126,12 +126,6 @@
   <data name="Buttons_Save" xml:space="preserve">
     <value>Save</value>
   </data>
-  <data name="Commands_ShowAllMetadata" xml:space="preserve">
-    <value>Show all metadata</value>
-  </data>
-  <data name="Commands_ShowPreview" xml:space="preserve">
-    <value>Show preview</value>
-  </data>
   <data name="Location_ShowBelowListing" xml:space="preserve">
     <value>Show below the listing</value>
   </data>
@@ -141,10 +135,16 @@
   <data name="Location_ShowInTabOnRight" xml:space="preserve">
     <value>Show in tab on right</value>
   </data>
-  <data name="TabTitles_RawMetadata" xml:space="preserve">
-    <value>Raw metadata</value>
-  </data>
-  <data name="TabTitles_ShowPreview" xml:space="preserve">
+  <data name="UIHelpers.Modules.ShowPreview.Module.CommandText" xml:space="preserve">
     <value>Show preview</value>
+  </data>
+  <data name="UIHelpers.Modules.ShowPreview.Module.TabTitle" xml:space="preserve">
+    <value>Show preview</value>
+  </data>
+  <data name="UIHelpers.Modules.ViewAllMetadata.Module.CommandText" xml:space="preserve">
+    <value>Show all metadata</value>
+  </data>
+  <data name="UIHelpers.Modules.ViewAllMetadata.Module.TabTitle" xml:space="preserve">
+    <value>Raw metadata</value>
   </data>
 </root>

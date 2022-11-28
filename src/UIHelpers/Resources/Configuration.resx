@@ -147,6 +147,12 @@
   <data name="CommandPriority_Label" xml:space="preserve">
     <value>Priority</value>
   </data>
+  <data name="CommandText_HelpText" xml:space="preserve">
+    <value />
+  </data>
+  <data name="CommandText_Label" xml:space="preserve">
+    <value>Command text</value>
+  </data>
   <data name="ConfiguredLocations_HelpText" xml:space="preserve">
     <value />
   </data>
@@ -174,12 +180,6 @@
   <data name="EnableEditing_Label" xml:space="preserve">
     <value>Enable Editing</value>
   </data>
-  <data name="Languages_ChildName" xml:space="preserve">
-    <value>Language</value>
-  </data>
-  <data name="Languages_Label" xml:space="preserve">
-    <value>Languages</value>
-  </data>
   <data name="Location_BottomPane" xml:space="preserve">
     <value>Under the listing</value>
   </data>
@@ -194,6 +194,18 @@
   </data>
   <data name="ShowPreview_Label" xml:space="preserve">
     <value>Show Preview</value>
+  </data>
+  <data name="TabTitle_HelpText" xml:space="preserve">
+    <value />
+  </data>
+  <data name="TabTitle_Label" xml:space="preserve">
+    <value>Tab title</value>
+  </data>
+  <data name="Translations_ChildName" xml:space="preserve">
+    <value>Translation</value>
+  </data>
+  <data name="Translations_Label" xml:space="preserve">
+    <value>Translations</value>
   </data>
   <data name="UI_Commands_Buttons_Close_HelpText" xml:space="preserve">
     <value>The text shown on the "close" button in the dashboard</value>
@@ -213,12 +225,6 @@
   <data name="UI_Commands_Buttons_Save_Label" xml:space="preserve">
     <value>Save (button)</value>
   </data>
-  <data name="UI_Commands_ShowAllMetadata_HelpText" xml:space="preserve">
-    <value>Command button text, shown in the context menu</value>
-  </data>
-  <data name="UI_Commands_ShowAllMetadata_Label" xml:space="preserve">
-    <value>Show all metadata (Command text)</value>
-  </data>
   <data name="UI_Commands_ShowBelowListing_HelpText" xml:space="preserve">
     <value>The text shown when hovering over the "show below listing" icon</value>
   </data>
@@ -236,24 +242,6 @@
   </data>
   <data name="UI_Commands_ShowInTabOnRight_Label" xml:space="preserve">
     <value>Show in tab on right</value>
-  </data>
-  <data name="UI_Commands_ShowPreview_HelpText" xml:space="preserve">
-    <value />
-  </data>
-  <data name="UI_Commands_ShowPreview_Label" xml:space="preserve">
-    <value>Show preview (Command text)</value>
-  </data>
-  <data name="UI_TabTitles_RawMetadata_HelpText" xml:space="preserve">
-    <value />
-  </data>
-  <data name="UI_TabTitles_RawMetadata_Label" xml:space="preserve">
-    <value>Tab title (Raw metadata)</value>
-  </data>
-  <data name="UI_TabTitles_ShowPreview_HelpText" xml:space="preserve">
-    <value />
-  </data>
-  <data name="UI_TabTitles_ShowPreview_Label" xml:space="preserve">
-    <value>Tab title (Show preview)</value>
   </data>
   <data name="UserConfiguration_Label" xml:space="preserve">
     <value>User Configuration</value>
