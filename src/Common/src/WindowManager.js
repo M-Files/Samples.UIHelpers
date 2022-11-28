@@ -197,7 +197,8 @@
 			vaultStructureManager: orchestrator.getVaultStructureManager(),
 			selectedItems: orchestrator.getSelectedItems(),
 			configuration: orchestrator.getConfigurationManager().getConfiguration(),
-			currentLocation: currentLocation
+			currentLocation: currentLocation,
+			moduleName: orchestrator.getModuleName()
 		};
 
 		// If we have a function then try to call it.

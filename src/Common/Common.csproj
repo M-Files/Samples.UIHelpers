@@ -42,6 +42,7 @@
     <Content Include="src\ConfigurationManager.js" />
     <Content Include="src\dashboards\scripts\console-dashboard.js" />
     <Content Include="src\console-shellui.js" />
+    <Content Include="src\dashboards\scripts\Dashboard.js" />
     <Content Include="src\Events.js" />
     <Content Include="src\dashboards\images\bottom-pane.png" />
     <Content Include="src\dashboards\images\icon-edit.png" />
