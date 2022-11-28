@@ -88,8 +88,8 @@ namespace UIHelpers.Modules.Base
         /// This may be different on different modules due to default values for things like the allowed locations.
         /// </summary>
         /// <returns></returns>
-        protected virtual LocationProvider GetLocationProvider()
-            => new LocationProvider();
+        protected virtual WindowLocationOptionsProvider GetLocationProvider()
+            => new WindowLocationOptionsProvider();
 
         /// <summary>
         /// Gets the locations that this module can be displayed.
@@ -102,7 +102,7 @@ namespace UIHelpers.Modules.Base
         {
             get
             {
-                var provider = this.GetLocationProvider() ?? new LocationProvider();
+                var provider = this.GetLocationProvider() ?? new WindowLocationOptionsProvider();
 
                 return Enum.GetNames(typeof(WindowLocation))
                   .Select(n => new Tuple<string, WindowLocation, bool?>(n, (WindowLocation)Enum.Parse(typeof(WindowLocation), n), null))

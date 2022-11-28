@@ -10,6 +10,24 @@ namespace UIHelpers.Modules.ShowPreview
     public class AdvancedConfiguration
         : AdvancedConfigurationBase
     {
+        /// <summary>
+        /// An implementation of <see cref="WindowLocationOptionsProvider" that provides data
+        /// for this module.
+        /// </summary>
+        public class ShowPreviewWindowLocationOptionsProvider
+            : WindowLocationOptionsProvider
+        {
+            public ShowPreviewWindowLocationOptionsProvider()
+                : base
+                (
+                    new[] { WindowLocation.BottomPane, WindowLocation.PopOut },
+                    new WindowLocation[0]
+                )
+            {
+
+            }
+        }
+
         [DataMember(Order = 0)]
         [JsonConfEditor
         (
@@ -17,7 +35,7 @@ namespace UIHelpers.Modules.ShowPreview
             HelpText = ResourceMarker.Id + nameof(Resources.Configuration.DefaultLocation_HelpText),
             DefaultValue = DefaultLocationDefault
         )]
-        [ValueOptions(typeof(LocationProvider.ShowPreviewLocationProvider))]
+        [ValueOptions(typeof(ShowPreviewWindowLocationOptionsProvider))]
         public override WindowLocation DefaultLocation { get; set; }
             = DefaultLocationDefault;
 
@@ -27,7 +45,7 @@ namespace UIHelpers.Modules.ShowPreview
             Label = ResourceMarker.Id + nameof(Resources.Configuration.ConfiguredLocations_Label),
             HelpText = ResourceMarker.Id + nameof(Resources.Configuration.ConfiguredLocations_HelpText)
         )]
-        [ObjectMembers(typeof(LocationProvider.ShowPreviewLocationProvider))]
+        [ObjectMembers(typeof(WindowLocationOptionsProvider.ShowPreviewWindowLocationOptionsProvider))]
         public override Dictionary<string, bool> ConfiguredLocations { get; set; }
             = new Dictionary<string, bool>();
 
@@ -42,7 +60,7 @@ namespace UIHelpers.Modules.ShowPreview
         public override int CommandPriority { get; set; } = 2;
 
         /// <inheritdoc />
-        protected override LocationProvider GetLocationProvider()
-            => new LocationProvider.ShowPreviewLocationProvider();
+        protected override WindowLocationOptionsProvider GetLocationProvider()
+            => new WindowLocationOptionsProvider.ShowPreviewWindowLocationOptionsProvider();
     }
 }

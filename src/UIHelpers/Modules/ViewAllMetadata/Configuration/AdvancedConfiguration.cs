@@ -11,6 +11,23 @@ namespace UIHelpers.Modules.ViewAllMetadata
     public class AdvancedConfiguration
         : AdvancedConfigurationBase
     {
+        /// <summary>
+        /// An implementation of <see cref="WindowLocationOptionsProvider" that provides data
+        /// for this module.
+        /// </summary>
+        public class ViewAllMetadataWindowLocationOptionsProvider
+            : WindowLocationOptionsProvider
+        {
+            public ViewAllMetadataWindowLocationOptionsProvider()
+                : base
+                (
+                    new[] { WindowLocation.BottomPane, WindowLocation.NewTab, WindowLocation.PopOut },
+                    new WindowLocation[0]
+                )
+            {
+
+            }
+        }
         [DataMember(Order = 0)]
         [JsonConfEditor
         (
@@ -18,7 +35,7 @@ namespace UIHelpers.Modules.ViewAllMetadata
             HelpText = ResourceMarker.Id + nameof(Resources.Configuration.DefaultLocation_HelpText),
             DefaultValue = DefaultLocationDefault
         )]
-        [ValueOptions(typeof(LocationProvider.ViewAllMetadataLocationProvider))]
+        [ValueOptions(typeof(ViewAllMetadataWindowLocationOptionsProvider))]
         public override WindowLocation DefaultLocation { get; set; }
             = DefaultLocationDefault;
 
@@ -28,7 +45,7 @@ namespace UIHelpers.Modules.ViewAllMetadata
             Label = ResourceMarker.Id + nameof(Resources.Configuration.ConfiguredLocations_Label),
             HelpText = ResourceMarker.Id + nameof(Resources.Configuration.ConfiguredLocations_HelpText)
         )]
-        [ObjectMembers(typeof(LocationProvider.ViewAllMetadataLocationProvider))]
+        [ObjectMembers(typeof(WindowLocationOptionsProvider.ViewAllMetadataWindowLocationOptionsProvider))]
         public override Dictionary<string, bool> ConfiguredLocations { get; set; }
             = new Dictionary<string, bool>();
 
@@ -43,7 +60,7 @@ namespace UIHelpers.Modules.ViewAllMetadata
         public override int CommandPriority { get; set; } = 1;
 
         /// <inheritdoc />
-        protected override LocationProvider GetLocationProvider()
-            => new LocationProvider.ViewAllMetadataLocationProvider();
+        protected override WindowLocationOptionsProvider GetLocationProvider()
+            => new WindowLocationOptionsProvider.ViewAllMetadataWindowLocationOptionsProvider();
     }
 }

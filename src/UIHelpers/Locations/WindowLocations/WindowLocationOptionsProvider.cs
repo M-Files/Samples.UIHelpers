@@ -9,42 +9,26 @@ using System.Resources;
 
 namespace UIHelpers
 {
-    public class LocationProvider
+    /// <summary>
+    /// Used to provide data to M-Files Admin on the various options that are avaialble.
+    /// </summary>
+    public class WindowLocationOptionsProvider
         : IObjectEditorMembersProvider, IStableValueOptionsProvider
     {
-        public class ShowPreviewLocationProvider
-            : LocationProvider
-        {
-            public ShowPreviewLocationProvider()
-                : base
-                (
-                    new[] { WindowLocation.BottomPane, WindowLocation.PopOut },
-                    new WindowLocation[0]
-                )
-            {
-
-            }
-        }
-        public class ViewAllMetadataLocationProvider
-            : LocationProvider
-        {
-            public ViewAllMetadataLocationProvider()
-                : base
-                (
-                    new[] { WindowLocation.BottomPane, WindowLocation.NewTab, WindowLocation.PopOut },
-                    new WindowLocation[0]
-                )
-            {
-
-            }
-        }
+        /// <summary>
+        /// The locations that are enabled by default.
+        /// </summary>
         public Dictionary<WindowLocation, bool> EnabledByDefault { get; }
             = new Dictionary<WindowLocation, bool>();
+
+        /// <summary>
+        /// Locations which are hidden from the UI.
+        /// </summary>
         public HashSet<WindowLocation> HiddenLocations { get; }
             = new HashSet<WindowLocation>();
 
-        public LocationProvider() { }
-        public LocationProvider
+        public WindowLocationOptionsProvider() { }
+        public WindowLocationOptionsProvider
         (
             IEnumerable<WindowLocation> enabledByDefault,
             IEnumerable<WindowLocation> hiddenLocations
@@ -61,6 +45,7 @@ namespace UIHelpers
             }
         }
 
+        /// <inheritdoc />
         public IEnumerable<ObjectEditorMember> GetMembers
         (
             Type memberType,
@@ -111,6 +96,7 @@ namespace UIHelpers
             return members.Values;
         }
 
+        /// <inheritdoc />
         public IEnumerable<ValueOption> GetOptions(IConfigurationRequestContext context)
         {
             foreach (var m in this.GetMembers(typeof(WindowLocation), context, null))
@@ -127,6 +113,14 @@ namespace UIHelpers
             }
         }
 
+        /// <summary>
+        /// If <paramref name="input"/> starts with <see cref="ResourceMarker.Id"/>,
+        /// removes the prefix and looks this up in <see cref="Resources.Configuration"/>.
+        /// If <paramref name="input"/> does not start with <see cref="ResourceMarker.Id"/>
+        /// then returns <paramref name="input"/>.
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
         protected virtual string ConvertFromResourceString(string input)
         {
             // Sanity.

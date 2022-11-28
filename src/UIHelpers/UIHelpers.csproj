@@ -58,8 +58,8 @@
   <ItemGroup>
     <Compile Include="Configuration\AdvancedConfiguration.cs" />
     <Compile Include="Configuration\Configuration.cs" />
-    <Compile Include="Locations\LocationProvider.cs" />
-    <Compile Include="Locations\MenuLocation.cs" />
+    <Compile Include="Locations\WindowLocations\WindowLocationProvider.cs" />
+    <Compile Include="Locations\CommandLocations\MenuLocation.cs" />
     <Compile Include="Modules\Base\Configuration\AdvancedConfigurationBase.cs" />
     <Compile Include="Modules\Base\Configuration\ConfigurationBase.cs" />
     <Compile Include="Modules\Base\ICanWriteWindowData.cs" />
@@ -78,7 +78,7 @@
     <Compile Include="ICanPerformCustomValidation.cs" />
     <Compile Include="Configuration\LanguageOverride.cs" />
     <Compile Include="Languages\LanguageProvider.cs" />
-    <Compile Include="Locations\WindowLocation.cs" />
+    <Compile Include="Locations\WindowLocations\WindowLocation.cs" />
     <Compile Include="Configuration\UsesResourcesAttribute.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Resources\Configuration.Designer.cs">

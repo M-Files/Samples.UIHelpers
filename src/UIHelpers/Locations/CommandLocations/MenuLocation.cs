@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace UIHelpers.Locations
 {
+    /// <summary>
+    /// Taken from https://www.m-files.com/UI_Extensibility_Framework/#MFClientScript~MenuLocation.html.
+    /// </summary>
     [DataContract]
     public enum MenuLocation
     {
