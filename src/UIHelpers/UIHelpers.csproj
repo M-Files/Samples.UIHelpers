@@ -58,12 +58,11 @@
   <ItemGroup>
     <Compile Include="Configuration\AdvancedConfiguration.cs" />
     <Compile Include="Configuration\Configuration.cs" />
-    <Compile Include="Locations\WindowLocations\WindowLocationProvider.cs" />
+    <Compile Include="Locations\WindowLocations\WindowLocationOptionsProvider.cs" />
     <Compile Include="Locations\CommandLocations\MenuLocation.cs" />
+    <Compile Include="Locations\WindowLocations\WindowLocationRepository.cs" />
     <Compile Include="Modules\Base\Configuration\AdvancedConfigurationBase.cs" />
     <Compile Include="Modules\Base\Configuration\ConfigurationBase.cs" />
-    <Compile Include="Modules\Base\ICanWriteWindowData.cs" />
-    <Compile Include="Modules\Base\ICanReadWindowData.cs" />
     <Compile Include="Modules\Base\ISuppliesUIXConfiguration.cs" />
     <Compile Include="Modules\Base\ModuleBase.cs" />
     <Compile Include="Modules\Base\UIXConfiguration\UIXConfigurationBase.cs" />

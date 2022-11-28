@@ -45,7 +45,7 @@ namespace UIHelpers.Modules.ViewAllMetadata
             Label = ResourceMarker.Id + nameof(Resources.Configuration.ConfiguredLocations_Label),
             HelpText = ResourceMarker.Id + nameof(Resources.Configuration.ConfiguredLocations_HelpText)
         )]
-        [ObjectMembers(typeof(WindowLocationOptionsProvider.ViewAllMetadataWindowLocationOptionsProvider))]
+        [ObjectMembers(typeof(ViewAllMetadataWindowLocationOptionsProvider))]
         public override Dictionary<string, bool> ConfiguredLocations { get; set; }
             = new Dictionary<string, bool>();
 
@@ -61,6 +61,6 @@ namespace UIHelpers.Modules.ViewAllMetadata
 
         /// <inheritdoc />
         protected override WindowLocationOptionsProvider GetLocationProvider()
-            => new WindowLocationOptionsProvider.ViewAllMetadataWindowLocationOptionsProvider();
+            => new ViewAllMetadataWindowLocationOptionsProvider();
     }
 }

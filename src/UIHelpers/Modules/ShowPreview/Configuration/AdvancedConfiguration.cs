@@ -45,7 +45,7 @@ namespace UIHelpers.Modules.ShowPreview
             Label = ResourceMarker.Id + nameof(Resources.Configuration.ConfiguredLocations_Label),
             HelpText = ResourceMarker.Id + nameof(Resources.Configuration.ConfiguredLocations_HelpText)
         )]
-        [ObjectMembers(typeof(WindowLocationOptionsProvider.ShowPreviewWindowLocationOptionsProvider))]
+        [ObjectMembers(typeof(ShowPreviewWindowLocationOptionsProvider))]
         public override Dictionary<string, bool> ConfiguredLocations { get; set; }
             = new Dictionary<string, bool>();
 
@@ -61,6 +61,6 @@ namespace UIHelpers.Modules.ShowPreview
 
         /// <inheritdoc />
         protected override WindowLocationOptionsProvider GetLocationProvider()
-            => new WindowLocationOptionsProvider.ShowPreviewWindowLocationOptionsProvider();
+            => new ShowPreviewWindowLocationOptionsProvider();
     }
 }

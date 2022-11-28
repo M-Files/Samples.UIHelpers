@@ -6,6 +6,7 @@ using MFilesAPI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using UIHelpers.Locations.WindowLocations;
 using UIHelpers.Modules.Base;
 
 namespace UIHelpers
@@ -41,7 +42,7 @@ namespace UIHelpers
                 // Return the config data.
                 return Newtonsoft.Json.JsonConvert.SerializeObject
                 (
-                    module.GetUIXConfiguration(input.Language)
+                    module.GetUIXConfiguration(input.Language, this.GetWindowLocationRepository())
                 );
             }
             catch (Exception e)
@@ -54,6 +55,13 @@ namespace UIHelpers
         #endregion
 
         #region Persist window location for module
+
+        /// <summary>
+        /// Gets the window location repository to use.
+        /// </summary>
+        /// <returns></returns>
+        internal virtual IWindowLocationRepository GetWindowLocationRepository()
+            => new WindowLocationRepository();
 
         /// <summary>
         /// Registers a Vault Extension Method with name "UIHelpers.PersistWindowData".
@@ -73,12 +81,20 @@ namespace UIHelpers
                 var input = Newtonsoft.Json.JsonConvert.DeserializeObject<PersistWindowDataVEMInput>(env.Input);
                 if (null == input)
                     throw new ArgumentException("Environment input invalid", nameof(env));
-                var module = this.GetModule<ICanWriteWindowData>(input.Module);
+                var module = this.GetModule(input.Module);
                 if (null == module)
                     throw new ArgumentException($"Module {input.Module} not found", nameof(env));
 
                 // Persist the window data.
-                module.PersistWindowData(env.Vault, input.Location, input.Height, input.Width);
+                this.GetWindowLocationRepository()
+                    .SetWindowLocationForCurrentUser
+                    (
+                        env.Vault,
+                        module,
+                        input.Location,
+                        input.Height,
+                        input.Width
+                    );
                 return "true";
             }
             catch (Exception e)
@@ -114,7 +130,7 @@ namespace UIHelpers
                 if (null == module)
                     throw new ArgumentException($"Module {input.Module} not found", nameof(env));
 
-                // Persist the window data.
+                // Identify whether this module should show for this user.
                 return module.ShouldShow(env.Vault, env.CurrentUserSessionInfo).ToString()?.ToLower();
             }
             catch (Exception e)

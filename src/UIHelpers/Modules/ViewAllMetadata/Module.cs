@@ -1,6 +1,7 @@
 ﻿using MFiles.VAF.Common;
 using MFilesAPI;
 using System.Linq;
+using UIHelpers.Locations.WindowLocations;
 using UIHelpers.Modules.Base;
 
 namespace UIHelpers.Modules.ViewAllMetadata
@@ -21,11 +22,12 @@ namespace UIHelpers.Modules.ViewAllMetadata
         protected override void PopulateUIXConfiguration
         (
             string language,
+            IWindowLocationRepository windowLocationRepository,
             UIXConfiguration uixConfiguration
         )
         {
             var config = this.GetTypedConfiguration();
-            base.PopulateUIXConfiguration(language, uixConfiguration);
+            base.PopulateUIXConfiguration(language, windowLocationRepository, uixConfiguration);
             uixConfiguration.EnableEditing = config?.EnableEditing ?? false;
         }
 

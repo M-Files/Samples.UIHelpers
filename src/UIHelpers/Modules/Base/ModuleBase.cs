@@ -5,6 +5,7 @@ using MFilesAPI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using UIHelpers.Locations.WindowLocations;
 
 namespace UIHelpers.Modules.Base
 {
@@ -126,7 +127,7 @@ namespace UIHelpers.Modules.Base
     }
 
     public abstract class ModuleBase<TConfigurationType>
-        : ModuleBase, ICanWriteWindowData, ICanReadWindowData
+        : ModuleBase
         where TConfigurationType : ConfigurationBase, new()
     {
         /// <inheritdoc />
@@ -174,85 +175,6 @@ namespace UIHelpers.Modules.Base
 
         #endregion
 
-        #region ICanWriteWindowData
-
-        /// <inheritdoc />
-        public virtual void PersistWindowData(Vault vault, WindowLocation location, int height, int width)
-        {
-            // Get the named values.
-            var type = MFNamedValueType.MFUserDefinedValue;
-            var ns = this.GetType().FullName + ".WindowData";
-            var namedValues = vault.NamedValueStorageOperations.GetNamedValues
-            (
-                type,
-                ns
-            ) ?? new NamedValues();
-
-            // Set the data.
-            namedValues["Location"] = (int)location;
-            namedValues["Height"] = height > 100 ? height : 100;
-            namedValues["Width"] = width > 100 ? width : 100;
-
-            // If any are default then remove them.
-            if (location == AdvancedConfigurationBase.DefaultLocationDefault)
-                namedValues["Location"] = null;
-            if (height == AdvancedConfigurationBase.DefaultPopupWindowHeightDefault)
-                namedValues["Height"] = null;
-            if (width == AdvancedConfigurationBase.DefaultPopupWindowWidthDefault)
-                namedValues["Width"] = null;
-
-            // Set the named values.
-            vault.NamedValueStorageOperations.SetNamedValues
-            (
-                type,
-                ns,
-                namedValues
-            );
-        }
-
-        #endregion
-
-        #region ICanReadWindowData
-
-        /// <inheritdoc />
-        public virtual void GetWindowData
-        (
-            Vault vault,
-            AdvancedConfigurationBase advancedConfiguration, 
-            out WindowLocation location, 
-            out int height, 
-            out int width
-        )
-        {
-            // Get the named values.
-            var type = MFNamedValueType.MFUserDefinedValue;
-            var ns = this.GetType().FullName + ".WindowData";
-            var namedValues = vault.NamedValueStorageOperations.GetNamedValues
-            (
-                type,
-                ns
-            ) ?? new NamedValues();
-
-            // Set the defaults.
-            location = advancedConfiguration?.DefaultLocation ?? AdvancedConfigurationBase.DefaultLocationDefault;
-            height = advancedConfiguration?.DefaultPopupWindowHeight ?? AdvancedConfigurationBase.DefaultPopupWindowHeightDefault;
-            width = advancedConfiguration?.DefaultPopupWindowWidth ?? AdvancedConfigurationBase.DefaultPopupWindowWidthDefault;
-
-            // Can we parse out the location?
-            if (namedValues.Contains("Location") && Enum.TryParse(namedValues["Location"]?.ToString(), out WindowLocation l))
-                location = l;
-
-            // Can we parse out the height?
-            if (namedValues.Contains("Height") && Int32.TryParse(namedValues["Height"]?.ToString(), out int h) && h > 100)
-                height = h;
-
-            // Can we parse out the width?
-            if (namedValues.Contains("Width") && Int32.TryParse(namedValues["Width"]?.ToString(), out int w) && w > 100)
-                width = w;
-        }
-
-        #endregion
-
     }
 
     public abstract class ModuleBase<TConfigurationType, TUIXConfiguration>
@@ -270,19 +192,29 @@ namespace UIHelpers.Modules.Base
         protected virtual void PopulateUIXConfiguration
         (
             string language,
+            IWindowLocationRepository windowLocationRepository,
             TUIXConfiguration uixConfiguration
         )
         {
+            // Sanity.
+            if (null == windowLocationRepository)
+                throw new ArgumentNullException(nameof(windowLocationRepository), "The window location repository cannot be null.");
+
             var config = this.GetConfiguration();
+
             // Get where the default window should be.
-            this.GetWindowData
+            windowLocationRepository.GetWindowLocationForCurrentUser
             (
                 this.VaultApplication.PermanentVault,
+                this,
                 config?.AdvancedConfiguration,
                 out WindowLocation windowLocation,
                 out int windowHeight,
                 out int windowWidth
             );
+            uixConfiguration.DefaultLocation = windowLocation;
+            uixConfiguration.PopupWindowHeight = windowHeight;
+            uixConfiguration.PopupWindowWidth = windowWidth;
 
             // Create the resource strings from the provider, or default to none.
             uixConfiguration.
@@ -293,9 +225,6 @@ namespace UIHelpers.Modules.Base
                         this.VaultApplication?.Configuration?.AdvancedConfiguration?.LanguageOverrides
                     )
                     ?? new ResourceStrings();
-            uixConfiguration.DefaultLocation = windowLocation;
-            uixConfiguration.PopupWindowHeight = windowHeight;
-            uixConfiguration.PopupWindowWidth = windowWidth;
             uixConfiguration.CommandLocation = (int)(config?.AdvancedConfiguration?.CommandLocation ?? Locations.MenuLocation.MenuLocation_ContextMenu_Top);
             uixConfiguration.CommandPriority= config?.AdvancedConfiguration?.CommandPriority ?? 1;
             if (config?.AdvancedConfiguration?.AllowedLocations?.Any() ?? false)
@@ -306,11 +235,12 @@ namespace UIHelpers.Modules.Base
 
         public virtual TUIXConfiguration GetUIXConfiguration
         (
-            string language
+            string language,
+            IWindowLocationRepository windowLocationRepository
         )
         {
             var c = this.CreateEmptyUIXConfiguration();
-            this.PopulateUIXConfiguration(language, c);
+            this.PopulateUIXConfiguration(language, windowLocationRepository, c);
             return c;
         }
 
@@ -327,7 +257,7 @@ namespace UIHelpers.Modules.Base
                     .UserIsAllowedAccess(vault, sessionInfo) ?? false
             );
         }
-        object ISuppliesUIXConfiguration.GetUIXConfiguration(string language) 
-            => this.GetUIXConfiguration(language);
+        object ISuppliesUIXConfiguration.GetUIXConfiguration(string language, IWindowLocationRepository windowLocationRepository) 
+            => this.GetUIXConfiguration(language, windowLocationRepository);
     }
 }
