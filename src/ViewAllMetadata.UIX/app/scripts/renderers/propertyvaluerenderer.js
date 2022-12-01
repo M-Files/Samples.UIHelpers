@@ -2,6 +2,62 @@
 {
     var renderer = this;
     var $listItem = null;
+    var originalValue = getCurrentValue();
+    renderer.getPropertyDef = function () { return propertyDef; }
+    function getCurrentValue()
+    {
+        switch (propertyDef.DataType)
+        {
+            case MFDatatypeText:
+                return null == $listItem
+                    ? propertyValue.Value.DisplayValue
+                    : $(".auto-select", $listItem).val() + "";
+            case MFDatatypeInteger:
+            case MFDatatypeFloating:
+                return null == $listItem
+                    ? propertyValue.Value.DisplayValue
+                    : parseFloat($(".auto-select", $listItem).val() + "");
+                break;
+            default:
+                return propertyValue.Value.DisplayValue;
+        }
+    }
+    renderer.hasChanged = function ()
+    {
+        switch (propertyDef.DataType)
+        {
+            case MFDatatypeText:
+            case MFDatatypeInteger:
+            case MFDatatypeFloating:
+                return getCurrentValue() != originalValue;
+                break;
+            default:
+                return false;
+        }
+    }
+    renderer.isValidValue = function()
+    {
+        var currentValue = getCurrentValue();
+
+        switch (propertyDef.DataType)
+        {
+            case MFDatatypeText:
+            case MFDatatypeMultiLineText:
+                if ((currentValue + "").length == 0 && isRequired)
+                    return false;
+                break;
+            case MFDatatypeInteger:
+            case MFDatatypeFloating:
+                if ((currentValue + "").length == 0 && isRequired)
+                    return false;
+                if (isNaN(parseFloat(currentValue)))
+                    return false;
+                break;
+            default:
+                return true;
+        }
+        return true;
+    }
 
     function renderLabel($parent)
     {
@@ -65,11 +121,29 @@
         switch (propertyDef.DataType)
         {
             case MFDatatypeText:
+            case MFDatatypeInteger:
+            case MFDatatypeFloating:
                 var $input = $("<input type='text' />").addClass("auto-select");
                 $input.val(propertyValue.Value.DisplayValue);
                 $input.blur(function () { renderer.exitEditMode(); });
                 $value.append($input);
+
+                // If it's a number then set the input mode
+                if (propertyDef.DataType != MFDatatypeText)
+                {
+                    $input.val(parseFloat(propertyValue.Value.DisplayValue));
+                    $input.attr("inputmode", "numeric");
+                    var pattern = "[0-9]*"; // Default to allowing just numbers.
+                    if (propertyDef.DataType == MFDatatypeFloating)
+                    {
+                        pattern = "[0=9\.\,]*"; // Allow decimal separators too.
+                    }
+                    $input.attr("pattern", pattern);
+                }
+
                 break;
+            default:
+                return null;
         }
 
         // Add to a parent if we can.
@@ -98,10 +172,25 @@
         switch (propertyDef.DataType)
         {
             case MFDatatypeText:
-                var value = $(".auto-select", $listItem).val() + "";
+            case MFDatatypeInteger:
+            case MFDatatypeFloating:
+                // If it's invalid then mark the list item.
+                if (!renderer.isValidValue())
+                {
+                    if (null != $listItem)
+                        $listItem.addClass("invalid-value")
+                    return false;
+                }
+
+                // We're good.
+                if (null != $listItem)
+                    $listItem.removeClass("invalid-value")
+
+                // Set the value.
+                var value = getCurrentValue();
 
                 // Update the property value in memory.
-                propertyValue.Value.SetValue(MFDatatypeText, value);
+                propertyValue.Value.SetValue(propertyDef.DataType, value);
 
                 // Update the UI.
                 if (value.length == 0)
@@ -110,6 +199,7 @@
                 break;
         }
         $listItem.removeClass("editing");
+        return true;
     }
 
     renderer.render = function ()
@@ -133,15 +223,12 @@
             // Is the property editable?
             if (propertyDef.AutomaticValueType == MFAutomaticValueTypeNone)
             {
-                // Mark it as editable.
-                $listItem.addClass("editable");
-
-                // For now only deal with text properties, as that's all we support.
-                if (propertyDef.DataType == 1)
+                // Attempt to create the editable value.
+                var $editableValue = renderEditableValue($listItem);
+                if (null != $editableValue)
                 {
-
-                    // Create the editable value.
-                    renderEditableValue($listItem);
+                    // Mark it as editable.
+                    $listItem.addClass("editable");
 
                     // Add the handler to allow editing.
                     $listItem.click(function (e)

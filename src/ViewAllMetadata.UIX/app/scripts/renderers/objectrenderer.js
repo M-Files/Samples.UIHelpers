@@ -115,13 +115,47 @@ function ObjectRenderer(dashboard)
             propertyValueRenderers.push(propertyValueRenderer);
         }
     }
-
-    // When the body is clicked, undo any editing.
-    $("body").click(function ()
+    function canSave()
     {
         for (var i = 0; i < propertyValueRenderers.length; i++)
         {
-            propertyValueRenderers[i].exitEditMode();
+            // Is it valid?
+            if (!propertyValueRenderers[i].isValidValue())
+                return false;
+        }
+        return true;
+    }
+
+    // When the body is clicked, exit editing mode.
+    var $body = $("body");
+    $body.click(function ()
+    {
+        var changedProperties = [];
+        var erroredProperties = [];
+        for (var i = 0; i < propertyValueRenderers.length; i++)
+        {
+            // Attempt to exit edit mode.
+            var renderer = propertyValueRenderers[i];
+            renderer.exitEditMode();
+
+            // Should we enable buttons and things?
+            if (renderer.hasChanged())
+                changedProperties.push(renderer);
+            if (!renderer.isValidValue())
+                erroredProperties.push(renderer);
+        }
+
+        // Update the body with flags.
+        $body
+            .removeClass("changed")
+            .removeClass("has-errors");
+        $("#btnSave").removeAttr("disabled");
+        if (changedProperties.length > 0)
+            $body.addClass("changed");
+        if (erroredProperties.length > 0)
+        {
+            $body.addClass("errors");
+            $("#btnSave").attr("disabled", "disabled");
         }
     });
 
@@ -134,16 +168,27 @@ function ObjectRenderer(dashboard)
             dashboard.Window.Close();
     }).text(dashboard.CustomData.configuration.ResourceStrings.Buttons_Close || "Close");
 
+    renderer.saveChanges = function ()
+    {
+        if (!canSave())
+            return false;
+        alert("Save not done yet.");
+    }
+
     // Configure the save button.
     $("#btnSave").click(function ()
     {
-        alert("Save not done yet.");
+        renderer.saveChanges();
     }).text(dashboard.CustomData.configuration.ResourceStrings.Buttons_Save || "Save");
 
+    renderer.discardChanges = function ()
+    {
+        renderer.render(renderer.originalObject);
+    }
     // Configure the discard button.
     $("#btnDiscard").click(function ()
     {
-        renderer.render(renderer.originalObject);
+        renderer.discardChanges();
     }).text(dashboard.CustomData.configuration.ResourceStrings.Buttons_Discard || "Discard");
 
     // Configure the locations buttons
