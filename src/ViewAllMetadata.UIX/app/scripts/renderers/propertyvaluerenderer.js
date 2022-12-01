@@ -22,6 +22,22 @@
                 return propertyValue.Value.DisplayValue;
         }
     }
+    renderer.getPropertyValue = function ()
+    {
+        switch (propertyDef.DataType)
+        {
+            case MFDatatypeText:
+            case MFDatatypeInteger:
+            case MFDatatypeFloating:
+                var pv = new MFiles.PropertyValue();
+                pv.PropertyDef = propertyDef.ID;
+                pv.Value.SetValue(propertyDef.DataType, getCurrentValue());
+                return pv;
+                break;
+            default:
+                return propertyValue;
+        }
+    }
     renderer.hasChanged = function ()
     {
         switch (propertyDef.DataType)
@@ -188,9 +204,6 @@
 
                 // Set the value.
                 var value = getCurrentValue();
-
-                // Update the property value in memory.
-                propertyValue.Value.SetValue(propertyDef.DataType, value);
 
                 // Update the UI.
                 if (value.length == 0)

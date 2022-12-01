@@ -172,7 +172,44 @@ function ObjectRenderer(dashboard)
     {
         if (!canSave())
             return false;
-        alert("Save not done yet.");
+        var vault = dashboard.Vault;
+
+        function getPropertyValueFromRenderer(propertyDef)
+        {
+            for (var i = 0; i < propertyValueRenderers.length; i++)
+            {
+                if (propertyValueRenderers[i].getPropertyDef().ID == propertyDef)
+                    return propertyValueRenderers[i].getPropertyValue();
+            }
+            return null;
+
+        }
+
+        // Gather the properties.
+        var propertyValues = new MFiles.PropertyValues();
+        for (var i = 0; i < renderer.originalObject.Properties.Count; i++)
+        {
+            // Get the value for this property.
+            var pvValue = getPropertyValueFromRenderer(renderer.originalObject.Properties[i].PropertyDef)
+                || renderer.originalObject.Properties[i];
+
+            // Add it.
+            propertyValues.Add(-1, pvValue);
+        }
+
+        // Update the properties.
+        try
+        {
+            // Set all the properties and update our cache.
+            renderer.originalObject = vault.ObjectPropertyOperations.SetAllProperties(renderer.originalObject.VersionData.ObjVer, true, propertyValues);
+
+            // By discarding the changes we'll revert to the (new) original object data.
+            renderer.discardChanges();
+        }
+        catch (e)
+        {
+            MFiles.ReportException(e);
+        }
     }
 
     // Configure the save button.

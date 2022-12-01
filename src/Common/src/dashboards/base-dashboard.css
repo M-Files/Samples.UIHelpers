@@ -72,16 +72,21 @@ button {
     text-align: center;
 }
 
-    button:hover, button:active, button.save:active, button.save:hover {
-        border-color: #318CCC;
-        background-color: #318CCC;
-        color: white;
-    }
+button:hover, button:active, button.save:active, button.save:hover {
+    border-color: #318CCC;
+    background-color: #318CCC;
+    color: white;
+}
 
-    button.save {
-        border-color: #318CCC;
-        color: #318CCC;
-    }
+button.save {
+    border-color: #318CCC;
+    color: #318CCC;
+}
+button.save:disabled, button.save[disabled] {
+    color: #CCC;
+    border-color: #CCC;
+    cursor: not-allowed;
+}
 
 .buttonGroup.top {
     position: fixed;

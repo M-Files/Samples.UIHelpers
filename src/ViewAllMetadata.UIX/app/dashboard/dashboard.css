@@ -94,19 +94,22 @@ ol.properties li.editable:hover {
     background-repeat: no-repeat;
     background-position: 170px 6px;
 }
-ol.properties li.editable .editing-value{
+ol.properties li.editable .editing-value
+{
     display: none;
 }
-ol.properties li.editable.editing .read-only-value {
+ol.properties li.editable.editing .read-only-value,
+ol.properties li.invalid-value .read-only-value {
     display: none;
 }
-ol.properties li.editable.editing .editing-value {
+ol.properties li.editable.editing .editing-value,
+ol.properties li.invalid-value .editing-value {
     display: block;
 }
 /* make text, real and integer input boxes full width */
-ol.properties li.mfdatatype-1.editable.editing input,
-ol.properties li.mfdatatype-2.editable.editing input,
-ol.properties li.mfdatatype-3.editable.editing input {
+ol.properties li.mfdatatype-1.editable input,
+ol.properties li.mfdatatype-2.editable input,
+ol.properties li.mfdatatype-3.editable input {
     display: inline-block;
     width: 100%;
     height: 21px;
