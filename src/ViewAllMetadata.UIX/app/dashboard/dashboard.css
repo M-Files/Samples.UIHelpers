@@ -103,10 +103,12 @@ ol.properties li.editable .editing-value
     display: none;
 }
 ol.properties li.editable.editing .read-only-value,
+ol.properties li.editable:focus .read-only-value,
 ol.properties li.invalid-value .read-only-value {
     display: none;
 }
 ol.properties li.editable.editing .editing-value,
+ol.properties li.editable:focus .editing-value,
 ol.properties li.invalid-value .editing-value {
     display: block;
 }

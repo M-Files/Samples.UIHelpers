@@ -79,15 +79,17 @@
     }
     renderer.hasChanged = function ()
     {
+        var currentValue = getCurrentValue();
         switch (propertyDef.DataType)
         {
             case MFDatatypeBoolean:
             case MFDatatypeText:
-            case MFDatatypeMultiLineText:
             case MFDatatypeInteger:
             case MFDatatypeFloating:
-                return getCurrentValue() !== originalValue;
-                break;
+                return currentValue !== originalValue;
+            case MFDatatypeMultiLineText:
+                // Line ending fun.
+                return (currentValue + "").replace(/\r\n/g, "\n") !== (originalValue + "").replace(/\r\n/g, "\n");
             default:
                 return false;
         }
@@ -340,6 +342,7 @@
     {
         // Create the (parent) list item.
         $listItem = $("<li></li>");
+        $listItem.attr("tabindex", "0");
         $listItem.addClass("mfdatatype-" + propertyDef.DataType.toString()); // Add a class for the data type
         $listItem.data("propertyDef", propertyDef);
         $listItem.data("propertyValue", propertyValue);
@@ -366,8 +369,15 @@
                     supportsEditing = true;
                     $listItem.addClass("editable");
 
-                    // Add the handler to allow editing. }
+                    // Add the handler to allow editing.
                     $listItem.click(function (e)
+                    {
+                        $(".editing").removeClass("editing");
+                        renderer.enterEditMode();
+                        e.stopPropagation();
+                        return false;
+                    });
+                    $listItem.focus(function (e)
                     {
                         $(".editing").removeClass("editing");
                         renderer.enterEditMode();
