@@ -19,9 +19,12 @@
                     ? propertyValue.Value.DisplayValue
                     : $(".auto-select", $listItem).val() + "";
                 if ((v + "").length > 0)
-                    v = parseFloat(v);
+                {
+                    var x = parseFloat(v);
+                    if (!isNaN(x))
+                        v = x;
+                }
                 return v;
-                break;
             default:
                 return propertyValue.Value.DisplayValue;
         }
@@ -71,12 +74,15 @@
                 break;
             case MFDatatypeInteger:
             case MFDatatypeFloating:
-                // If it does not have a value but is required, die.
-                if ((currentValue + "").length == 0 && isRequired)
-                    return false;
+                // If it's empty then just check whether it's required.
+                if ((currentValue + "").length == 0)
+                    return !isRequired;
+
                 // If it's got a value, but not a number, die.
-                if ((currentValue + "").length > 0 && isNaN(parseFloat(currentValue)))
+                currentValue = parseFloat(currentValue);
+                if (isNaN(currentValue))
                     return false;
+
                 break;
             default:
                 return true;
@@ -160,7 +166,7 @@
                 // Note: this doesn't do anything currently, but maybe in the future...
                 if (propertyDef.DataType != MFDatatypeText)
                 {
-                    $input.val(parseFloat(propertyValue.Value.DisplayValue));
+                    $input.val(propertyValue.Value.DisplayValue);
                     $input.attr("inputmode", "numeric");
                     var pattern = "[0-9]*"; // Default to allowing just numbers.
                     if (propertyDef.DataType == MFDatatypeFloating)
