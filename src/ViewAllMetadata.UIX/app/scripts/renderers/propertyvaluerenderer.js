@@ -144,7 +144,8 @@
                 $input.blur(function () { renderer.exitEditMode(); });
                 $value.append($input);
 
-                // If it's a number then set the input mode
+                // If it's a number then set the input mode.
+                // Note: this doesn't do anything currently, but maybe in the future...
                 if (propertyDef.DataType != MFDatatypeText)
                 {
                     $input.val(parseFloat(propertyValue.Value.DisplayValue));
@@ -152,7 +153,7 @@
                     var pattern = "[0-9]*"; // Default to allowing just numbers.
                     if (propertyDef.DataType == MFDatatypeFloating)
                     {
-                        pattern = "[0=9\.\,]*"; // Allow decimal separators too.
+                        pattern = "[0-9\.\,]*"; // Allow decimal separators too.
                     }
                     $input.attr("pattern", pattern);
                 }
