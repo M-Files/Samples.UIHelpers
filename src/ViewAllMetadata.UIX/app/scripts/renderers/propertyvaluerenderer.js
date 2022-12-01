@@ -26,6 +26,7 @@
                         return "";
                 }
             case MFDatatypeText:
+            case MFDatatypeMultiLineText:
                 return false == supportsEditing
                     ? propertyValue.Value.DisplayValue
                     : $(".auto-select", $listItem).val() + "";
@@ -65,6 +66,7 @@
                 }
                 return pv;
             case MFDatatypeText:
+            case MFDatatypeMultiLineText:
             case MFDatatypeInteger:
             case MFDatatypeFloating:
                 var pv = new MFiles.PropertyValue();
@@ -81,6 +83,7 @@
         {
             case MFDatatypeBoolean:
             case MFDatatypeText:
+            case MFDatatypeMultiLineText:
             case MFDatatypeInteger:
             case MFDatatypeFloating:
                 return getCurrentValue() !== originalValue;
@@ -215,6 +218,12 @@
                 $select.change(function () { renderer.exitEditMode(); });
                 $value.append($select);
                 break;
+            case MFDatatypeMultiLineText:
+                var $textarea = $("<textarea></textarea>").addClass("auto-select");
+                $textarea.val(propertyValue.Value.DisplayValue);
+                $textarea.blur(function () { renderer.exitEditMode(); });
+                $value.append($textarea);
+                break;
             case MFDatatypeText:
             case MFDatatypeInteger:
             case MFDatatypeFloating:
@@ -257,6 +266,11 @@
             return;
         if (null == $listItem)
             return;
+        // Already editing?
+        if ($listItem.hasClass("editing"))
+            return;
+
+        // Start editing.
         $listItem.addClass("editing");
         $(".auto-select", $listItem).select();
     }
@@ -269,6 +283,7 @@
         {
             case MFDatatypeBoolean:
             case MFDatatypeText:
+            case MFDatatypeMultiLineText:
             case MFDatatypeInteger:
             case MFDatatypeFloating:
                 // If it's invalid then mark the list item.
@@ -351,7 +366,7 @@
                     supportsEditing = true;
                     $listItem.addClass("editable");
 
-                    // Add the handler to allow editing.
+                    // Add the handler to allow editing. }
                     $listItem.click(function (e)
                     {
                         $(".editing").removeClass("editing");
