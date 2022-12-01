@@ -1,4 +1,4 @@
-﻿<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" InitialTargets="CleanAll">
+﻿<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <_BundlerMinifierTaskAssembly Condition="'$(MSBuildRuntimeType)' == 'Core'">..\packages\BuildBundlerMinifier.3.2.449\tools\netstandard1.3\BundlerMinifier.dll</_BundlerMinifierTaskAssembly>
@@ -59,16 +59,12 @@
     <None Include="bundleconfig.json" />
     <None Include="packages.config" />
   </ItemGroup>
-  <Target Name="CleanAll">
+  <Target Name="Clean">
     <RemoveDir Directories="out;bin;obj;bundles" />
-    <BundlerMinifier.BundlerBuildTask FileName="$(MSBuildProjectDirectory)\bundleconfig.json" />
   </Target>
   <Target Name="Build">
+    <BundlerMinifier.BundlerBuildTask FileName="$(MSBuildProjectDirectory)\bundleconfig.json" />
   </Target>
-  <Target Name="BundleMinifyClean" AfterTargets="CoreClean">
-    <BundlerMinifier.BundlerCleanTask FileName="$(MSBuildProjectDirectory)\bundleconfig.json" />
-  </Target>
-  <Target Name="Rebuild" DependsOnTargets="CleanAll" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

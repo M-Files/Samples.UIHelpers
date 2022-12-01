@@ -37,7 +37,7 @@ ol.properties li {
     padding-left: 195px;
     break-inside: avoid;
     padding-right: 20px;
-    height: 28px;
+    min-height: 28px;
 }
 ol.properties li:hover {
     background-color: #F4F4F4;
@@ -73,8 +73,7 @@ ol.properties li .read-only-value {
     vertical-align: top;
     display: inline-block;
     white-space: pre-line;
-    position: relative;
-    top: 4px;
+    margin: 4px;
 }
 ol.properties li.mfdatatype-13 {
     min-height: 56px;
@@ -85,6 +84,9 @@ ol.properties li.mfdatatype-1 .read-only-value {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+}
+ol.properties li.mfdatatype-1.empty .read-only-value{
+    display: inline-block; /* otherwise incorrect height*/
 }
 ol.properties li.editable .read-only-value {
     cursor: text;

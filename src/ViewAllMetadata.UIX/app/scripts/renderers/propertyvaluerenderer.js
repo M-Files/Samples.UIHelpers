@@ -2,6 +2,7 @@
 {
     var renderer = this;
     var $listItem = null;
+    var supportsEditing = false;
     var originalValue = getCurrentValue();
     renderer.getPropertyDef = function () { return propertyDef; }
     function getCurrentValue()
@@ -9,14 +10,17 @@
         switch (propertyDef.DataType)
         {
             case MFDatatypeText:
-                return null == $listItem
+                return false == supportsEditing
                     ? propertyValue.Value.DisplayValue
                     : $(".auto-select", $listItem).val() + "";
             case MFDatatypeInteger:
             case MFDatatypeFloating:
-                return null == $listItem
+                var v = false == supportsEditing
                     ? propertyValue.Value.DisplayValue
-                    : parseFloat($(".auto-select", $listItem).val() + "");
+                    : $(".auto-select", $listItem).val() + "";
+                if ((v + "").length > 0)
+                    v = parseFloat(v);
+                return v;
                 break;
             default:
                 return propertyValue.Value.DisplayValue;
@@ -24,6 +28,8 @@
     }
     renderer.getPropertyValue = function ()
     {
+        if (false == supportsEditing)
+            return propertyValue;
         switch (propertyDef.DataType)
         {
             case MFDatatypeText:
@@ -59,14 +65,17 @@
         {
             case MFDatatypeText:
             case MFDatatypeMultiLineText:
+                // If it does not have a value but is required, die.
                 if ((currentValue + "").length == 0 && isRequired)
                     return false;
                 break;
             case MFDatatypeInteger:
             case MFDatatypeFloating:
+                // If it does not have a value but is required, die.
                 if ((currentValue + "").length == 0 && isRequired)
                     return false;
-                if (isNaN(parseFloat(currentValue)))
+                // If it's got a value, but not a number, die.
+                if ((currentValue + "").length > 0 && isNaN(parseFloat(currentValue)))
                     return false;
                 break;
             default:
@@ -98,7 +107,10 @@
         var $value = $("<span></span>").addClass("read-only-value");
         var value = propertyValue.Value.DisplayValue;
         if ((value + "").length == 0)
+        {
+            $listItem.addClass("empty");
             value = "---";
+        }
         $value.text(value);
 
         // Do any special processing for different data types.
@@ -207,12 +219,19 @@
                 var value = getCurrentValue();
 
                 // Update the UI.
+                if (null != $listItem)
+                    $listItem.removeClass("empty");
                 if (value.length == 0)
+                {
+                    if (null != $listItem)
+                        $listItem.addClass("empty");
                     value = "---";
+                }
                 $(".read-only-value", $listItem).text(value);
                 break;
         }
-        $listItem.removeClass("editing");
+        if (null != $listItem)
+            $listItem.removeClass("editing");
         return true;
     }
 
@@ -237,6 +256,8 @@
             // Is the property editable?
             if (propertyDef.AutomaticValueType == MFAutomaticValueTypeNone)
             {
+                supportsEditing = true;
+
                 // Attempt to create the editable value.
                 var $editableValue = renderEditableValue($listItem);
                 if (null != $editableValue)

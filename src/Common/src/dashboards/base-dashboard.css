@@ -82,11 +82,14 @@ button.save {
     border-color: #318CCC;
     color: #318CCC;
 }
-button.save:disabled, button.save[disabled] {
-    color: #CCC;
-    border-color: #CCC;
-    cursor: not-allowed;
-}
+    button.save:disabled, button.save[disabled],
+    button.save:disabled:active, button.save:disabled:hover,
+    button.save[disabled]:active, button.save[disabled]:hover {
+        color: #CCC;
+        border-color: #CCC;
+        cursor: not-allowed;
+        background-color: white;
+    }
 
 .buttonGroup.top {
     position: fixed;
