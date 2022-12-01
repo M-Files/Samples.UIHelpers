@@ -9,6 +9,22 @@
     {
         switch (propertyDef.DataType)
         {
+            case MFDatatypeBoolean:
+                var v = false == supportsEditing
+                    ? propertyValue.Value.DisplayValue
+                    : $(".auto-select", $listItem).val();
+                switch ((v + "").toLowerCase())
+                {
+                    case "true":
+                    case "yes":
+                        return true;
+                    case "false":
+                    case "no":
+                        return false;
+                    default:
+                        // No value.
+                        return "";
+                }
             case MFDatatypeText:
                 return false == supportsEditing
                     ? propertyValue.Value.DisplayValue
@@ -35,6 +51,19 @@
             return propertyValue;
         switch (propertyDef.DataType)
         {
+            case MFDatatypeBoolean:
+                var currentValue = getCurrentValue();
+                var pv = new MFiles.PropertyValue();
+                pv.PropertyDef = propertyDef.ID;
+                if ((currentValue + "").length == 0)
+                {
+                    pv.Value.SetValue(propertyDef.DataType, null);
+                }
+                else
+                {
+                    pv.Value.SetValue(propertyDef.DataType, currentValue);
+                }
+                return pv;
             case MFDatatypeText:
             case MFDatatypeInteger:
             case MFDatatypeFloating:
@@ -42,7 +71,6 @@
                 pv.PropertyDef = propertyDef.ID;
                 pv.Value.SetValue(propertyDef.DataType, getCurrentValue());
                 return pv;
-                break;
             default:
                 return propertyValue;
         }
@@ -51,10 +79,11 @@
     {
         switch (propertyDef.DataType)
         {
+            case MFDatatypeBoolean:
             case MFDatatypeText:
             case MFDatatypeInteger:
             case MFDatatypeFloating:
-                return getCurrentValue() != originalValue;
+                return getCurrentValue() !== originalValue;
                 break;
             default:
                 return false;
@@ -66,6 +95,16 @@
 
         switch (propertyDef.DataType)
         {
+            case MFDatatypeBoolean:
+                switch ((currentValue + "").toLowerCase())
+                {
+                    case "true":
+                    case "false":
+                    case "":
+                        return true;
+                    default:
+                        return !isRequired;
+                }
             case MFDatatypeText:
             case MFDatatypeMultiLineText:
                 // If it does not have a value but is required, die.
@@ -154,6 +193,28 @@
         // Render each data type.
         switch (propertyDef.DataType)
         {
+            case MFDatatypeBoolean:
+                var $select = $("<select></select>").addClass("auto-select");
+                var $emptyOption = $("<option></option>").val("").text("");
+                var $yesOption = $("<option></option>").val("Yes").text("Yes");
+                var $noOption = $("<option></option>").val("No").text("No");
+                switch ((propertyValue.Value.DisplayValue + "").toLowerCase())
+                {
+                    case "true":
+                    case "yes":
+                        $yesOption.attr("selected", "selected");
+                        break;
+                    case "false":
+                    case "no":
+                        $noOption.attr("selected", "selected");
+                        break;
+                }
+                $select.append($emptyOption);
+                $select.append($yesOption);
+                $select.append($noOption);
+                $select.change(function () { renderer.exitEditMode(); });
+                $value.append($select);
+                break;
             case MFDatatypeText:
             case MFDatatypeInteger:
             case MFDatatypeFloating:
@@ -206,6 +267,7 @@
             return;
         switch (propertyDef.DataType)
         {
+            case MFDatatypeBoolean:
             case MFDatatypeText:
             case MFDatatypeInteger:
             case MFDatatypeFloating:
@@ -224,10 +286,28 @@
                 // Set the value.
                 var value = getCurrentValue();
 
+                // Format the value.
+                switch (propertyDef.DataType)
+                {
+                    case MFDatatypeBoolean:
+                        switch (value)
+                        {
+                            case true:
+                                value = "Yes";
+                                break;
+                            case false:
+                                value = "No";
+                                break;
+                            default:
+                                value = "";
+                        }
+                        break;
+                }
+
                 // Update the UI.
                 if (null != $listItem)
                     $listItem.removeClass("empty");
-                if (value.length == 0)
+                if ((value + "").length == 0)
                 {
                     if (null != $listItem)
                         $listItem.addClass("empty");
@@ -250,7 +330,7 @@
         $listItem.data("propertyValue", propertyValue);
 
         // Create the label.
-        renderLabel( $listItem);
+        renderLabel($listItem);
 
         // Create the read-only value.
         renderReadOnlyValue($listItem);
@@ -262,13 +342,13 @@
             // Is the property editable?
             if (propertyDef.AutomaticValueType == MFAutomaticValueTypeNone)
             {
-                supportsEditing = true;
 
                 // Attempt to create the editable value.
                 var $editableValue = renderEditableValue($listItem);
                 if (null != $editableValue)
                 {
                     // Mark it as editable.
+                    supportsEditing = true;
                     $listItem.addClass("editable");
 
                     // Add the handler to allow editing.
