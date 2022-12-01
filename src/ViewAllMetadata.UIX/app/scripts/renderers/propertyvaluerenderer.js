@@ -139,7 +139,7 @@
             case MFDatatypeText:
             case MFDatatypeInteger:
             case MFDatatypeFloating:
-                var $input = $("<input type='text' />").addClass("auto-select");
+                var $input = $("<input type='text' maxlength='100' />").addClass("auto-select");
                 $input.val(propertyValue.Value.DisplayValue);
                 $input.blur(function () { renderer.exitEditMode(); });
                 $value.append($input);
