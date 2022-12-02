@@ -233,6 +233,7 @@ function PropertyValueRenderer(dashboard, propertyDef, propertyValue, isRequired
         switch (propertyDef.DataType)
         {
             case MFDatatypeDate:
+            case MFDatatypeTime:
                 return false == supportsEditing
                     ? propertyValue.Value.DisplayValue
                     : $(".auto-select", $listItem).val();
@@ -279,6 +280,11 @@ function PropertyValueRenderer(dashboard, propertyDef, propertyValue, isRequired
             return propertyValue;
         switch (propertyDef.DataType)
         {
+            case MFDatatypeText:
+            case MFDatatypeMultiLineText:
+            case MFDatatypeInteger:
+            case MFDatatypeFloating:
+            case MFDatatypeTime:
             case MFDatatypeDate:
             case MFDatatypeBoolean:
                 var currentValue = getCurrentValue();
@@ -293,14 +299,6 @@ function PropertyValueRenderer(dashboard, propertyDef, propertyValue, isRequired
                     pv.Value.SetValue(propertyDef.DataType, currentValue);
                 }
                 return pv;
-            case MFDatatypeText:
-            case MFDatatypeMultiLineText:
-            case MFDatatypeInteger:
-            case MFDatatypeFloating:
-                var pv = new MFiles.PropertyValue();
-                pv.PropertyDef = propertyDef.ID;
-                pv.Value.SetValue(propertyDef.DataType, getCurrentValue());
-                return pv;
             default:
                 return propertyValue;
         }
@@ -310,6 +308,7 @@ function PropertyValueRenderer(dashboard, propertyDef, propertyValue, isRequired
         var currentValue = getCurrentValue();
         switch (propertyDef.DataType)
         {
+            case MFDatatypeTime:
             case MFDatatypeDate:
             case MFDatatypeBoolean:
             case MFDatatypeText:
@@ -455,10 +454,11 @@ function PropertyValueRenderer(dashboard, propertyDef, propertyValue, isRequired
                 $textarea.blur(function () { renderer.exitEditMode(); });
                 $value.append($textarea);
                 break;
+            case MFDatatypeTime:
+            case MFDatatypeDate:
             case MFDatatypeText:
             case MFDatatypeInteger:
             case MFDatatypeFloating:
-            case MFDatatypeDate:
                 var $input = $("<input type='text' maxlength='100' />").addClass("auto-select");
                 $input.val(propertyValue.Value.DisplayValue);
                 //$input.blur(function () { renderer.exitEditMode(); });
@@ -488,7 +488,24 @@ function PropertyValueRenderer(dashboard, propertyDef, propertyValue, isRequired
                             {
                                 timepicker: false,
                                 value: propertyValue.Value.DisplayValue,
-                                format: format
+                                format: format,
+                                mask: true
+                            }
+                        );
+                }
+
+                // If it's time then set up the picker.
+                if (propertyDef.DataType == MFDatatypeTime)
+                {
+                    $input.datetimepicker
+                        (
+                            {
+                                datepicker: false,
+                                timepicker: false,
+                                value: propertyValue.Value.DisplayValue,
+                                mask: true,
+                                format: 'H:i:s',
+                                step: 1
                             }
                         );
                 }
@@ -528,6 +545,7 @@ function PropertyValueRenderer(dashboard, propertyDef, propertyValue, isRequired
             return;
         switch (propertyDef.DataType)
         {
+            case MFDatatypeTime:
             case MFDatatypeDate:
             case MFDatatypeBoolean:
             case MFDatatypeText:
