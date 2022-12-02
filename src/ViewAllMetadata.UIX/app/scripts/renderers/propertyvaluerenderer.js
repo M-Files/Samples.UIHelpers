@@ -502,7 +502,7 @@ function PropertyValueRenderer(dashboard, propertyDef, propertyValue, isRequired
                         (
                             {
                                 datepicker: false,
-                                timepicker: false,
+                                timepicker: true,
                                 value: propertyValue.Value.DisplayValue,
                                 mask: true,
                                 format: 'H:i:s',
