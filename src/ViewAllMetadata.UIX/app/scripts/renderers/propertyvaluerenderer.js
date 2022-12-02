@@ -234,9 +234,12 @@ function PropertyValueRenderer(dashboard, propertyDef, propertyValue, isRequired
         {
             case MFDatatypeDate:
             case MFDatatypeTime:
-                return false == supportsEditing
+                var v = false == supportsEditing
                     ? propertyValue.Value.DisplayValue
                     : $(".auto-select", $listItem).val();
+                if (v == "__:__:__") // Happens when tabbing through the time field; just get the mask.
+                    v = "";
+                return v;
             case MFDatatypeBoolean:
                 var v = false == supportsEditing
                     ? propertyValue.Value.DisplayValue
@@ -357,7 +360,7 @@ function PropertyValueRenderer(dashboard, propertyDef, propertyValue, isRequired
 
                 break;
             default:
-                return true;
+                return !isRequired;
         }
         return true;
     }
