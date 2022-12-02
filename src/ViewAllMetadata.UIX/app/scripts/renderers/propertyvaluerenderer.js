@@ -232,7 +232,11 @@ function PropertyValueRenderer(dashboard, propertyDef, propertyValue, isRequired
     {
         switch (propertyDef.DataType)
         {
+            case MFDatatypeTimestamp:
             case MFDatatypeDate:
+                return false == supportsEditing
+                    ? propertyValue.Value.DisplayValue
+                    : $(".auto-select", $listItem).val();
             case MFDatatypeTime:
                 var v = false == supportsEditing
                     ? propertyValue.Value.DisplayValue
@@ -283,13 +287,7 @@ function PropertyValueRenderer(dashboard, propertyDef, propertyValue, isRequired
             return propertyValue;
         switch (propertyDef.DataType)
         {
-            case MFDatatypeText:
-            case MFDatatypeMultiLineText:
-            case MFDatatypeInteger:
-            case MFDatatypeFloating:
-            case MFDatatypeTime:
-            case MFDatatypeDate:
-            case MFDatatypeBoolean:
+            default:
                 var currentValue = getCurrentValue();
                 var pv = new MFiles.PropertyValue();
                 pv.PropertyDef = propertyDef.ID;
@@ -302,8 +300,6 @@ function PropertyValueRenderer(dashboard, propertyDef, propertyValue, isRequired
                     pv.Value.SetValue(propertyDef.DataType, currentValue);
                 }
                 return pv;
-            default:
-                return propertyValue;
         }
     }
     renderer.hasChanged = function ()
@@ -311,6 +307,7 @@ function PropertyValueRenderer(dashboard, propertyDef, propertyValue, isRequired
         var currentValue = getCurrentValue();
         switch (propertyDef.DataType)
         {
+            case MFDatatypeTimestamp:
             case MFDatatypeTime:
             case MFDatatypeDate:
             case MFDatatypeBoolean:
@@ -360,7 +357,7 @@ function PropertyValueRenderer(dashboard, propertyDef, propertyValue, isRequired
 
                 break;
             default:
-                return !isRequired;
+                return (isRequired && (currentValue + "").length > 0) || !isRequired;
         }
         return true;
     }
@@ -457,6 +454,7 @@ function PropertyValueRenderer(dashboard, propertyDef, propertyValue, isRequired
                 $textarea.blur(function () { renderer.exitEditMode(); });
                 $value.append($textarea);
                 break;
+            case MFDatatypeTimestamp:
             case MFDatatypeTime:
             case MFDatatypeDate:
             case MFDatatypeText:
@@ -513,6 +511,23 @@ function PropertyValueRenderer(dashboard, propertyDef, propertyValue, isRequired
                         );
                 }
 
+                // If it's time then set up the picker.
+                if (propertyDef.DataType == MFDatatypeTimestamp)
+                {
+                    var format = getLocaleDateString() + " H:i:s";
+                    $input.datetimepicker
+                        (
+                            {
+                                datepicker: true,
+                                timepicker: true,
+                                value: propertyValue.Value.DisplayValue,
+                                mask: true,
+                                format: format,
+                                step: 1
+                            }
+                        );
+                }
+
                 break;
             default:
                 return null;
@@ -548,6 +563,7 @@ function PropertyValueRenderer(dashboard, propertyDef, propertyValue, isRequired
             return;
         switch (propertyDef.DataType)
         {
+            case MFDatatypeTimestamp:
             case MFDatatypeTime:
             case MFDatatypeDate:
             case MFDatatypeBoolean:
