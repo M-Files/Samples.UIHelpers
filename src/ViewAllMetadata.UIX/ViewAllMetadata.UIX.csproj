@@ -38,6 +38,8 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="app\dashboard\dashboard.css" />
+    <Content Include="app\dashboard\jquery.datetimepicker.min.css" />
+    <Content Include="app\scripts\jquery.datetimepicker.full.min.js" />
     <Content Include="app\scripts\renderers\objectrenderer.js" />
     <Content Include="app\scripts\renderers\propertyvaluerenderer.js" />
     <Content Include="app\shellui.js" />

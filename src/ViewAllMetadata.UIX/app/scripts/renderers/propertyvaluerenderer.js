@@ -1,4 +1,227 @@
-﻿function PropertyValueRenderer(dashboard, propertyDef, propertyValue, isRequired, $parent)
+﻿function getLocaleDateString()
+{
+    const formats = {
+        "af-ZA": "Y/m/d",
+        "am-ET": "d/M/Y",
+        "ar-AE": "d/m/Y",
+        "ar-BH": "d/m/Y",
+        "ar-DZ": "d-m-Y",
+        "ar-EG": "d/m/Y",
+        "ar-IQ": "d/m/Y",
+        "ar-JO": "d/m/Y",
+        "ar-KW": "d/m/Y",
+        "ar-LB": "d/m/Y",
+        "ar-LY": "d/m/Y",
+        "ar-MA": "d-m-Y",
+        "ar-OM": "d/m/Y",
+        "ar-QA": "d/m/Y",
+        "ar-SA": "d/m/yy",
+        "ar-SY": "d/m/Y",
+        "ar-TN": "d-m-Y",
+        "ar-YE": "d/m/Y",
+        "arn-CL": "d-m-Y",
+        "as-IN": "d-m-Y",
+        "az-Cyrl-AZ": "d.m.Y",
+        "az-Latn-AZ": "d.m.Y",
+        "ba-RU": "d.m.yy",
+        "be-BY": "d.m.Y",
+        "bg-BG": "d.M.Y",
+        "bn-BD": "d-m-yy",
+        "bn-IN": "d-m-yy",
+        "bo-CN": "Y/M/d",
+        "br-FR": "d/m/Y",
+        "bs-Cyrl-BA": "d.M.Y",
+        "bs-Latn-BA": "d.M.Y",
+        "ca-ES": "d/m/Y",
+        "co-FR": "d/m/Y",
+        "cs-CZ": "d.M.Y",
+        "cy-GB": "d/m/Y",
+        "da-DK": "d-m-Y",
+        "de-AT": "d.m.Y",
+        "de-CH": "d.m.Y",
+        "de-DE": "d.m.Y",
+        "de-LI": "d.m.Y",
+        "de-LU": "d.m.Y",
+        "dsb-DE": "d. M. Y",
+        "dv-MV": "d/m/yy",
+        "el-GR": "d/M/Y",
+        "en-029": "m/d/Y",
+        "en-AU": "d/m/Y",
+        "en-BZ": "d/m/Y",
+        "en-CA": "d/m/Y",
+        "en-GB": "d/m/Y",
+        "en-IE": "d/m/Y",
+        "en-IN": "d-m-Y",
+        "en-JM": "d/m/Y",
+        "en-MY": "d/M/Y",
+        "en-NZ": "d/m/Y",
+        "en-PH": "M/d/Y",
+        "en-SG": "d/M/Y",
+        "en-TT": "d/m/Y",
+        "en-US": "M/d/Y",
+        "en-ZA": "Y/m/d",
+        "en-ZW": "M/d/Y",
+        "es-AR": "d/m/Y",
+        "es-BO": "d/m/Y",
+        "es-CL": "d-m-Y",
+        "es-CO": "d/m/Y",
+        "es-CR": "d/m/Y",
+        "es-DO": "d/m/Y",
+        "es-EC": "d/m/Y",
+        "es-ES": "d/m/Y",
+        "es-GT": "d/m/Y",
+        "es-HN": "d/m/Y",
+        "es-MX": "d/m/Y",
+        "es-NI": "d/m/Y",
+        "es-PA": "m/d/Y",
+        "es-PE": "d/m/Y",
+        "es-PR": "d/m/Y",
+        "es-PY": "d/m/Y",
+        "es-SV": "d/m/Y",
+        "es-US": "M/d/Y",
+        "es-UY": "d/m/Y",
+        "es-VE": "d/m/Y",
+        "et-EE": "d.m.Y",
+        "eu-ES": "Y/m/d",
+        "fa-IR": "m/d/Y",
+        "fi-FI": "d.M.Y",
+        "fil-PH": "M/d/Y",
+        "fo-FO": "d-m-Y",
+        "fr-BE": "d/m/Y",
+        "fr-CA": "Y-m-d",
+        "fr-CH": "d.m.Y",
+        "fr-FR": "d/m/Y",
+        "fr-LU": "d/m/Y",
+        "fr-MC": "d/m/Y",
+        "fy-NL": "d-M-Y",
+        "ga-IE": "d/m/Y",
+        "gd-GB": "d/m/Y",
+        "gl-ES": "d/m/yy",
+        "gsw-FR": "d/m/Y",
+        "gu-IN": "d-m-yy",
+        "ha-Latn-NG": "d/M/Y",
+        "he-IL": "d/m/Y",
+        "hi-IN": "d-m-Y",
+        "hr-BA": "d.M.Y.",
+        "hr-HR": "d.M.Y",
+        "hsb-DE": "d. M. Y",
+        "hu-HU": "Y. m. d.",
+        "hy-AM": "d.m.Y",
+        "id-ID": "d/m/Y",
+        "ig-NG": "d/M/Y",
+        "ii-CN": "Y/M/d",
+        "is-IS": "d.M.Y",
+        "it-CH": "d.m.Y",
+        "it-IT": "d/m/Y",
+        "iu-Cans-CA": "d/M/Y",
+        "iu-Latn-CA": "d/m/Y",
+        "ja-JP": "Y/m/d",
+        "ka-GE": "d.m.Y",
+        "kk-KZ": "d.m.Y",
+        "kl-GL": "d-m-Y",
+        "km-KH": "Y-m-d",
+        "kn-IN": "d-m-yy",
+        "ko-KR": "Y. m. d",
+        "kok-IN": "d-m-Y",
+        "ky-KG": "d.m.yy",
+        "lb-LU": "d/m/Y",
+        "lo-LA": "d/m/Y",
+        "lt-LT": "Y.m.d",
+        "lv-LV": "Y.m.d.",
+        "mi-NZ": "d/m/Y",
+        "mk-MK": "d.m.Y",
+        "ml-IN": "d-m-yy",
+        "mn-MN": "yy.m.d",
+        "mn-Mong-CN": "Y/M/d",
+        "moh-CA": "M/d/Y",
+        "mr-IN": "d-m-Y",
+        "ms-BN": "d/m/Y",
+        "ms-MY": "d/m/Y",
+        "mt-MT": "d/m/Y",
+        "nb-NO": "d.m.Y",
+        "ne-NP": "M/d/Y",
+        "nl-BE": "d/m/Y",
+        "nl-NL": "d-M-Y",
+        "nn-NO": "d.m.Y",
+        "nso-ZA": "Y/m/d",
+        "oc-FR": "d/m/Y",
+        "or-IN": "d-m-yy",
+        "pa-IN": "d-m-yy",
+        "pl-PL": "d.m.Y",
+        "prs-AF": "d/m/yy",
+        "ps-AF": "d/m/yy",
+        "pt-BR": "d/M/Y",
+        "pt-PT": "d-m-Y",
+        "qut-GT": "d/m/Y",
+        "quz-BO": "d/m/Y",
+        "quz-EC": "d/m/Y",
+        "quz-PE": "d/m/Y",
+        "rm-CH": "d/m/Y",
+        "ro-RO": "d.m.Y",
+        "ru-RU": "d.m.Y",
+        "rw-RW": "M/d/Y",
+        "sa-IN": "d-m-Y",
+        "sah-RU": "m.d.Y",
+        "se-FI": "d.M.Y",
+        "se-NO": "d.m.Y",
+        "se-SE": "Y-m-d",
+        "si-LK": "Y-m-d",
+        "sk-SK": "d. M. Y",
+        "sl-SI": "d.M.Y",
+        "sma-NO": "d.m.Y",
+        "sma-SE": "Y-m-d",
+        "smj-NO": "d.m.Y",
+        "smj-SE": "Y-m-d",
+        "smn-FI": "d.M.Y",
+        "sms-FI": "d.M.Y",
+        "sq-AL": "Y-m-d",
+        "sr-Cyrl-BA": "d.M.Y",
+        "sr-Cyrl-CS": "d.M.Y",
+        "sr-Cyrl-ME": "d.M.Y",
+        "sr-Cyrl-RS": "d.M.Y",
+        "sr-Latn-BA": "d.M.Y",
+        "sr-Latn-CS": "d.M.Y",
+        "sr-Latn-ME": "d.M.Y",
+        "sr-Latn-RS": "d.M.Y",
+        "sv-FI": "d.M.Y",
+        "sv-SE": "Y-m-d",
+        "sw-KE": "M/d/Y",
+        "syr-SY": "d/m/Y",
+        "ta-IN": "d-m-Y",
+        "te-IN": "d-m-yy",
+        "tg-Cyrl-TJ": "d.m.yy",
+        "th-TH": "d/M/Y",
+        "tk-TM": "d.m.yy",
+        "tn-ZA": "Y/m/d",
+        "tr-TR": "d.m.Y",
+        "tt-RU": "d.m.Y",
+        "tzm-Latn-DZ": "d-m-Y",
+        "ug-CN": "Y-M-d",
+        "uk-UA": "d.m.Y",
+        "ur-PK": "d/m/Y",
+        "uz-Cyrl-UZ": "d.m.Y",
+        "uz-Latn-UZ": "d/m Y",
+        "vi-VN": "d/m/Y",
+        "wo-SN": "d/m/Y",
+        "xh-ZA": "Y/m/d",
+        "yo-NG": "d/M/Y",
+        "zh-CN": "Y/M/d",
+        "zh-HK": "d/M/Y",
+        "zh-MO": "d/M/Y",
+        "zh-SG": "d/M/Y",
+        "zh-TW": "Y/M/d",
+        "zu-ZA": "Y/m/d",
+    };
+
+    var l = navigator.language;
+    try
+    {
+        l = (new Intl.DateTimeFormat().resolvedOptions()).locale;
+    }
+    catch (e) { }
+    return formats[l] || "dd/MM/yyyy";
+}
+function PropertyValueRenderer(dashboard, propertyDef, propertyValue, isRequired, $parent)
 {
     var renderer = this;
     var $listItem = null;
@@ -9,6 +232,10 @@
     {
         switch (propertyDef.DataType)
         {
+            case MFDatatypeDate:
+                return false == supportsEditing
+                    ? propertyValue.Value.DisplayValue
+                    : $(".auto-select", $listItem).val();
             case MFDatatypeBoolean:
                 var v = false == supportsEditing
                     ? propertyValue.Value.DisplayValue
@@ -52,6 +279,7 @@
             return propertyValue;
         switch (propertyDef.DataType)
         {
+            case MFDatatypeDate:
             case MFDatatypeBoolean:
                 var currentValue = getCurrentValue();
                 var pv = new MFiles.PropertyValue();
@@ -82,6 +310,7 @@
         var currentValue = getCurrentValue();
         switch (propertyDef.DataType)
         {
+            case MFDatatypeDate:
             case MFDatatypeBoolean:
             case MFDatatypeText:
             case MFDatatypeInteger:
@@ -229,14 +458,16 @@
             case MFDatatypeText:
             case MFDatatypeInteger:
             case MFDatatypeFloating:
+            case MFDatatypeDate:
                 var $input = $("<input type='text' maxlength='100' />").addClass("auto-select");
                 $input.val(propertyValue.Value.DisplayValue);
-                $input.blur(function () { renderer.exitEditMode(); });
+                //$input.blur(function () { renderer.exitEditMode(); });
                 $value.append($input);
 
                 // If it's a number then set the input mode.
                 // Note: this doesn't do anything currently, but maybe in the future...
-                if (propertyDef.DataType != MFDatatypeText)
+                if (propertyDef.DataType == MFDatatypeInteger
+                    || propertyDef.DataType == MFDatatypeFloating)
                 {
                     $input.val(propertyValue.Value.DisplayValue);
                     $input.attr("inputmode", "numeric");
@@ -246,6 +477,20 @@
                         pattern = "[0-9\.\,]*"; // Allow decimal separators too.
                     }
                     $input.attr("pattern", pattern);
+                }
+
+                // If it's a date then set up the picker.
+                if (propertyDef.DataType == MFDatatypeDate)
+                {
+                    var format = getLocaleDateString();
+                    $input.datetimepicker
+                        (
+                            {
+                                timepicker: false,
+                                value: propertyValue.Value.DisplayValue,
+                                format: format
+                            }
+                        );
                 }
 
                 break;
@@ -283,6 +528,7 @@
             return;
         switch (propertyDef.DataType)
         {
+            case MFDatatypeDate:
             case MFDatatypeBoolean:
             case MFDatatypeText:
             case MFDatatypeMultiLineText:
