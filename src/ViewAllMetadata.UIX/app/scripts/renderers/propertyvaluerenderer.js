@@ -505,7 +505,7 @@ function PropertyValueRenderer(dashboard, propertyDef, propertyValue, isRequired
                                 timepicker: true,
                                 value: propertyValue.Value.DisplayValue,
                                 mask: true,
-                                format: 'H:i:s',
+                                format: 'H:i',
                                 step: 1
                             }
                         );
@@ -514,7 +514,7 @@ function PropertyValueRenderer(dashboard, propertyDef, propertyValue, isRequired
                 // If it's time then set up the picker.
                 if (propertyDef.DataType == MFDatatypeTimestamp)
                 {
-                    var format = getLocaleDateString() + " H:i:s";
+                    var format = getLocaleDateString() + " H:i";
                     $input.datetimepicker
                         (
                             {
