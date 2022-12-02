@@ -39,6 +39,10 @@
     </Content>
     <Content Include="app\dashboard\dashboard.css" />
     <Content Include="app\dashboard\jquery.datetimepicker.min.css" />
+    <Content Include="app\scripts\dayjs\customParseFormat.js" />
+    <Content Include="app\scripts\dayjs\dayjs.min.js" />
+    <Content Include="app\scripts\dayjs\localizedFormat.js" />
+    <Content Include="app\scripts\dayjs\utc.js" />
     <Content Include="app\scripts\jquery.datetimepicker.full.min.js" />
     <Content Include="app\scripts\renderers\objectrenderer.js" />
     <Content Include="app\scripts\renderers\propertyvaluerenderer.js" />

@@ -1,5 +1,10 @@
 "use strict";
 
+dayjs.extend(window.dayjs_plugin_utc);
+dayjs.extend(window.dayjs_plugin_customParseFormat);
+dayjs.extend(window.dayjs_plugin_localizedFormat);
+dayjs().utcOffset(new Date().getTimezoneOffset());
+
 (function ()
 {
 
