@@ -111,7 +111,9 @@ function ObjectRenderer(dashboard)
                 property.isRequired,
                 $propertiesList
             );
-            propertyValueRenderer.render();
+            var $listItem = propertyValueRenderer.render();
+            if (null != $listItem)
+                $listItem.focus(updateUI);
             propertyValueRenderers.push(propertyValueRenderer);
         }
     }
@@ -126,19 +128,21 @@ function ObjectRenderer(dashboard)
         return true;
     }
 
-    // When the body is clicked, exit editing mode.
-    var $body = $("body");
-    $body.click(function ()
+    // Update the UI re: save/errors.
+    function updateUI()
     {
+        // Stop any editing.
+        $(".editing").removeClass("editing");
+
         var changedProperties = [];
         var erroredProperties = [];
         for (var i = 0; i < propertyValueRenderers.length; i++)
         {
             // Attempt to exit edit mode.
-            var renderer = propertyValueRenderers[i];
-            renderer.exitEditMode();
+            //renderer.exitEditMode();
 
             // Should we enable buttons and things?
+            var renderer = propertyValueRenderers[i];
             if (renderer.hasChanged())
                 changedProperties.push(renderer);
             if (!renderer.isValidValue())
@@ -157,7 +161,11 @@ function ObjectRenderer(dashboard)
             $body.addClass("errors");
             $("#btnSave").attr("disabled", "disabled");
         }
-    });
+    }
+
+    // When the body is clicked, exit editing mode.
+    var $body = $("body");
+    $body.click(updateUI);
 
     // Configure the close button.
     $("#btnClose").click(function ()
