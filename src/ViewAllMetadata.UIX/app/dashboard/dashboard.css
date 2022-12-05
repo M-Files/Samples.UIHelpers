@@ -32,7 +32,7 @@ ol.properties {
     column-gap: 10px;
     margin: 10px 0px;
 }
-ol.properties li {
+ol.properties > li {
     position: relative;
     padding-left: 195px;
     break-inside: avoid;
@@ -73,7 +73,7 @@ ol.properties li .read-only-value {
     vertical-align: top;
     display: inline-block;
     white-space: pre-line;
-    margin: 4px;
+    margin: 4px 0px;
 }
 ol.properties li.mfdatatype-13 {
     min-height: 56px;
@@ -113,16 +113,18 @@ ol.properties li.invalid-value .editing-value {
     display: block;
 }
 /* make text, real and integer input boxes full width */
-ol.properties li.mfdatatype-1.editable input,
-ol.properties li.mfdatatype-2.editable input,
-ol.properties li.mfdatatype-3.editable input {
-    display: inline-block;
-    width: 100%;
-    height: 21px;
-    border: 1px solid #767676;
-    position: relative;
-    top: 2px;
-}
+    ol.properties li.mfdatatype-1.editable input,
+    ol.properties li.mfdatatype-2.editable input,
+    ol.properties li.mfdatatype-3.editable input,
+    ol.properties li.mfdatatype-9.editable input,
+    ol.properties li.mfdatatype-10.editable input {
+        display: inline-block;
+        width: 100%;
+        height: 21px;
+        border: 1px solid #767676;
+        position: relative;
+        top: 2px;
+    }
 ol.properties li.mfdatatype-13.editable textarea {
     display: block;
     width: 100%;
@@ -133,8 +135,57 @@ ol.properties li.invalid-value input
     border-color: red !important;
 }
 
-/* more columns on wider screens */
+/* lookups have more UI components */
+    ol.properties li.mfdatatype-9 {
+        padding-right: 4px;
+    }
+    ol.properties li.mfdatatype-9 a.dropdown,
+    ol.properties li.mfdatatype-10 a.dropdown {
+        display: inline-block;
+        position: absolute;
+        right: 1px;
+        top: 3px;
+        cursor: pointer;
+        background-color: #EEE;
+        height: 22px;
+        width: 22px;
+        background-position: center center;
+        background-repeat: no-repeat;
+        background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAACESURBVHgB7Y/NDYAgDEahEziCo8gGOoIbCAlb8DOKI+gGrsAiBMvBhGjVg/HGS0hb+F4TGKt8hpeDMaYHgPlJiDEKrfVKLsg45xYs3Y2/KqVEeQHnBOd8wBIIOeDbeMkTQea9b1NKG7ZNIQspZThngVqQg/jX4ZixHyn5FWvtlA+r/MsOt6gntJXB1Z4AAAAASUVORK5CYII=");
+    }
+    ol.properties li.mfdatatype-9 div.select,
+    ol.properties li.mfdatatype-10 div.select {
+        position: absolute;
+        top: 26px;
+        left: 195px;
+        right: 0px;
+        border: 1px solid #767676;
+        background-color: #FFF;
+        max-height: 100px;
+        overflow-y: scroll;
+        z-index: 1000;
+        display: none;
+    }
+        ol.properties li.mfdatatype-9.options-expanded div.select,
+        ol.properties li.mfdatatype-10.options-expanded div.select {
+            display: block;
+        }
+    ol.properties li.mfdatatype-9 ol, ol.properties li.mfdatatype-9 ol li,
+    ol.properties li.mfdatatype-10 ol, ol.properties li.mfdatatype-10 ol li {
+        margin: 0px;
+        padding: 0px;
+    }
+        li.caption{
+            background-color: #EEE;
+            font-size: 0.8em;
+        }
+        ol.properties li.mfdatatype-9 ol li,
+        ol.properties li.mfdatatype-10 ol li {
+            padding: 2px 5px;
+            cursor: pointer;
+        }
 
+/* more columns on wider screens */
 @media screen and (min-width: 900px) {
     ol.properties {
         column-count: 2;

@@ -1,9 +1,8 @@
-﻿function PropertyValueRenderer(dashboard, propertyDef, propertyValue, isRequired, $parent)
+﻿function PropertyValueRenderer(dashboard, objectRenderer, propertyDef, propertyValue, isRequired, $parent)
 {
     var renderer = this;
     var $listItem = null;
     var supportsEditing = false;
-    var originalValue = getCurrentValue();
     renderer.getPropertyDef = function () { return propertyDef; }
 
     renderer.getLocaleDateString = function(forPlugin)
@@ -238,12 +237,26 @@
 
     renderer.getCurrentValue = function()
     {
-        return false == supportsEditing
-            ? propertyValue.Value.DisplayValue
-            : $(".auto-select", $listItem).val() + "";
-
         switch (propertyDef.DataType)
         {
+            case MFDatatypeLookup:
+                if (false == supportsEditing)
+                {
+                    if ((propertyValue.Value.IsNULL() ? "" : propertyValue.Value.GetLookupID()))
+                        return "";
+                    return {
+                        id: propertyValue.Value.GetLookupID(),
+                        displayValue: propertyValue.Value.DisplayValue
+                    };
+                }
+                var v = $(".text-entry", $listItem).data("id");
+                if (isNaN(v) || v == 0)
+                    return "";
+                return {
+                        id: v,
+                        displayValue: $(".text-entry", $listItem).data("displayValue")
+                    };
+                return v;
             case MFDatatypeTimestamp:
             case MFDatatypeDate:
                 return false == supportsEditing
@@ -293,6 +306,7 @@
                 return propertyValue.Value.DisplayValue;
         }
     }
+    var originalValue = renderer.getCurrentValue();
     renderer.getPropertyValue = function ()
     {
         if (false == supportsEditing)
@@ -301,6 +315,12 @@
         var currentValue = renderer.getCurrentValue();
         switch (propertyDef.DataType)
         {
+            case MFDatatypeLookup:
+                if (currentValue != "")
+                {
+                    currentValue = currentValue.id;
+                }
+                break;
             case MFDatatypeDate:
                 if ((currentValue + "").length > 0)
                 {
@@ -338,6 +358,12 @@
         var currentValue = renderer.getCurrentValue();
         switch (propertyDef.DataType)
         {
+            case MFDatatypeLookup:
+                if (typeof currentValue != typeof originalValue)
+                    return true;
+                if (currentValue == "" && originalValue == "")
+                    return true;
+                return (currentValue.id != originalValue.id);
             case MFDatatypeTimestamp:
             case MFDatatypeTime:
             case MFDatatypeDate:
@@ -375,6 +401,10 @@
                 if ((currentValue + "").length == 0 && isRequired)
                     return false;
                 break;
+            case MFDatatypeLookup:
+                if (currentValue == "")
+                    return !isRequired;
+                return currentValue.id > 0;
             case MFDatatypeInteger:
             case MFDatatypeFloating:
                 // If it's empty then just check whether it's required.
@@ -457,6 +487,157 @@
         // Render each data type.
         switch (propertyDef.DataType)
         {
+            case MFDatatypeLookup:
+                var $textInput = $("<input type='text' maxlength='100' />")
+                    .addClass("text-entry");
+                var $select = $("<div></div>").addClass("select")
+                    .append($("<ol></ol>"));
+
+                function sortItems(obj)
+                {
+                    // Convert to a JS array.
+                    var arr = [];
+                    for (var i = 0; i < obj.Count; i++) {
+                        arr.push(obj[i]);
+                    }
+                    arr.sort(function (a, b)
+                    {
+                        return a.Name == b.Name ? 0
+                            : (a.Name < b.Name)
+                                ? propertyDef.SortAscending ? -1 : 1
+                                : propertyDef.SortAscending ? 1 : -1;
+                    });
+                    return arr;
+                }
+
+                function populateLookupOptions()
+                {
+                    // Is this class?
+                    if (propertyDef.ID == 100)
+                    {
+                        // Get the object type
+                        var objectType = objectRenderer.getObjectBeingRendered().VersionData.ObjVer.Type;
+
+                        // Search.
+                        dashboard.Vault.Async.ClassOperations.GetObjectClasses
+                            (
+                                objectType,
+                                function (results)
+                                {
+                                    // Empty the select.
+                                    var $ol = $("ol", $select);
+                                    $ol.empty();
+
+                                    // Add an item for each one.
+                                    var arr = sortItems(results);
+                                    for (var i = 0; i < arr.length; i++)
+                                    {
+                                        var item = arr[i];
+                                        var $li = $("<li></li>")
+                                            .text(item.Name)
+                                            .data("id", item.ID)
+                                            .data("displayValue", item.Name);
+                                        $li.click(function ()
+                                        {
+                                            var $this = $(this);
+                                            var id = $this.data("id");
+                                            var displayValue = $this.data("displayValue");
+                                            $textInput.val(displayValue);
+                                            $textInput.data("displayValue", displayValue);
+                                            $textInput.data("id", id);
+                                            $listItem.removeClass("options-expanded");
+                                        });
+                                        $ol.append($li);
+                                    }
+                                },
+                                function (shorterror, longerror, errorobj)
+                                {
+                                    // Error checking permissions.
+                                    MFiles.ReportException(errorobj);
+                                }
+                            );
+
+                        return;
+                    }
+
+                    // It's another property.
+
+                    // Build up the search conditions.
+                    var searchConditions = new MFiles.SearchConditions();
+
+                    // Search.
+                    dashboard.Vault.Async.ValueListItemOperations.SearchForValueListItemsEx2
+                        (
+                            propertyDef.ValueList,
+                            searchConditions,
+                            false,
+                            MFExternalDBRefreshTypeNone,
+                            true,
+                            propertyDef.ID,
+                            50,
+                            function (results)
+                            {
+                                // Empty the select.
+                                var $ol = $("ol", $select);
+                                $ol.empty();
+
+                                // Are there more?
+                                if (results.MoreResults)
+                                {
+                                    $ol.append("<li class='caption'>First 50 values</li>");
+                                }
+
+                                // Add an item for each one.
+                                var arr = sortItems(results);
+                                for (var i = 0; i < arr.length; i++)
+                                {
+                                    var item = arr[i];
+                                    var $li = $("<li></li>")
+                                        .text(item.Name)
+                                        .data("id", item.ID)
+                                        .data("displayValue", item.Name);
+                                    $li.click(function ()
+                                    {
+                                        var $this = $(this);
+                                        var id = $this.data("id");
+                                        var displayValue = $this.data("displayValue");
+                                        $textInput.val(displayValue);
+                                        $textInput.data("displayValue", displayValue);
+                                        $textInput.data("id", id);
+                                        $listItem.removeClass("options-expanded");
+                                    });
+                                    $ol.append($li);
+                                }
+                            },
+                            function (shorterror, longerror, errorobj)
+                            {
+                                // Error checking permissions.
+                                MFiles.ReportException(errorobj);
+                            }
+                        );
+                }
+                $textInput.change(populateLookupOptions);
+
+                var $dropdown = $("<a />")
+                    .addClass("dropdown")
+                    .click(function ()
+                {
+                    // Toggle options.
+                        $listItem.addClass("options-expanded");
+                        populateLookupOptions();
+                    return false;
+                });
+
+                $value.append($textInput);
+                $value.append($select);
+                $value.append($dropdown);
+                if (!propertyValue.Value.IsNull())
+                {
+                    $textInput.val(propertyValue.Value.DisplayValue);
+                    $textInput.data("id", propertyValue.Value.GetLookupID());
+                    $textInput.data("displayValue", propertyValue.Value.DisplayValue);
+                }
+                break;
             case MFDatatypeBoolean:
                 var $select = $("<select></select>").addClass("auto-select");
                 var $emptyOption = $("<option></option>").val("").text("");
@@ -579,6 +760,10 @@
             return;
         if (null == $listItem)
             return;
+
+        // Hide options.
+        $(".options-expanded").removeClass("options-expanded");
+
         // Already editing?
         if ($listItem.hasClass("editing"))
             return;
@@ -594,6 +779,33 @@
             return;
         switch (propertyDef.DataType)
         {
+            case MFDatatypeLookup:
+                // If it's invalid then mark the list item.
+                if (!renderer.isValidValue())
+                {
+                    if (null != $listItem)
+                        $listItem.addClass("invalid-value")
+                    return false;
+                }
+
+                // We're good.
+                if (null != $listItem)
+                    $listItem.removeClass("invalid-value")
+
+                // Set the value.
+                var value = renderer.getCurrentValue();
+
+                // Update the UI.
+                if (null != $listItem)
+                    $listItem.removeClass("empty");
+                if ((value + "").length == 0)
+                {
+                    if (null != $listItem)
+                        $listItem.addClass("empty");
+                    value = "---";
+                }
+                $(".read-only-value", $listItem).text(value.displayValue);
+                break;
             case MFDatatypeTimestamp:
             case MFDatatypeTime:
             case MFDatatypeDate:

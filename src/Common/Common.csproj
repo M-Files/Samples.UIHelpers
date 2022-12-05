@@ -40,6 +40,7 @@
     </Content>
     <Content Include="src\dashboards\base-dashboard.css" />
     <Content Include="src\ConfigurationManager.js" />
+    <Content Include="src\dashboards\images\arrow_drop_down_s1_grey.png" />
     <Content Include="src\dashboards\scripts\console-dashboard.js" />
     <Content Include="src\console-shellui.js" />
     <Content Include="src\dashboards\scripts\Dashboard.js" />

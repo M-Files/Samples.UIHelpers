@@ -1,5 +1,4 @@
-﻿
-function ObjectRenderer(dashboard)
+﻿function ObjectRenderer(dashboard)
 {
     var renderer = this;
     renderer.dashboard = dashboard;
@@ -53,18 +52,29 @@ function ObjectRenderer(dashboard)
         // Return the array of properties to render.
         return properties;
     }
-    var originalObject = null;
+    renderer.getObjectBeingRendered = function () { return renderer.originalObject; }
     renderer.render = function (selectedItem)
     {
-        renderer.originalObject = selectedItem;
 
         // Sanity.
         if (null == selectedItem)
         {
+            renderer.originalObject = null;
             // Close it.
             dashboard.CustomData.tabClosedCallback(false);
             return;
         }
+
+        // Is it the same object?
+        if (renderer.originalObject != null)
+        {
+            // If it's the same object then don't refresh.
+            if (selectedItem.VersionData.ObjVer.ID == renderer.originalObject.VersionData.ObjVer.ID
+                && selectedItem.VersionData.ObjVer.Type == renderer.originalObject.VersionData.ObjVer.Type
+                && selectedItem.VersionData.ObjVer.Version == renderer.originalObject.VersionData.ObjVer.Version)
+                return;
+        }
+
         renderer.originalObject = selectedItem.Clone();
 
         // Are we editing?
@@ -106,6 +116,7 @@ function ObjectRenderer(dashboard)
             var propertyValueRenderer = new PropertyValueRenderer
                 (
                 dashboard,
+                renderer,
                 propertyDef,
                 propertyValue,
                 property.isRequired,
@@ -133,13 +144,12 @@ function ObjectRenderer(dashboard)
     {
         // Stop any editing.
         $(".editing").removeClass("editing");
+        $(".options-expanded").removeClass("options-expanded");
 
         var changedProperties = [];
         var erroredProperties = [];
         for (var i = 0; i < propertyValueRenderers.length; i++)
         {
-            // Attempt to exit edit mode.
-            //renderer.exitEditMode();
 
             // Should we enable buttons and things?
             var renderer = propertyValueRenderers[i];
@@ -147,6 +157,9 @@ function ObjectRenderer(dashboard)
                 changedProperties.push(renderer);
             if (!renderer.isValidValue())
                 erroredProperties.push(renderer);
+
+            // Attempt to exit edit mode.
+            renderer.exitEditMode();
         }
 
         // Update the body with flags.
