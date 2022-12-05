@@ -242,23 +242,29 @@
             case MFDatatypeLookup:
                 if (false == supportsEditing)
                 {
-                    if ((propertyValue.Value.IsNULL() ? "" : propertyValue.Value.GetLookupID()))
+                    if (propertyValue.Value.IsNULL())
                         return "";
                     return {
                         id: propertyValue.Value.GetLookupID(),
                         displayValue: propertyValue.Value.DisplayValue
                     };
                 }
-                var v = $(".text-entry", $listItem).data("id");
+                var $textEntry = $(".text-entry", $listItem);
+                if (($textEntry.val() + "").length == 0)
+                {
+                    $textEntry.data("id", "");
+                    $textEntry.data("displayValue", "");
+                    return "";
+                }
+                var v = $textEntry.data("id");
                 if (isNaN(v) || v == 0)
                     return "";
                 return {
                         id: v,
-                        displayValue: $(".text-entry", $listItem).data("displayValue")
+                    displayValue: $textEntry.data("displayValue")
                     };
                 return v;
             case MFDatatypeTimestamp:
-            case MFDatatypeDate:
                 return false == supportsEditing
                     ? propertyValue.Value.DisplayValue
                     : $(".auto-select", $listItem).val();
@@ -267,6 +273,13 @@
                     ? propertyValue.Value.DisplayValue
                     : $(".auto-select", $listItem).val();
                 if (v == "__:__:__") // Happens when tabbing through the time field; just get the mask.
+                    v = "";
+                return v;
+            case MFDatatypeDate:
+                var v = false == supportsEditing
+                    ? propertyValue.Value.DisplayValue
+                    : $(".auto-select", $listItem).val();
+                if (v == "__/__/____") // Happens when tabbing through the time field; just get the mask.
                     v = "";
                 return v;
             case MFDatatypeBoolean:
@@ -502,16 +515,19 @@
                     }
                     arr.sort(function (a, b)
                     {
-                        return a.Name == b.Name ? 0
-                            : (a.Name < b.Name)
-                                ? propertyDef.SortAscending ? -1 : 1
-                                : propertyDef.SortAscending ? 1 : -1;
+                        var x = a.Name == b.Name ? 0
+                            : a.Name.localeCompare(b.Name);
+                        if (!propertyDef.SortAscending)
+                            x = x * -1;
+                        return x;
                     });
                     return arr;
                 }
 
                 function populateLookupOptions()
                 {
+                    $listItem.addClass("options-expanded");
+
                     // Is this class?
                     if (propertyDef.ID == 100)
                     {
@@ -528,11 +544,20 @@
                                     var $ol = $("ol", $select);
                                     $ol.empty();
 
+                                    // What's typed in?
+                                    var val = ($textInput.val() + "").toLowerCase();
+
                                     // Add an item for each one.
                                     var arr = sortItems(results);
                                     for (var i = 0; i < arr.length; i++)
                                     {
                                         var item = arr[i];
+
+                                        // We can't filter classes by name, so let's filter now.
+                                        if(val.length > 0)
+                                            if (item.Name.toLowerCase().indexOf(val) == -1)
+                                                continue;
+
                                         var $li = $("<li></li>")
                                             .text(item.Name)
                                             .data("id", item.ID)
@@ -564,6 +589,23 @@
 
                     // Build up the search conditions.
                     var searchConditions = new MFiles.SearchConditions();
+
+                    // Add condition to search by name.
+                    if (($textInput.val() + "").length > 0)
+                    {
+                        var nameCondition = new MFiles.SearchCondition();
+                        nameCondition.Expression.SetValueListItemExpression(2, 0, new MFiles.DataFunctionCall());
+                        nameCondition.ConditionType = MFConditionTypeStartsWith;
+                        nameCondition.TypedValue.SetValue(MFDatatypeText, $textInput.val());
+                        searchConditions.Add(-1, nameCondition);
+                    }
+
+                    // Filter out deleted items.
+                    var deletedItemsCondition = new MFiles.SearchCondition();
+                    deletedItemsCondition.Expression.SetValueListItemExpression(5, 0, new MFiles.DataFunctionCall());
+                    deletedItemsCondition.ConditionType = MFConditionTypeEqual;
+                    deletedItemsCondition.TypedValue.SetValue(MFDatatypeBoolean, false);
+                    searchConditions.Add(-1, deletedItemsCondition);
 
                     // Search.
                     dashboard.Vault.Async.ValueListItemOperations.SearchForValueListItemsEx2
@@ -616,7 +658,9 @@
                             }
                         );
                 }
-                $textInput.change(populateLookupOptions);
+                $textInput.click(populateLookupOptions);
+                $textInput.keyup(populateLookupOptions);
+                $textInput.focus(populateLookupOptions);
 
                 var $dropdown = $("<a />")
                     .addClass("dropdown")
@@ -802,8 +846,11 @@
                 {
                     if (null != $listItem)
                         $listItem.addClass("empty");
-                    value = "---";
+                    $(".read-only-value", $listItem).text("---");
+                    return;
                 }
+
+                // Set the display value.
                 $(".read-only-value", $listItem).text(value.displayValue);
                 break;
             case MFDatatypeTimestamp:
@@ -856,7 +903,7 @@
                         $listItem.addClass("empty");
                     value = "---";
                 }
-                $(".read-only-value", $listItem).text(value);
+                $(".read-only-value", $listItem).text(value.displayValue);
                 break;
         }
         if (null != $listItem)

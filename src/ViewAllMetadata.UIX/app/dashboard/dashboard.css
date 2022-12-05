@@ -147,8 +147,9 @@ ol.properties li.invalid-value input
         top: 3px;
         cursor: pointer;
         background-color: #EEE;
-        height: 22px;
+        height: 23px;
         width: 22px;
+        border-left: 1px solid #767676;
         background-position: center center;
         background-repeat: no-repeat;
         background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAACESURBVHgB7Y/NDYAgDEahEziCo8gGOoIbCAlb8DOKI+gGrsAiBMvBhGjVg/HGS0hb+F4TGKt8hpeDMaYHgPlJiDEKrfVKLsg45xYs3Y2/KqVEeQHnBOd8wBIIOeDbeMkTQea9b1NKG7ZNIQspZThngVqQg/jX4ZixHyn5FWvtlA+r/MsOt6gntJXB1Z4AAAAASUVORK5CYII=");
@@ -162,7 +163,7 @@ ol.properties li.invalid-value input
         border: 1px solid #767676;
         background-color: #FFF;
         max-height: 100px;
-        overflow-y: scroll;
+        overflow-y: auto;
         z-index: 1000;
         display: none;
     }
