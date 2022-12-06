@@ -122,6 +122,11 @@
                 property.isRequired,
                 $propertiesList
             );
+            propertyValueRenderer.addEventListener
+                (
+                    PropertyValueRenderer.EventTypes.PropertyValueChanged,
+                    updateUI
+                );
             var $listItem = propertyValueRenderer.render();
             if (null != $listItem)
                 $listItem.focus(updateUI);

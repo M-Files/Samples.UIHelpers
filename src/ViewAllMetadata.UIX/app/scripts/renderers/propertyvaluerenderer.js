@@ -3,8 +3,24 @@
     var renderer = this;
     var $listItem = null;
     var supportsEditing = false;
+    this.getSupportsEditing = function () { return supportsEditing; }
+
+    var events = new Events();
+    this.addEventListener = events.addEventListener;
+    this.dispatchEvent = events.dispatchEvent;
+
     this.getPropertyDef = function () { return propertyDef; }
     this.getListItem = function () { return $listItem; }
+    this.getBase = function ()
+    {
+        var base = {}
+        for (var p in this)
+        {
+            if (typeof this[p] == "function")
+                base[p] = this[p];
+        }
+        return base;
+    }
 
     this.getLocaleDateString = function(forPlugin)
     {
@@ -236,112 +252,19 @@
             : format.toUpperCase();
     }
 
-    this.getCurrentValue = function()
+    this.getCurrentValue = function ()
     {
-        switch (propertyDef.DataType)
-        {
-            case MFDatatypeLookup:
-                if (false == supportsEditing)
-                {
-                    if (propertyValue.Value.IsNULL())
-                        return "";
-                    return {
-                        id: propertyValue.Value.GetLookupID(),
-                        displayValue: propertyValue.Value.DisplayValue
-                    };
-                }
-                var $textEntry = $(".text-entry", $listItem);
-                if (($textEntry.val() + "").length == 0)
-                {
-                    $textEntry.data("id", "");
-                    $textEntry.data("displayValue", "");
-                    return "";
-                }
-                var v = $textEntry.data("id");
-                if (isNaN(v) || v == 0)
-                    return "";
-                return {
-                        id: v,
-                    displayValue: $textEntry.data("displayValue")
-                    };
-                return v;
-            case MFDatatypeTimestamp:
-                return false == supportsEditing
-                    ? propertyValue.Value.DisplayValue
-                    : $(".auto-select", $listItem).val();
-            case MFDatatypeTime:
-                var v = false == supportsEditing
-                    ? propertyValue.Value.DisplayValue
-                    : $(".auto-select", $listItem).val();
-                if (v == "__:__:__") // Happens when tabbing through the time field; just get the mask.
-                    v = "";
-                return v;
-            case MFDatatypeDate:
-                var v = false == supportsEditing
-                    ? propertyValue.Value.DisplayValue
-                    : $(".auto-select", $listItem).val();
-                if (v == "__/__/____") // Happens when tabbing through the time field; just get the mask.
-                    v = "";
-                return v;
-            case MFDatatypeBoolean:
-                var v = false == supportsEditing
-                    ? propertyValue.Value.DisplayValue
-                    : $(".auto-select", $listItem).val();
-                switch ((v + "").toLowerCase())
-                {
-                    case "true":
-                    case "yes":
-                        return true;
-                    case "false":
-                    case "no":
-                        return false;
-                    default:
-                        // No value.
-                        return "";
-                }
-            case MFDatatypeText:
-            case MFDatatypeMultiLineText:
-                return false == supportsEditing
-                    ? propertyValue.Value.DisplayValue
-                    : $(".auto-select", $listItem).val() + "";
-            case MFDatatypeInteger:
-            case MFDatatypeFloating:
-                var v = false == supportsEditing
-                    ? propertyValue.Value.DisplayValue
-                    : $(".auto-select", $listItem).val() + "";
-                if ((v + "").length > 0)
-                {
-                    var x = parseFloat(v);
-                    if (!isNaN(x))
-                        v = x;
-                }
-                return v;
-            default:
-                return propertyValue.Value.DisplayValue;
-        }
+        return propertyValue.Value.DisplayValue;
     }
     var originalValue = this.getCurrentValue();
+    this.setOriginalValue = function (v) { originalValue = v || this.getCurrentValue(); }
     this.getPropertyValue = function ()
     {
         if (false == supportsEditing)
             return propertyValue;
 
         var currentValue = this.getCurrentValue();
-        switch (propertyDef.DataType)
-        {
-            case MFDatatypeDate:
-                if ((currentValue + "").length > 0)
-                {
-                    currentValue = dayjs(currentValue, this.getLocaleDateString(false)).utc().format("YYYY-MM-DD")
-                }
-                break;
-            case MFDatatypeTimestamp:
-                if ((currentValue + "").length > 0)
-                {
-                    currentValue = dayjs(currentValue, this.getLocaleDateString(false) + " HH:mm").utc().format("YYYY-MM-DD HH:mm:ss")
-                }
-                break;
-        }
+
         var pv = new MFiles.PropertyValue();
         pv.PropertyDef = propertyDef.ID;
         if ((currentValue + "").length == 0)
@@ -361,6 +284,7 @@
         }
         return pv;
     }
+
     this.hasChanged = function ()
     {
         var currentValue = this.getCurrentValue();
@@ -391,44 +315,7 @@
     {
         var currentValue = this.getCurrentValue();
 
-        switch (propertyDef.DataType)
-        {
-            case MFDatatypeBoolean:
-                switch ((currentValue + "").toLowerCase())
-                {
-                    case "true":
-                    case "false":
-                    case "":
-                        return true;
-                    default:
-                        return !isRequired;
-                }
-            case MFDatatypeText:
-            case MFDatatypeMultiLineText:
-                // If it does not have a value but is required, die.
-                if ((currentValue + "").length == 0 && isRequired)
-                    return false;
-                break;
-            case MFDatatypeLookup:
-                if (currentValue == "")
-                    return !isRequired;
-                return currentValue.id > 0;
-            case MFDatatypeInteger:
-            case MFDatatypeFloating:
-                // If it's empty then just check whether it's required.
-                if ((currentValue + "").length == 0)
-                    return !isRequired;
-
-                // If it's got a value, but not a number, die.
-                currentValue = parseFloat(currentValue);
-                if (isNaN(currentValue))
-                    return false;
-
-                break;
-            default:
-                return (isRequired && (currentValue + "").length > 0) || !isRequired;
-        }
-        return true;
+        return (isRequired && (currentValue + "").length > 0) || !isRequired;
     }
 
     this.renderLabel = function($parent)
@@ -622,6 +509,7 @@
                                         $textInput.data("displayValue", displayValue);
                                         $textInput.data("id", id);
                                         $listItem.removeClass("options-expanded");
+                                        renderer.dispatchEvent(PropertyValueRenderer.EventTypes.PropertyValueChanged)
                                     });
                                     $ol.append($li);
                                 }
@@ -676,13 +564,19 @@
                 $select.append($emptyOption);
                 $select.append($yesOption);
                 $select.append($noOption);
-                //$select.change(function () { this.exitEditMode(); });
+                $select.change(function ()
+                {
+                    renderer.dispatchEvent(PropertyValueRenderer.EventTypes.PropertyValueChanged);
+                });
                 $value.append($select);
                 break;
             case MFDatatypeMultiLineText:
                 var $textarea = $("<textarea></textarea>").addClass("auto-select");
                 $textarea.val(propertyValue.Value.DisplayValue);
-                //$textarea.blur(function () { this.exitEditMode(); });
+                $textarea.blur(function ()
+                {
+                    renderer.dispatchEvent(PropertyValueRenderer.EventTypes.PropertyValueChanged);
+                });
                 $value.append($textarea);
                 break;
             case MFDatatypeTimestamp:
@@ -693,7 +587,10 @@
             case MFDatatypeFloating:
                 var $input = $("<input type='text' maxlength='100' />").addClass("auto-select");
                 $input.val(propertyValue.Value.DisplayValue);
-                //$input.blur(function () { this.exitEditMode(); });
+                $input.blur(function ()
+                {
+                    renderer.dispatchEvent(PropertyValueRenderer.EventTypes.PropertyValueChanged);
+                });
                 $value.append($input);
 
                 // If it's a number then set the input mode.
@@ -878,7 +775,7 @@
                         $listItem.addClass("empty");
                     value = "---";
                 }
-                $(".read-only-value", $listItem).text(value.displayValue);
+                $(".read-only-value", $listItem).text(value);
                 break;
         }
         if (null != $listItem)
@@ -945,6 +842,9 @@
 
     return this;
 }
+PropertyValueRenderer.EventTypes = {
+    PropertyValueChanged: 1
+};
 PropertyValueRenderer.create = function (dashboard, objectRenderer, propertyDef, propertyValue, isRequired, $parent)
 {
     switch (propertyDef.DataType)
