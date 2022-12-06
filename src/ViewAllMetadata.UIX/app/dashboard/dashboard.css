@@ -162,7 +162,7 @@ ol.properties li.invalid-value input
         right: 0px;
         border: 1px solid #767676;
         background-color: #FFF;
-        max-height: 100px;
+        max-height: 300px;
         overflow-y: auto;
         z-index: 1000;
         display: none;
@@ -180,6 +180,14 @@ ol.properties li.invalid-value input
             background-color: #EEE;
             font-size: 0.8em;
         }
+ol.properties li.mfdatatype-9.options-expanded li,
+ol.properties li.mfdatatype-10.options-expanded li {
+    padding: 3px 5px;
+}
+ol.properties li.mfdatatype-9.options-expanded li.current,
+ol.properties li.mfdatatype-10.options-expanded li.current {
+    background-color: #EEE;
+}
         ol.properties li.mfdatatype-9 ol li,
         ol.properties li.mfdatatype-10 ol li {
             padding: 2px 5px;

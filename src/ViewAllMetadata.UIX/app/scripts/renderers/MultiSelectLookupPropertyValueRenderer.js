@@ -39,4 +39,8 @@ function MultiSelectLookupPropertyValueRenderer(dashboard, objectRenderer, prope
     {
         return propertyValue;
     }
+    this.renderEditableValue = function ($parent)
+    {
+        return null;
+    }
 }

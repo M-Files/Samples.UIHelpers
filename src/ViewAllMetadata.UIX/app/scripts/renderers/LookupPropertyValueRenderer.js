@@ -148,182 +148,198 @@ function LookupPropertyValueRenderer(dashboard, objectRenderer, propertyDef, pro
         // Create the value for the PV.
         var $value = $("<span></span>").addClass("editing-value");
 
-                var $textInput = $("<input type='text' maxlength='100' />")
-                    .addClass("text-entry");
-                var $select = $("<div></div>").addClass("select")
-                    .append($("<ol></ol>"));
+        var $textInput = $("<input type='text' maxlength='100' />")
+            .addClass("text-entry");
+        var $select = $("<div></div>").addClass("select")
+            .append($("<ol></ol>"));
 
-                function sortItems(obj)
-                {
-                    // Convert to a JS array.
-                    var arr = [];
-                    for (var i = 0; i < obj.Count; i++)
-                    {
-                        arr.push(obj[i]);
-                    }
-                    arr.sort(function (a, b)
-                    {
-                        var x = a.Name == b.Name ? 0
-                            : a.Name.localeCompare(b.Name);
-                        if (!propertyDef.SortAscending)
-                            x = x * -1;
-                        return x;
-                    });
-                    return arr;
-                }
+        function sortItems(obj)
+        {
+            // Convert to a JS array.
+            var arr = [];
+            for (var i = 0; i < obj.Count; i++)
+            {
+                arr.push(obj[i]);
+            }
+            arr.sort(function (a, b)
+            {
+                var x = a.Name == b.Name ? 0
+                    : a.Name.localeCompare(b.Name);
+                if (!propertyDef.SortAscending)
+                    x = x * -1;
+                return x;
+            });
+            return arr;
+        }
 
-                function populateLookupOptions()
-                {
-                    $listItem.addClass("options-expanded");
+        function populateLookupOptions(restrictByEnteredText)
+        {
+            $listItem.addClass("options-expanded");
 
-                    // Is this class?
-                    if (propertyDef.ID == 100)
-                    {
-                        // Get the object type
-                        var objectType = objectRenderer.getObjectBeingRendered().VersionData.ObjVer.Type;
+            // Is this class?
+            if (propertyDef.ID == 100)
+            {
+                // Get the object type
+                var objectType = objectRenderer.getObjectBeingRendered().VersionData.ObjVer.Type;
 
-                        // Search.
-                        dashboard.Vault.Async.ClassOperations.GetObjectClasses
-                            (
-                                objectType,
-                                function (results)
-                                {
-                                    // Empty the select.
-                                    var $ol = $("ol", $select);
-                                    $ol.empty();
+                // Search.
+                dashboard.Vault.Async.ClassOperations.GetObjectClasses
+                    (
+                        objectType,
+                        function (results)
+                        {
+                            // Empty the select.
+                            var $ol = $("ol", $select);
+                            $ol.empty();
 
-                                    // What's typed in?
-                                    var val = ($textInput.val() + "").toLowerCase();
+                            // What's typed in?
+                            var val = ($textInput.val() + "").toLowerCase();
 
-                                    // Add an item for each one.
-                                    var arr = sortItems(results);
-                                    for (var i = 0; i < arr.length; i++)
-                                    {
-                                        var item = arr[i];
+                            // What's the current value?
+                            var currentValue = renderer.getCurrentValue();
 
-                                        // We can't filter classes by name, so let's filter now.
-                                        if (val.length > 0)
-                                            if (item.Name.toLowerCase().indexOf(val) == -1)
-                                                continue;
-
-                                        var $li = $("<li></li>")
-                                            .text(item.Name)
-                                            .data("id", item.ID)
-                                            .data("displayValue", item.Name);
-                                        $li.click(function ()
-                                        {
-                                            var $this = $(this);
-                                            var id = $this.data("id");
-                                            var displayValue = $this.data("displayValue");
-                                            $textInput.val(displayValue);
-                                            $textInput.data("displayValue", displayValue);
-                                            $textInput.data("id", id);
-                                            $listItem.removeClass("options-expanded");
-                                        });
-                                        $ol.append($li);
-                                    }
-                                },
-                                function (shorterror, longerror, errorobj)
-                                {
-                                    // Error checking permissions.
-                                    MFiles.ReportException(errorobj);
-                                }
-                            );
-
-                        return;
-                    }
-
-                    // It's another property.
-
-                    // Build up the search conditions.
-                    var searchConditions = new MFiles.SearchConditions();
-
-                    // Add condition to search by name.
-                    if (($textInput.val() + "").length > 0)
-                    {
-                        var nameCondition = new MFiles.SearchCondition();
-                        nameCondition.Expression.SetValueListItemExpression(2, 0, new MFiles.DataFunctionCall());
-                        nameCondition.ConditionType = MFConditionTypeStartsWith;
-                        nameCondition.TypedValue.SetValue(MFDatatypeText, $textInput.val());
-                        searchConditions.Add(-1, nameCondition);
-                    }
-
-                    // Filter out deleted items.
-                    var deletedItemsCondition = new MFiles.SearchCondition();
-                    deletedItemsCondition.Expression.SetValueListItemExpression(5, 0, new MFiles.DataFunctionCall());
-                    deletedItemsCondition.ConditionType = MFConditionTypeEqual;
-                    deletedItemsCondition.TypedValue.SetValue(MFDatatypeBoolean, false);
-                    searchConditions.Add(-1, deletedItemsCondition);
-
-                    // Search.
-                    dashboard.Vault.Async.ValueListItemOperations.SearchForValueListItemsEx2
-                        (
-                            propertyDef.ValueList,
-                            searchConditions,
-                            false,
-                            MFExternalDBRefreshTypeNone,
-                            true,
-                            propertyDef.ID,
-                            50,
-                            function (results)
+                            // Add an item for each one.
+                            var arr = sortItems(results);
+                            for (var i = 0; i < arr.length; i++)
                             {
-                                // Empty the select.
-                                var $ol = $("ol", $select);
-                                $ol.empty();
+                                var item = arr[i];
 
-                                // Are there more?
-                                if (results.MoreResults)
-                                {
-                                    $ol.append("<li class='caption'>First 50 values</li>");
-                                }
+                                // We can't filter classes by name, so let's filter now.
+                                if (restrictByEnteredText && val.length > 0)
+                                    if (item.Name.toLowerCase().indexOf(val) == -1)
+                                        continue;
 
-                                // Add an item for each one.
-                                var arr = sortItems(results);
-                                for (var i = 0; i < arr.length; i++)
+                                var $li = $("<li></li>")
+                                    .text(item.Name)
+                                    .data("id", item.ID)
+                                    .data("displayValue", item.Name);
+
+                                // Mark the option as selected if it's the current one.
+                                if (typeof currentValue == "object" && currentValue.id == item.ID)
+                                    $li.addClass("current");
+
+                                $li.click(function ()
                                 {
-                                    var item = arr[i];
-                                    var $li = $("<li></li>")
-                                        .text(item.Name)
-                                        .data("id", item.ID)
-                                        .data("displayValue", item.Name);
-                                    $li.click(function ()
-                                    {
-                                        var $this = $(this);
-                                        var id = $this.data("id");
-                                        var displayValue = $this.data("displayValue");
-                                        $textInput.val(displayValue);
-                                        $textInput.data("displayValue", displayValue);
-                                        $textInput.data("id", id);
-                                        $listItem.removeClass("options-expanded");
-                                        renderer.dispatchEvent(PropertyValueRenderer.EventTypes.PropertyValueChanged)
-                                    });
-                                    $ol.append($li);
-                                }
-                            },
-                            function (shorterror, longerror, errorobj)
-                            {
-                                // Error checking permissions.
-                                MFiles.ReportException(errorobj);
+                                    var $this = $(this);
+                                    var id = $this.data("id");
+                                    var displayValue = $this.data("displayValue");
+                                    $textInput.val(displayValue);
+                                    $textInput.data("displayValue", displayValue);
+                                    $textInput.data("id", id);
+                                    $listItem.removeClass("options-expanded");
+                                });
+                                $ol.append($li);
                             }
-                        );
-                }
-                $textInput.click(populateLookupOptions);
-                $textInput.keyup(populateLookupOptions);
-                $textInput.focus(populateLookupOptions);
+                        },
+                        function (shorterror, longerror, errorobj)
+                        {
+                            // Error checking permissions.
+                            MFiles.ReportException(errorobj);
+                        }
+                    );
 
-                var $dropdown = $("<a />")
-                    .addClass("dropdown")
-                    .click(function ()
+                return;
+            }
+
+            // It's another property.
+
+            // Build up the search conditions.
+            var searchConditions = new MFiles.SearchConditions();
+
+            // Add condition to search by name.
+            if (restrictByEnteredText && ($textInput.val() + "").length > 0)
+            {
+                var nameCondition = new MFiles.SearchCondition();
+                nameCondition.Expression.SetValueListItemExpression(2, 0, new MFiles.DataFunctionCall());
+                nameCondition.ConditionType = MFConditionTypeStartsWith;
+                nameCondition.TypedValue.SetValue(MFDatatypeText, $textInput.val());
+                searchConditions.Add(-1, nameCondition);
+            }
+
+            // Filter out deleted items.
+            var deletedItemsCondition = new MFiles.SearchCondition();
+            deletedItemsCondition.Expression.SetValueListItemExpression(5, 0, new MFiles.DataFunctionCall());
+            deletedItemsCondition.ConditionType = MFConditionTypeEqual;
+            deletedItemsCondition.TypedValue.SetValue(MFDatatypeBoolean, false);
+            searchConditions.Add(-1, deletedItemsCondition);
+
+            // Search.
+            dashboard.Vault.Async.ValueListItemOperations.SearchForValueListItemsEx2
+                (
+                    propertyDef.ValueList,
+                    searchConditions,
+                    false,
+                    MFExternalDBRefreshTypeNone,
+                    true,
+                    propertyDef.ID,
+                    50,
+                    function (results)
                     {
-                        // Toggle options.
-                        $listItem.addClass("options-expanded");
-                        populateLookupOptions();
-                        return false;
-                    });
+                        // Empty the select.
+                        var $ol = $("ol", $select);
+                        $ol.empty();
 
-                $value.append($textInput);
-                $value.append($select);
-                $value.append($dropdown);
+                        // Are there more?
+                        if (results.MoreResults)
+                        {
+                            $ol.append("<li class='caption'>First 50 values</li>");
+                        }
+
+                        // What's the current value?
+                        var currentValue = renderer.getCurrentValue();
+
+                        // Add an item for each one.
+                        var arr = sortItems(results);
+                        for (var i = 0; i < arr.length; i++)
+                        {
+                            var item = arr[i];
+                            var $li = $("<li></li>")
+                                .text(item.Name)
+                                .data("id", item.ID)
+                                .data("displayValue", item.Name);
+
+                            // Mark the option as selected if it's the current one.
+                            if (typeof currentValue == "object" && currentValue.id == item.ID)
+                                $li.addClass("current");
+
+                            $li.click(function ()
+                            {
+                                var $this = $(this);
+                                var id = $this.data("id");
+                                var displayValue = $this.data("displayValue");
+                                $textInput.val(displayValue);
+                                $textInput.data("displayValue", displayValue);
+                                $textInput.data("id", id);
+                                $listItem.removeClass("options-expanded");
+                                renderer.dispatchEvent(PropertyValueRenderer.EventTypes.PropertyValueChanged)
+                            });
+                            $ol.append($li);
+                        }
+                    },
+                    function (shorterror, longerror, errorobj)
+                    {
+                        // Error checking permissions.
+                        MFiles.ReportException(errorobj);
+                    }
+                );
+        }
+        $textInput.click(function () { populateLookupOptions(true); });
+        $textInput.keyup(function () { populateLookupOptions(true); });
+        $textInput.focus(function () { populateLookupOptions(true); });
+
+        var $dropdown = $("<a />")
+            .addClass("dropdown")
+            .click(function ()
+            {
+                // Toggle options.
+                $listItem.addClass("options-expanded");
+                populateLookupOptions(false);
+                return false;
+            });
+
+        $value.append($textInput);
+        $value.append($select);
+        $value.append($dropdown);
         if (!propertyValue.Value.IsNull())
         {
             $textInput.val(propertyValue.Value.DisplayValue);

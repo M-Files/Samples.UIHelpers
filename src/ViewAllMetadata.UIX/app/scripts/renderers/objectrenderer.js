@@ -183,7 +183,7 @@
 
     // When the body is clicked, exit editing mode.
     var $body = $("body");
-    $body.click(updateUI);
+    //$body.click(updateUI);
 
     // Configure the close button.
     $("#btnClose").click(function ()
@@ -247,6 +247,7 @@
     renderer.discardChanges = function ()
     {
         renderer.render(renderer.originalObject, true);
+        updateUI();
     }
     // Configure the discard button.
     $("#btnDiscard").click(function ()
