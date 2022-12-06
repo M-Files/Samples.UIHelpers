@@ -16,4 +16,26 @@ function TimePropertyValueRenderer(dashboard, objectRenderer, propertyDef, prope
         return v;
     }
     this.setOriginalValue();
+
+    this.renderEditableValue = function ($parent)
+    {
+        var $value = base.renderEditableValue.call(this, $parent);
+        if (null == $value)
+            return $value;
+        var $input = $(".auto-select", $value);
+
+        $input.datetimepicker
+            (
+                {
+                    datepicker: false,
+                    timepicker: true,
+                    value: propertyValue.Value.DisplayValue,
+                    mask: true,
+                    format: 'H:i',
+                    step: 1
+                }
+            );
+
+        return $value
+    }
 }

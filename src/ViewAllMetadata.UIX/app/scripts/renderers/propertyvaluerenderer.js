@@ -258,6 +258,7 @@
     }
     var originalValue = this.getCurrentValue();
     this.setOriginalValue = function (v) { originalValue = v || this.getCurrentValue(); }
+    this.getOriginalValue = function () { return originalValue; }
     this.getPropertyValue = function ()
     {
         if (false == supportsEditing)
@@ -287,29 +288,7 @@
 
     this.hasChanged = function ()
     {
-        var currentValue = this.getCurrentValue();
-        switch (propertyDef.DataType)
-        {
-            case MFDatatypeLookup:
-                if (typeof currentValue != typeof originalValue)
-                    return true;
-                if (currentValue == "" && originalValue == "")
-                    return false;
-                return (currentValue.id != originalValue.id);
-            case MFDatatypeTimestamp:
-            case MFDatatypeTime:
-            case MFDatatypeDate:
-            case MFDatatypeBoolean:
-            case MFDatatypeText:
-            case MFDatatypeInteger:
-            case MFDatatypeFloating:
-                return currentValue !== originalValue;
-            case MFDatatypeMultiLineText:
-                // Line ending fun.
-                return (currentValue + "").replace(/\r\n/g, "\n") !== (originalValue + "").replace(/\r\n/g, "\n");
-            default:
-                return false;
-        }
+        return this.getCurrentValue() !== originalValue;
     }
     this.isValidValue = function()
     {
@@ -354,312 +333,20 @@
         return $value
 
     }
+
     this.renderEditableValue = function($parent)
     {
         // Create the value for the PV.
         var $value = $("<span></span>").addClass("editing-value");
 
-        // Render each data type.
-        switch (propertyDef.DataType)
+        // Create a standard input.
+        var $input = $("<input type='text' maxlength='100' />").addClass("auto-select");
+        $input.val(propertyValue.Value.DisplayValue);
+        $input.blur(function ()
         {
-            case MFDatatypeLookup:
-                var $textInput = $("<input type='text' maxlength='100' />")
-                    .addClass("text-entry");
-                var $select = $("<div></div>").addClass("select")
-                    .append($("<ol></ol>"));
-
-                function sortItems(obj)
-                {
-                    // Convert to a JS array.
-                    var arr = [];
-                    for (var i = 0; i < obj.Count; i++) {
-                        arr.push(obj[i]);
-                    }
-                    arr.sort(function (a, b)
-                    {
-                        var x = a.Name == b.Name ? 0
-                            : a.Name.localeCompare(b.Name);
-                        if (!propertyDef.SortAscending)
-                            x = x * -1;
-                        return x;
-                    });
-                    return arr;
-                }
-
-                function populateLookupOptions()
-                {
-                    $listItem.addClass("options-expanded");
-
-                    // Is this class?
-                    if (propertyDef.ID == 100)
-                    {
-                        // Get the object type
-                        var objectType = objectRenderer.getObjectBeingRendered().VersionData.ObjVer.Type;
-
-                        // Search.
-                        dashboard.Vault.Async.ClassOperations.GetObjectClasses
-                            (
-                                objectType,
-                                function (results)
-                                {
-                                    // Empty the select.
-                                    var $ol = $("ol", $select);
-                                    $ol.empty();
-
-                                    // What's typed in?
-                                    var val = ($textInput.val() + "").toLowerCase();
-
-                                    // Add an item for each one.
-                                    var arr = sortItems(results);
-                                    for (var i = 0; i < arr.length; i++)
-                                    {
-                                        var item = arr[i];
-
-                                        // We can't filter classes by name, so let's filter now.
-                                        if(val.length > 0)
-                                            if (item.Name.toLowerCase().indexOf(val) == -1)
-                                                continue;
-
-                                        var $li = $("<li></li>")
-                                            .text(item.Name)
-                                            .data("id", item.ID)
-                                            .data("displayValue", item.Name);
-                                        $li.click(function ()
-                                        {
-                                            var $this = $(this);
-                                            var id = $this.data("id");
-                                            var displayValue = $this.data("displayValue");
-                                            $textInput.val(displayValue);
-                                            $textInput.data("displayValue", displayValue);
-                                            $textInput.data("id", id);
-                                            $listItem.removeClass("options-expanded");
-                                        });
-                                        $ol.append($li);
-                                    }
-                                },
-                                function (shorterror, longerror, errorobj)
-                                {
-                                    // Error checking permissions.
-                                    MFiles.ReportException(errorobj);
-                                }
-                            );
-
-                        return;
-                    }
-
-                    // It's another property.
-
-                    // Build up the search conditions.
-                    var searchConditions = new MFiles.SearchConditions();
-
-                    // Add condition to search by name.
-                    if (($textInput.val() + "").length > 0)
-                    {
-                        var nameCondition = new MFiles.SearchCondition();
-                        nameCondition.Expression.SetValueListItemExpression(2, 0, new MFiles.DataFunctionCall());
-                        nameCondition.ConditionType = MFConditionTypeStartsWith;
-                        nameCondition.TypedValue.SetValue(MFDatatypeText, $textInput.val());
-                        searchConditions.Add(-1, nameCondition);
-                    }
-
-                    // Filter out deleted items.
-                    var deletedItemsCondition = new MFiles.SearchCondition();
-                    deletedItemsCondition.Expression.SetValueListItemExpression(5, 0, new MFiles.DataFunctionCall());
-                    deletedItemsCondition.ConditionType = MFConditionTypeEqual;
-                    deletedItemsCondition.TypedValue.SetValue(MFDatatypeBoolean, false);
-                    searchConditions.Add(-1, deletedItemsCondition);
-
-                    // Search.
-                    dashboard.Vault.Async.ValueListItemOperations.SearchForValueListItemsEx2
-                        (
-                            propertyDef.ValueList,
-                            searchConditions,
-                            false,
-                            MFExternalDBRefreshTypeNone,
-                            true,
-                            propertyDef.ID,
-                            50,
-                            function (results)
-                            {
-                                // Empty the select.
-                                var $ol = $("ol", $select);
-                                $ol.empty();
-
-                                // Are there more?
-                                if (results.MoreResults)
-                                {
-                                    $ol.append("<li class='caption'>First 50 values</li>");
-                                }
-
-                                // Add an item for each one.
-                                var arr = sortItems(results);
-                                for (var i = 0; i < arr.length; i++)
-                                {
-                                    var item = arr[i];
-                                    var $li = $("<li></li>")
-                                        .text(item.Name)
-                                        .data("id", item.ID)
-                                        .data("displayValue", item.Name);
-                                    $li.click(function ()
-                                    {
-                                        var $this = $(this);
-                                        var id = $this.data("id");
-                                        var displayValue = $this.data("displayValue");
-                                        $textInput.val(displayValue);
-                                        $textInput.data("displayValue", displayValue);
-                                        $textInput.data("id", id);
-                                        $listItem.removeClass("options-expanded");
-                                        renderer.dispatchEvent(PropertyValueRenderer.EventTypes.PropertyValueChanged)
-                                    });
-                                    $ol.append($li);
-                                }
-                            },
-                            function (shorterror, longerror, errorobj)
-                            {
-                                // Error checking permissions.
-                                MFiles.ReportException(errorobj);
-                            }
-                        );
-                }
-                $textInput.click(populateLookupOptions);
-                $textInput.keyup(populateLookupOptions);
-                $textInput.focus(populateLookupOptions);
-
-                var $dropdown = $("<a />")
-                    .addClass("dropdown")
-                    .click(function ()
-                {
-                    // Toggle options.
-                        $listItem.addClass("options-expanded");
-                        populateLookupOptions();
-                    return false;
-                });
-
-                $value.append($textInput);
-                $value.append($select);
-                $value.append($dropdown);
-                if (!propertyValue.Value.IsNull())
-                {
-                    $textInput.val(propertyValue.Value.DisplayValue);
-                    $textInput.data("id", propertyValue.Value.GetLookupID());
-                    $textInput.data("displayValue", propertyValue.Value.DisplayValue);
-                }
-                break;
-            case MFDatatypeBoolean:
-                var $select = $("<select></select>").addClass("auto-select");
-                var $emptyOption = $("<option></option>").val("").text("");
-                var $yesOption = $("<option></option>").val("Yes").text("Yes");
-                var $noOption = $("<option></option>").val("No").text("No");
-                switch ((propertyValue.Value.DisplayValue + "").toLowerCase())
-                {
-                    case "true":
-                    case "yes":
-                        $yesOption.attr("selected", "selected");
-                        break;
-                    case "false":
-                    case "no":
-                        $noOption.attr("selected", "selected");
-                        break;
-                }
-                $select.append($emptyOption);
-                $select.append($yesOption);
-                $select.append($noOption);
-                $select.change(function ()
-                {
-                    renderer.dispatchEvent(PropertyValueRenderer.EventTypes.PropertyValueChanged);
-                });
-                $value.append($select);
-                break;
-            case MFDatatypeMultiLineText:
-                var $textarea = $("<textarea></textarea>").addClass("auto-select");
-                $textarea.val(propertyValue.Value.DisplayValue);
-                $textarea.blur(function ()
-                {
-                    renderer.dispatchEvent(PropertyValueRenderer.EventTypes.PropertyValueChanged);
-                });
-                $value.append($textarea);
-                break;
-            case MFDatatypeTimestamp:
-            case MFDatatypeTime:
-            case MFDatatypeDate:
-            case MFDatatypeText:
-            case MFDatatypeInteger:
-            case MFDatatypeFloating:
-                var $input = $("<input type='text' maxlength='100' />").addClass("auto-select");
-                $input.val(propertyValue.Value.DisplayValue);
-                $input.blur(function ()
-                {
-                    renderer.dispatchEvent(PropertyValueRenderer.EventTypes.PropertyValueChanged);
-                });
-                $value.append($input);
-
-                // If it's a number then set the input mode.
-                // Note: this doesn't do anything currently, but maybe in the future...
-                if (propertyDef.DataType == MFDatatypeInteger
-                    || propertyDef.DataType == MFDatatypeFloating)
-                {
-                    $input.val(propertyValue.Value.DisplayValue);
-                    $input.attr("inputmode", "numeric");
-                    var pattern = "[0-9]*"; // Default to allowing just numbers.
-                    if (propertyDef.DataType == MFDatatypeFloating)
-                    {
-                        pattern = "[0-9\.\,]*"; // Allow decimal separators too.
-                    }
-                    $input.attr("pattern", pattern);
-                }
-
-                // If it's a date then set up the picker.
-                if (propertyDef.DataType == MFDatatypeDate)
-                {
-                    var format = this.getLocaleDateString(true);
-                    $input.datetimepicker
-                        (
-                            {
-                                timepicker: false,
-                                value: propertyValue.Value.DisplayValue,
-                                format: format,
-                                mask: true
-                            }
-                        );
-                }
-
-                // If it's time then set up the picker.
-                if (propertyDef.DataType == MFDatatypeTime)
-                {
-                    $input.datetimepicker
-                        (
-                            {
-                                datepicker: false,
-                                timepicker: true,
-                                value: propertyValue.Value.DisplayValue,
-                                mask: true,
-                                format: 'H:i',
-                                step: 1
-                            }
-                        );
-                }
-
-                // If it's time then set up the picker.
-                if (propertyDef.DataType == MFDatatypeTimestamp)
-                {
-                    var format = this.getLocaleDateString(true) + " H:i";
-                    $input.datetimepicker
-                        (
-                            {
-                                datepicker: true,
-                                timepicker: true,
-                                value: propertyValue.Value.DisplayValue,
-                                mask: true,
-                                format: format,
-                                step: 1
-                            }
-                        );
-                }
-
-                break;
-            default:
-                return null;
-        }
+            renderer.dispatchEvent(PropertyValueRenderer.EventTypes.PropertyValueChanged);
+        });
+        $value.append($input);
 
         // Add to a parent if we can.
         if (null != $parent)
@@ -693,91 +380,33 @@
         // No editing?  Die.
         if (!dashboard.CustomData.configuration.EnableEditing)
             return;
-        switch (propertyDef.DataType)
+
+        // If it's invalid then mark the list item.
+        if (!this.isValidValue())
         {
-            case MFDatatypeLookup:
-                // If it's invalid then mark the list item.
-                if (!this.isValidValue())
-                {
-                    if (null != $listItem)
-                        $listItem.addClass("invalid-value")
-                    return false;
-                }
-
-                // We're good.
-                if (null != $listItem)
-                    $listItem.removeClass("invalid-value")
-
-                // Set the value.
-                var value = this.getCurrentValue();
-
-                // Update the UI.
-                if (null != $listItem)
-                    $listItem.removeClass("empty");
-                if ((value + "").length == 0)
-                {
-                    if (null != $listItem)
-                        $listItem.addClass("empty");
-                    $(".read-only-value", $listItem).text("---");
-                    return;
-                }
-
-                // Set the display value.
-                $(".read-only-value", $listItem).text(value.displayValue);
-                break;
-            case MFDatatypeTimestamp:
-            case MFDatatypeTime:
-            case MFDatatypeDate:
-            case MFDatatypeBoolean:
-            case MFDatatypeText:
-            case MFDatatypeMultiLineText:
-            case MFDatatypeInteger:
-            case MFDatatypeFloating:
-                // If it's invalid then mark the list item.
-                if (!this.isValidValue())
-                {
-                    if (null != $listItem)
-                        $listItem.addClass("invalid-value")
-                    return false;
-                }
-
-                // We're good.
-                if (null != $listItem)
-                    $listItem.removeClass("invalid-value")
-
-                // Set the value.
-                var value = this.getCurrentValue();
-
-                // Format the value.
-                switch (propertyDef.DataType)
-                {
-                    case MFDatatypeBoolean:
-                        switch (value)
-                        {
-                            case true:
-                                value = "Yes";
-                                break;
-                            case false:
-                                value = "No";
-                                break;
-                            default:
-                                value = "";
-                        }
-                        break;
-                }
-
-                // Update the UI.
-                if (null != $listItem)
-                    $listItem.removeClass("empty");
-                if ((value + "").length == 0)
-                {
-                    if (null != $listItem)
-                        $listItem.addClass("empty");
-                    value = "---";
-                }
-                $(".read-only-value", $listItem).text(value);
-                break;
+            if (null != $listItem)
+                $listItem.addClass("invalid-value")
+            return false;
         }
+
+        // We're good.
+        if (null != $listItem)
+            $listItem.removeClass("invalid-value")
+
+        // Set the value.
+        var value = this.getCurrentValue();
+
+        // Update the UI.
+        if (null != $listItem)
+            $listItem.removeClass("empty");
+        if ((value + "").length == 0)
+        {
+            if (null != $listItem)
+                $listItem.addClass("empty");
+            value = "---";
+        }
+        $(".read-only-value", $listItem).text(value);
+
         if (null != $listItem)
             $listItem.removeClass("editing");
         return true;

@@ -16,4 +16,17 @@ function IntegerPropertyValueRenderer(dashboard, objectRenderer, propertyDef, pr
         return v;
     }
     this.setOriginalValue();
+
+    this.renderEditableValue = function ($parent)
+    {
+        var $value = base.renderEditableValue.call(this, $parent);
+        if (null == $value)
+            return $value;
+        var $input = $(".auto-select", $value);
+
+        // Set the pattern to just allow integers.
+        $input.attr("pattern", "[0-9]*");
+
+        return $value
+    }
 }

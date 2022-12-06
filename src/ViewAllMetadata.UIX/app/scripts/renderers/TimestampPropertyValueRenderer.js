@@ -45,4 +45,27 @@ function TimestampPropertyValueRenderer(dashboard, objectRenderer, propertyDef, 
         return pv;
     }
     this.setOriginalValue();
+
+    this.renderEditableValue = function ($parent)
+    {
+        var $value = base.renderEditableValue.call(this, $parent);
+        if (null == $value)
+            return $value;
+        var $input = $(".auto-select", $value);
+
+        var format = this.getLocaleDateString(true) + " H:i";
+        $input.datetimepicker
+            (
+                {
+                    datepicker: true,
+                    timepicker: true,
+                    value: propertyValue.Value.DisplayValue,
+                    mask: true,
+                    format: format,
+                    step: 1
+                }
+            );
+
+        return $value
+    }
 }

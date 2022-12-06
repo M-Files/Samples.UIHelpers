@@ -47,4 +47,25 @@ function DatePropertyValueRenderer(dashboard, objectRenderer, propertyDef, prope
         return pv;
     }
     this.setOriginalValue();
+
+    this.renderEditableValue = function ($parent)
+    {
+        var $value = base.renderEditableValue.call(this, $parent);
+        if (null == $value)
+            return $value;
+        var $input = $(".auto-select", $value);
+
+        var format = this.getLocaleDateString(true);
+        $input.datetimepicker
+            (
+                {
+                    timepicker: false,
+                    value: propertyValue.Value.DisplayValue,
+                    format: format,
+                    mask: true
+                }
+            );
+
+        return $value
+    }
 }

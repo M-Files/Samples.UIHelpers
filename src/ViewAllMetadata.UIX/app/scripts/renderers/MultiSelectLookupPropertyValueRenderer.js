@@ -34,4 +34,9 @@ function MultiSelectLookupPropertyValueRenderer(dashboard, objectRenderer, prope
 
     }
     this.setOriginalValue();
+    this.exitEditMode = function () { };
+    this.getPropertyValue = function ()
+    {
+        return propertyValue;
+    }
 }

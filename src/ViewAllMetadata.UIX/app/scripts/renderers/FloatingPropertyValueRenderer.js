@@ -35,4 +35,17 @@ function FloatingPropertyValueRenderer(dashboard, objectRenderer, propertyDef, p
         return true;
     }
     this.setOriginalValue();
+
+    this.renderEditableValue = function ($parent)
+    {
+        var $value = base.renderEditableValue.call(this, $parent);
+        if (null == $value)
+            return $value;
+        var $input = $(".auto-select", $value);
+
+        $input.attr("inputmode", "numeric");
+        $input.attr("pattern", "[0-9\.\,]*"); // Allow decimal separators too.
+
+        return $value
+    }
 }
