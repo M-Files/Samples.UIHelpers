@@ -1,6 +1,7 @@
 ﻿
 function BooleanPropertyValueRenderer(dashboard, objectRenderer, propertyDef, propertyValue, isRequired, $parent)
 {
+    var renderer = this;
     PropertyValueRenderer.apply(this, arguments);
     var base = this.getBase();
 
@@ -38,26 +39,10 @@ function BooleanPropertyValueRenderer(dashboard, objectRenderer, propertyDef, pr
         }
     }
     this.setOriginalValue();
-    this.exitEditMode = function ()
+    this.renderReadOnlyValue = function ($parent)
     {
-        var supportsEditing = this.getSupportsEditing();
         var $listItem = this.getListItem();
-
-        // No editing?  Die.
-        if (!dashboard.CustomData.configuration.EnableEditing || !supportsEditing)
-            return;
-
-        // If it's invalid then mark the list item.
-        if (!this.isValidValue())
-        {
-            if (null != $listItem)
-                $listItem.addClass("invalid-value")
-            return false;
-        }
-
-        // We're good.
-        if (null != $listItem)
-            $listItem.removeClass("invalid-value")
+        var $value = base.renderReadOnlyValue.apply(this, [$parent]);
 
         // Set the value.
         var value = this.getCurrentValue();
@@ -73,20 +58,14 @@ function BooleanPropertyValueRenderer(dashboard, objectRenderer, propertyDef, pr
                 value = "";
         }
 
-        // Update the UI.
-        if (null != $listItem)
-            $listItem.removeClass("empty");
         if ((value + "").length == 0)
         {
-            if (null != $listItem)
-                $listItem.addClass("empty");
-            value = "---";
+            $listItem.addClass("empty");
+            $value.text("---");
+            return $value;
         }
-        $(".read-only-value", $listItem).text(value);
-
-        if (null != $listItem)
-            $listItem.removeClass("editing");
-        return true;
+        $value.text(value);
+        return $value;
     }
     this.renderEditableValue = function ($parent)
     {

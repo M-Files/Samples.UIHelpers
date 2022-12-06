@@ -315,10 +315,31 @@
     }
     this.renderReadOnlyValue = function($parent)
     {
+        if (null == $parent)
+            return;
+
+        var $listItem = renderer.getListItem();
+
+        // If it's invalid then mark the list item.
+        if (!renderer.isValidValue())
+        {
+            if (null != $listItem)
+                $listItem.addClass("invalid-value")
+            return false;
+        }
+
+        // We're good.
+        if (null != $listItem)
+            $listItem.removeClass("invalid-value");
 
         // Create the value for the PV.
-        var $value = $("<span></span>").addClass("read-only-value");
-        var value = this.getCurrentValue();
+        var $value = $("span.read-only-value", renderer.getListItem());
+        if ($value.length == 0)
+        {
+            $value = $("<span></span>").addClass("read-only-value");
+            $parent.append($value);
+        }
+        var value = renderer.getCurrentValue();
         if ((value + "").length == 0)
         {
             $listItem.addClass("empty");
@@ -326,12 +347,7 @@
         }
         $value.text(value);
 
-        // Add to a parent if we can.
-        if (null != $parent)
-            $parent.append($value);
-
-        return $value
-
+        return $value;
     }
 
     this.renderEditableValue = function($parent)
@@ -381,34 +397,17 @@
         if (!dashboard.CustomData.configuration.EnableEditing)
             return;
 
-        // If it's invalid then mark the list item.
-        if (!this.isValidValue())
-        {
-            if (null != $listItem)
-                $listItem.addClass("invalid-value")
-            return false;
-        }
-
-        // We're good.
-        if (null != $listItem)
-            $listItem.removeClass("invalid-value")
-
-        // Set the value.
-        var value = this.getCurrentValue();
+        // If we aren't editing then die.
+        if (!$listItem.hasClass("editing"))
+            return;
 
         // Update the UI.
-        if (null != $listItem)
-            $listItem.removeClass("empty");
-        if ((value + "").length == 0)
-        {
-            if (null != $listItem)
-                $listItem.addClass("empty");
-            value = "---";
-        }
-        $(".read-only-value", $listItem).text(value);
+        renderer.renderReadOnlyValue($parent);
 
+        // We aren't editing.
         if (null != $listItem)
             $listItem.removeClass("editing");
+
         return true;
     }
 
