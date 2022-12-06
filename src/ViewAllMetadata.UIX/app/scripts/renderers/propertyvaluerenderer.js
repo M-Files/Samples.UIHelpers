@@ -329,12 +329,6 @@
         var currentValue = this.getCurrentValue();
         switch (propertyDef.DataType)
         {
-            case MFDatatypeLookup:
-                if (currentValue != "")
-                {
-                    currentValue = currentValue.id;
-                }
-                break;
             case MFDatatypeDate:
                 if ((currentValue + "").length > 0)
                 {
@@ -951,98 +945,6 @@
 
     return this;
 }
-function SingleLineTextPropertyValueRenderer(dashboard, objectRenderer, propertyDef, propertyValue, isRequired, $parent)
-{
-    PropertyValueRenderer.apply(this, arguments);
-}
-function MultiLineTextPropertyValueRenderer(dashboard, objectRenderer, propertyDef, propertyValue, isRequired, $parent)
-{
-    PropertyValueRenderer.apply(this, arguments);
-}
-function BooleanPropertyValueRenderer(dashboard, objectRenderer, propertyDef, propertyValue, isRequired, $parent)
-{
-    PropertyValueRenderer.apply(this, arguments);
-}
-function IntegerPropertyValueRenderer(dashboard, objectRenderer, propertyDef, propertyValue, isRequired, $parent)
-{
-    PropertyValueRenderer.apply(this, arguments);
-}
-function FloatingPropertyValueRenderer(dashboard, objectRenderer, propertyDef, propertyValue, isRequired, $parent)
-{
-    PropertyValueRenderer.apply(this, arguments);
-}
-function DatePropertyValueRenderer(dashboard, objectRenderer, propertyDef, propertyValue, isRequired, $parent)
-{
-    PropertyValueRenderer.apply(this, arguments);
-}
-function TimestampPropertyValueRenderer(dashboard, objectRenderer, propertyDef, propertyValue, isRequired, $parent)
-{
-    PropertyValueRenderer.apply(this, arguments);
-}
-function TimePropertyValueRenderer(dashboard, objectRenderer, propertyDef, propertyValue, isRequired, $parent)
-{
-    PropertyValueRenderer.apply(this, arguments);
-}
-
-function LookupPropertyValueRenderer(dashboard, objectRenderer, propertyDef, propertyValue, isRequired, $parent)
-{
-    PropertyValueRenderer.apply(this, arguments);
-    var base =
-    {
-        renderReadOnlyValue: this.renderReadOnlyValue
-    };
-    this.renderReadOnlyValue = function ($parent)
-    {
-        var $listItem = this.getListItem();
-        var $value = base.renderReadOnlyValue.apply(this, [$parent]);
-        var value = this.getCurrentValue();
-        if ((value + "").length == 0)
-        {
-            $listItem.addClass("empty");
-            $value.text("---");
-            return $value;
-        }
-        $value.text(value.displayValue);
-        return $value;
-    }
-}
-
-function MultiSelectLookupPropertyValueRenderer(dashboard, objectRenderer, propertyDef, propertyValue, isRequired, $parent)
-{
-    PropertyValueRenderer.apply(this, arguments);
-    var base =
-    {
-        renderReadOnlyValue: this.renderReadOnlyValue
-    };
-    this.renderReadOnlyValue = function ($parent)
-    {
-        var $listItem = this.getListItem();
-        var $value = base.renderReadOnlyValue.apply(this, [$parent]);
-        var value = this.getCurrentValue();
-
-        // Get the data out the lookups.
-        var lookups = propertyValue.Value.GetValueAsLookups();
-
-        // Only replace the value if we have something (otherwise leave as "---").
-        if (lookups.Count > 0)
-        {
-            value = $("<div></div>");
-            for (var i = 0; i < lookups.Count; i++)
-            {
-                value.append($("<div></div>").text(lookups[i].DisplayValue));
-            }
-            $value.empty().append(value);
-        }
-        else
-        {
-            $listItem.addClass("empty");
-        }
-
-        return $value;
-
-    }
-}
-
 PropertyValueRenderer.create = function (dashboard, objectRenderer, propertyDef, propertyValue, isRequired, $parent)
 {
     switch (propertyDef.DataType)
