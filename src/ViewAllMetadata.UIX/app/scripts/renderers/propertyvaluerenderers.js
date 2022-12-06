@@ -3,9 +3,10 @@
     var renderer = this;
     var $listItem = null;
     var supportsEditing = false;
-    renderer.getPropertyDef = function () { return propertyDef; }
+    this.getPropertyDef = function () { return propertyDef; }
+    this.getListItem = function () { return $listItem; }
 
-    renderer.getLocaleDateString = function(forPlugin)
+    this.getLocaleDateString = function(forPlugin)
     {
         const formats = {
             "af-ZA": "yyyy/MM/dd",
@@ -235,7 +236,7 @@
             : format.toUpperCase();
     }
 
-    renderer.getCurrentValue = function()
+    this.getCurrentValue = function()
     {
         switch (propertyDef.DataType)
         {
@@ -319,13 +320,13 @@
                 return propertyValue.Value.DisplayValue;
         }
     }
-    var originalValue = renderer.getCurrentValue();
-    renderer.getPropertyValue = function ()
+    var originalValue = this.getCurrentValue();
+    this.getPropertyValue = function ()
     {
         if (false == supportsEditing)
             return propertyValue;
 
-        var currentValue = renderer.getCurrentValue();
+        var currentValue = this.getCurrentValue();
         switch (propertyDef.DataType)
         {
             case MFDatatypeLookup:
@@ -337,13 +338,13 @@
             case MFDatatypeDate:
                 if ((currentValue + "").length > 0)
                 {
-                    currentValue = dayjs(currentValue, renderer.getLocaleDateString(false)).utc().format("YYYY-MM-DD")
+                    currentValue = dayjs(currentValue, this.getLocaleDateString(false)).utc().format("YYYY-MM-DD")
                 }
                 break;
             case MFDatatypeTimestamp:
                 if ((currentValue + "").length > 0)
                 {
-                    currentValue = dayjs(currentValue, renderer.getLocaleDateString(false) + " HH:mm").utc().format("YYYY-MM-DD HH:mm:ss")
+                    currentValue = dayjs(currentValue, this.getLocaleDateString(false) + " HH:mm").utc().format("YYYY-MM-DD HH:mm:ss")
                 }
                 break;
         }
@@ -366,16 +367,16 @@
         }
         return pv;
     }
-    renderer.hasChanged = function ()
+    this.hasChanged = function ()
     {
-        var currentValue = renderer.getCurrentValue();
+        var currentValue = this.getCurrentValue();
         switch (propertyDef.DataType)
         {
             case MFDatatypeLookup:
                 if (typeof currentValue != typeof originalValue)
                     return true;
                 if (currentValue == "" && originalValue == "")
-                    return true;
+                    return false;
                 return (currentValue.id != originalValue.id);
             case MFDatatypeTimestamp:
             case MFDatatypeTime:
@@ -392,9 +393,9 @@
                 return false;
         }
     }
-    renderer.isValidValue = function()
+    this.isValidValue = function()
     {
-        var currentValue = renderer.getCurrentValue();
+        var currentValue = this.getCurrentValue();
 
         switch (propertyDef.DataType)
         {
@@ -436,7 +437,7 @@
         return true;
     }
 
-    renderer.renderLabel = function($parent)
+    this.renderLabel = function($parent)
     {
         // Create the label for the PV.
         var $label = $("<label></label>");
@@ -452,37 +453,18 @@
 
         return $label;
     }
-    renderer.renderReadOnlyValue = function($parent)
+    this.renderReadOnlyValue = function($parent)
     {
 
         // Create the value for the PV.
         var $value = $("<span></span>").addClass("read-only-value");
-        var value = propertyValue.Value.DisplayValue;
+        var value = this.getCurrentValue();
         if ((value + "").length == 0)
         {
             $listItem.addClass("empty");
             value = "---";
         }
         $value.text(value);
-
-        // Do any special processing for different data types.
-        switch (propertyDef.DataType)
-        {
-            case MFDatatypeMultiSelectLookup:
-                // Get the data out the lookups.
-                var lookups = propertyValue.Value.GetValueAsLookups();
-                // Only replace the value if we have something (otherwise leave as "---").
-                if (lookups.Count > 0)
-                {
-                    value = $("<div></div>");
-                    for (var i = 0; i < lookups.Count; i++)
-                    {
-                        value.append($("<div></div>").text(lookups[i].DisplayValue));
-                    }
-                    $value.empty().append(value);
-                }
-                break;
-        }
 
         // Add to a parent if we can.
         if (null != $parent)
@@ -491,9 +473,8 @@
         return $value
 
     }
-    renderer.renderEditableValue = function($parent)
+    this.renderEditableValue = function($parent)
     {
-
         // Create the value for the PV.
         var $value = $("<span></span>").addClass("editing-value");
 
@@ -701,13 +682,13 @@
                 $select.append($emptyOption);
                 $select.append($yesOption);
                 $select.append($noOption);
-                //$select.change(function () { renderer.exitEditMode(); });
+                //$select.change(function () { this.exitEditMode(); });
                 $value.append($select);
                 break;
             case MFDatatypeMultiLineText:
                 var $textarea = $("<textarea></textarea>").addClass("auto-select");
                 $textarea.val(propertyValue.Value.DisplayValue);
-                //$textarea.blur(function () { renderer.exitEditMode(); });
+                //$textarea.blur(function () { this.exitEditMode(); });
                 $value.append($textarea);
                 break;
             case MFDatatypeTimestamp:
@@ -718,7 +699,7 @@
             case MFDatatypeFloating:
                 var $input = $("<input type='text' maxlength='100' />").addClass("auto-select");
                 $input.val(propertyValue.Value.DisplayValue);
-                //$input.blur(function () { renderer.exitEditMode(); });
+                //$input.blur(function () { this.exitEditMode(); });
                 $value.append($input);
 
                 // If it's a number then set the input mode.
@@ -739,7 +720,7 @@
                 // If it's a date then set up the picker.
                 if (propertyDef.DataType == MFDatatypeDate)
                 {
-                    var format = renderer.getLocaleDateString(true);
+                    var format = this.getLocaleDateString(true);
                     $input.datetimepicker
                         (
                             {
@@ -770,7 +751,7 @@
                 // If it's time then set up the picker.
                 if (propertyDef.DataType == MFDatatypeTimestamp)
                 {
-                    var format = renderer.getLocaleDateString(true) + " H:i";
+                    var format = this.getLocaleDateString(true) + " H:i";
                     $input.datetimepicker
                         (
                             {
@@ -797,7 +778,7 @@
 
     }
 
-    renderer.enterEditMode = function ()
+    this.enterEditMode = function ()
     {
         // No editing?  Die.
         if (!dashboard.CustomData.configuration.EnableEditing)
@@ -816,7 +797,7 @@
         $listItem.addClass("editing");
         $(".auto-select", $listItem).select();
     }
-    renderer.exitEditMode = function ()
+    this.exitEditMode = function ()
     {
         // No editing?  Die.
         if (!dashboard.CustomData.configuration.EnableEditing)
@@ -825,7 +806,7 @@
         {
             case MFDatatypeLookup:
                 // If it's invalid then mark the list item.
-                if (!renderer.isValidValue())
+                if (!this.isValidValue())
                 {
                     if (null != $listItem)
                         $listItem.addClass("invalid-value")
@@ -837,7 +818,7 @@
                     $listItem.removeClass("invalid-value")
 
                 // Set the value.
-                var value = renderer.getCurrentValue();
+                var value = this.getCurrentValue();
 
                 // Update the UI.
                 if (null != $listItem)
@@ -862,7 +843,7 @@
             case MFDatatypeInteger:
             case MFDatatypeFloating:
                 // If it's invalid then mark the list item.
-                if (!renderer.isValidValue())
+                if (!this.isValidValue())
                 {
                     if (null != $listItem)
                         $listItem.addClass("invalid-value")
@@ -874,7 +855,7 @@
                     $listItem.removeClass("invalid-value")
 
                 // Set the value.
-                var value = renderer.getCurrentValue();
+                var value = this.getCurrentValue();
 
                 // Format the value.
                 switch (propertyDef.DataType)
@@ -911,7 +892,7 @@
         return true;
     }
 
-    renderer.render = function ()
+    this.render = function ()
     {
         // Create the (parent) list item.
         $listItem = $("<li></li>");
@@ -921,10 +902,10 @@
         $listItem.data("propertyValue", propertyValue);
 
         // Create the label.
-        renderer.renderLabel($listItem);
+        this.renderLabel($listItem);
 
         // Create the read-only value.
-        renderer.renderReadOnlyValue($listItem);
+        this.renderReadOnlyValue($listItem);
 
         // Is editing enabled?
         if (dashboard.CustomData.configuration.EnableEditing)
@@ -935,7 +916,7 @@
             {
 
                 // Attempt to create the editable value.
-                var $editableValue = renderer.renderEditableValue($listItem);
+                var $editableValue = this.renderEditableValue($listItem);
                 if (null != $editableValue)
                 {
                     // Mark it as editable.
@@ -968,5 +949,126 @@
         return $listItem;
     }
 
-    return renderer;
+    return this;
+}
+function SingleLineTextPropertyValueRenderer(dashboard, objectRenderer, propertyDef, propertyValue, isRequired, $parent)
+{
+    PropertyValueRenderer.apply(this, arguments);
+}
+function MultiLineTextPropertyValueRenderer(dashboard, objectRenderer, propertyDef, propertyValue, isRequired, $parent)
+{
+    PropertyValueRenderer.apply(this, arguments);
+}
+function BooleanPropertyValueRenderer(dashboard, objectRenderer, propertyDef, propertyValue, isRequired, $parent)
+{
+    PropertyValueRenderer.apply(this, arguments);
+}
+function IntegerPropertyValueRenderer(dashboard, objectRenderer, propertyDef, propertyValue, isRequired, $parent)
+{
+    PropertyValueRenderer.apply(this, arguments);
+}
+function FloatingPropertyValueRenderer(dashboard, objectRenderer, propertyDef, propertyValue, isRequired, $parent)
+{
+    PropertyValueRenderer.apply(this, arguments);
+}
+function DatePropertyValueRenderer(dashboard, objectRenderer, propertyDef, propertyValue, isRequired, $parent)
+{
+    PropertyValueRenderer.apply(this, arguments);
+}
+function TimestampPropertyValueRenderer(dashboard, objectRenderer, propertyDef, propertyValue, isRequired, $parent)
+{
+    PropertyValueRenderer.apply(this, arguments);
+}
+function TimePropertyValueRenderer(dashboard, objectRenderer, propertyDef, propertyValue, isRequired, $parent)
+{
+    PropertyValueRenderer.apply(this, arguments);
+}
+
+function LookupPropertyValueRenderer(dashboard, objectRenderer, propertyDef, propertyValue, isRequired, $parent)
+{
+    PropertyValueRenderer.apply(this, arguments);
+    var base =
+    {
+        renderReadOnlyValue: this.renderReadOnlyValue
+    };
+    this.renderReadOnlyValue = function ($parent)
+    {
+        var $listItem = this.getListItem();
+        var $value = base.renderReadOnlyValue.apply(this, [$parent]);
+        var value = this.getCurrentValue();
+        if ((value + "").length == 0)
+        {
+            $listItem.addClass("empty");
+            $value.text("---");
+            return $value;
+        }
+        $value.text(value.displayValue);
+        return $value;
+    }
+}
+
+function MultiSelectLookupPropertyValueRenderer(dashboard, objectRenderer, propertyDef, propertyValue, isRequired, $parent)
+{
+    PropertyValueRenderer.apply(this, arguments);
+    var base =
+    {
+        renderReadOnlyValue: this.renderReadOnlyValue
+    };
+    this.renderReadOnlyValue = function ($parent)
+    {
+        var $listItem = this.getListItem();
+        var $value = base.renderReadOnlyValue.apply(this, [$parent]);
+        var value = this.getCurrentValue();
+
+        // Get the data out the lookups.
+        var lookups = propertyValue.Value.GetValueAsLookups();
+
+        // Only replace the value if we have something (otherwise leave as "---").
+        if (lookups.Count > 0)
+        {
+            value = $("<div></div>");
+            for (var i = 0; i < lookups.Count; i++)
+            {
+                value.append($("<div></div>").text(lookups[i].DisplayValue));
+            }
+            $value.empty().append(value);
+        }
+        else
+        {
+            $listItem.addClass("empty");
+        }
+
+        return $value;
+
+    }
+}
+
+PropertyValueRenderer.create = function (dashboard, objectRenderer, propertyDef, propertyValue, isRequired, $parent)
+{
+    switch (propertyDef.DataType)
+    {
+        case MFDatatypeMultiSelectLookup:
+            return new MultiSelectLookupPropertyValueRenderer(dashboard, objectRenderer, propertyDef, propertyValue, isRequired, $parent);
+        case MFDatatypeLookup:
+            return new LookupPropertyValueRenderer(dashboard, objectRenderer, propertyDef, propertyValue, isRequired, $parent);
+        case MFDatatypeTimestamp:
+            return new TimestampPropertyValueRenderer(dashboard, objectRenderer, propertyDef, propertyValue, isRequired, $parent);
+        case MFDatatypeTime:
+            return new TimePropertyValueRenderer(dashboard, objectRenderer, propertyDef, propertyValue, isRequired, $parent);
+        case MFDatatypeDate:
+            return new DatePropertyValueRenderer(dashboard, objectRenderer, propertyDef, propertyValue, isRequired, $parent);
+        case MFDatatypeBoolean:
+            return new BooleanPropertyValueRenderer(dashboard, objectRenderer, propertyDef, propertyValue, isRequired, $parent);
+        case MFDatatypeInteger:
+            return new IntegerPropertyValueRenderer(dashboard, objectRenderer, propertyDef, propertyValue, isRequired, $parent);
+        case MFDatatypeFloating:
+            return new FloatingPropertyValueRenderer(dashboard, objectRenderer, propertyDef, propertyValue, isRequired, $parent);
+        case MFDatatypeMultiLineText:
+            return new MultiLineTextPropertyValueRenderer(dashboard, objectRenderer, propertyDef, propertyValue, isRequired, $parent);
+        case MFDatatypeText:
+            return new SingleLineTextPropertyValueRenderer(dashboard, objectRenderer, propertyDef, propertyValue, isRequired, $parent);
+        default:
+            alert("Property datatype " + propertyDef.DataType + " not handled; rendering may fail.");
+            return new PropertyValueRenderer(dashboard, objectRenderer, propertyDef, propertyValue, isRequired, $parent);
+    }
 }

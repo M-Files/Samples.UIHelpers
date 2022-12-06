@@ -53,7 +53,7 @@
         return properties;
     }
     renderer.getObjectBeingRendered = function () { return renderer.originalObject; }
-    renderer.render = function (selectedItem)
+    renderer.render = function (selectedItem, force)
     {
 
         // Sanity.
@@ -66,7 +66,7 @@
         }
 
         // Is it the same object?
-        if (renderer.originalObject != null)
+        if (renderer.originalObject != null && !force)
         {
             // If it's the same object then don't refresh.
             if (selectedItem.VersionData.ObjVer.ID == renderer.originalObject.VersionData.ObjVer.ID
@@ -113,7 +113,7 @@
             var propertyValue = selectedItem.Properties[propertyIndex - 1];
 
             // Render.
-            var propertyValueRenderer = new PropertyValueRenderer
+            var propertyValueRenderer = PropertyValueRenderer.create
                 (
                 dashboard,
                 renderer,
@@ -241,7 +241,7 @@
 
     renderer.discardChanges = function ()
     {
-        renderer.render(renderer.originalObject);
+        renderer.render(renderer.originalObject, true);
     }
     // Configure the discard button.
     $("#btnDiscard").click(function ()

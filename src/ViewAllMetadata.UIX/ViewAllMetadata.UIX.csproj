@@ -45,7 +45,7 @@
     <Content Include="app\scripts\dayjs\utc.js" />
     <Content Include="app\scripts\jquery.datetimepicker.full.min.js" />
     <Content Include="app\scripts\renderers\objectrenderer.js" />
-    <Content Include="app\scripts\renderers\propertyvaluerenderer.js" />
+    <Content Include="app\scripts\renderers\propertyvaluerenderers.js" />
     <Content Include="app\shellui.js" />
     <Content Include="app\dashboard\dashboard.html" />
     <Content Include="app\dashboard\dashboard.js" />
