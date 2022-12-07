@@ -53,6 +53,26 @@
         return properties;
     }
     renderer.getObjectBeingRendered = function () { return renderer.originalObject; }
+    renderer.getPropertyValue = function (propertyDef)
+    {
+        for (var i = 0; i < propertyValueRenderers.length; i++)
+        {
+            if (propertyValueRenderers[i].getPropertyDef().ID != propertyDef)
+                continue;
+            return propertyValueRenderers[i].getPropertyValue();
+        }
+        return null;
+    }
+    renderer.getCurrentValue = function (propertyDef)
+    {
+        for (var i = 0; i < propertyValueRenderers.length; i++)
+        {
+            if (propertyValueRenderers[i].getPropertyDef().ID != propertyDef)
+                continue;
+            return propertyValueRenderers[i].getCurrentValue();
+        }
+        return null;
+    }
     renderer.render = function (selectedItem, force)
     {
 

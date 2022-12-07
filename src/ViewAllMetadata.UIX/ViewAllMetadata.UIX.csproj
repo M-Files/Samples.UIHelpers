@@ -31,6 +31,10 @@
     <Content Include="..\Common\bundles\common-shellui.js">
       <Link>app\common-shellui.js</Link>
     </Content>
+    <Content Include="..\Common\bundles\common-shellui.min.js">
+      <Link>app\common-shellui.min.js</Link>
+      <DependentUpon>common-shellui.js</DependentUpon>
+    </Content>
     <Content Include="..\Common\src\dashboards\images\icon-edit.png">
       <Link>app\images\icon-edit.png</Link>
     </Content>

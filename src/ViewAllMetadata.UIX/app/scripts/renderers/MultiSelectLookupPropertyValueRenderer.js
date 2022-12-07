@@ -13,18 +13,15 @@ function MultiSelectLookupPropertyValueRenderer(dashboard, objectRenderer, prope
         var $value = base.renderReadOnlyValue.apply(this, [$parent]);
         var value = this.getCurrentValue();
 
-        // Get the data out the lookups.
-        var lookups = propertyValue.Value.GetValueAsLookups();
-
         // Only replace the value if we have something (otherwise leave as "---").
-        if (lookups.Count > 0)
+        if (value.length > 0)
         {
-            value = $("<div></div>");
-            for (var i = 0; i < lookups.Count; i++)
+            var v = $("<div></div>");
+            for (var i = 0; i < value.length; i++)
             {
-                value.append($("<div></div>").text(lookups[i].DisplayValue));
+                v.append($("<div></div>").text(value[i].displayValue));
             }
-            $value.empty().append(value);
+            $value.empty().append(v);
         }
         else
         {
@@ -133,6 +130,7 @@ function MultiSelectLookupPropertyValueRenderer(dashboard, objectRenderer, prope
             {
                 var lookup = new MFiles.Lookup();
                 lookup.Item = currentValue[i].id;
+                lookup.DisplayValue = currentValue[i].displayValue;
                 lookups.Add(-1, lookup);
             }
 

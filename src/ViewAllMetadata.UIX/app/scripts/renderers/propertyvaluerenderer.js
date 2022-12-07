@@ -397,16 +397,9 @@
         if (!dashboard.CustomData.configuration.EnableEditing)
             return;
 
-        // If we aren't editing then die.
-        if (!$listItem.hasClass("editing"))
-            return;
-
         // Update the UI.
         renderer.renderReadOnlyValue($parent);
-
-        // We aren't editing.
-        if (null != $listItem)
-            $listItem.removeClass("editing");
+        $listItem.removeClass("editing");
 
         return true;
     }

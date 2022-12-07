@@ -214,6 +214,69 @@ function LookupPropertyValueRenderer(dashboard, objectRenderer, propertyDef, pro
         deletedItemsCondition.TypedValue.SetValue(MFDatatypeBoolean, false);
         searchConditions.Add(-1, deletedItemsCondition);
 
+        var filterString = "";
+
+        // Does the property definition need filtering?
+        if (propertyDef.DependencyRelation == 2 && propertyDef.DependencyPD > 0)
+        {
+            // Get the values for the dependency condition.
+            var dependencyPropertyValue = objectRenderer.getPropertyValue(propertyDef.DependencyPD);
+            var propertyDefValueList = dashboard.CustomData.vaultStructureManager.getValueList(propertyDef.ValueList);
+            var dependencyPropertyDefValueList = dashboard.CustomData.vaultStructureManager.getValueList
+                (
+                    dashboard.CustomData.vaultStructureManager.getPropertyDefinition(propertyDef.DependencyPD).ValueList
+            );
+            if (null != dependencyPropertyValue
+                && !dependencyPropertyValue.Value.IsNULL()
+                && dependencyPropertyDefValueList != null
+                && propertyDefValueList != null)
+            {
+                // Get the values.
+                var dependencyLookupValues = dependencyPropertyValue.Value.GetValueAsLookups();
+
+                // Set up the filter string.
+                filterString = dependencyPropertyDefValueList.NameSingular + ": ";
+                for (var i = 0; i < dependencyLookupValues.Count; i++) 
+                {
+                    if (i > 0)
+                        filterString += ";";
+                    filterString += dependencyLookupValues[i].DisplayValue;
+                }
+
+                var dependencyCondition = new MFiles.SearchCondition();
+
+                // If the dependency ID is the owner of this list then set it as an owner relationship.
+                if (propertyDefValueList.HasOwnerType
+                    && propertyDefValueList.OwnerType > 0
+                    && propertyDefValueList.OwnerType == dependencyPropertyDefValueList.ID)
+                {
+
+                    // It is an owner relationship.
+                    dependencyCondition.Expression.SetValueListItemExpression
+                        (
+                            MFValueListItemPropertyDefOwner,
+                            MFParentChildBehaviorNone,
+                            new MFiles.DataFunctionCall()
+                        );
+                }
+                else
+                {
+                    // It's not an owner relationship.
+                    dependencyCondition.Expression.SetTypedValueExpression
+                        (
+                            MFDatatypeLookup,
+                            dependencyPropertyDefValueList.ID,
+                            MFParentChildBehaviorNone,
+                            new MFiles.DataFunctionCall()
+                        );
+                }
+
+                dependencyCondition.ConditionType = MFConditionTypeEqual;
+                dependencyCondition.TypedValue.SetValueToMultiSelectLookup(dependencyLookupValues);
+                searchConditions.Add(-1, dependencyCondition);
+            }
+        }
+
         // Search.
         dashboard.Vault.Async.ValueListItemOperations.SearchForValueListItemsEx2
             (
@@ -229,6 +292,12 @@ function LookupPropertyValueRenderer(dashboard, objectRenderer, propertyDef, pro
                     // Empty the select.
                     var $ol = $("ol", $select);
                     $ol.empty();
+
+                    // Do we have a filter string?
+                    if (filterString.length > 0)
+                    {
+                        $ol.append($("<li class='caption'></li>").text(filterString));
+                    }
 
                     // Are there more?
                     if (results.MoreResults)
@@ -281,23 +350,10 @@ function LookupPropertyValueRenderer(dashboard, objectRenderer, propertyDef, pro
             .addClass("text-entry");
         var $select = $("<div></div>").addClass("select")
             .append($("<ol></ol>"));
-        $textInput.click(function (e)
+        $textInput.keypress(function (e)
         {
             renderer.renderOptions($div, $textInput, $select, true);
-            e.stopPropagation();
-            return false;
-        });
-        $textInput.keyup(function (e)
-        {
-            renderer.renderOptions($div, $textInput, $select, true);
-            e.stopPropagation();
-            return false;
-        });
-        $textInput.focus(function (e)
-        {
-            renderer.renderOptions($div, $textInput, $select, true);
-            e.stopPropagation();
-            return false;
+            return true;
         });
 
         var $dropdown = $("<a />")
@@ -305,8 +361,11 @@ function LookupPropertyValueRenderer(dashboard, objectRenderer, propertyDef, pro
             .click(function ()
             {
                 // Toggle options.
-                $div.addClass("options-expanded");
-                renderer.renderOptions($div, $textInput, $select, false);
+                $div.toggleClass("options-expanded");
+                if ($div.hasClass("options-expanded"))
+                {
+                    renderer.renderOptions($div, $textInput, $select, false);
+                }
                 return false;
             });
 

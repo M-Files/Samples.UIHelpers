@@ -167,8 +167,8 @@ ol.properties li.invalid-value input
         z-index: 1000;
         display: none;
     }
-        ol.properties li.mfdatatype-9 div.lookup.options-expanded div.select,
-        ol.properties li.mfdatatype-10 div.lookup.options-expanded div.select {
+        ol.properties li.mfdatatype-9 .options-expanded div.select,
+        ol.properties li.mfdatatype-10 .options-expanded div.select {
             display: block;
         }
     ol.properties li.mfdatatype-9 ol, ol.properties li.mfdatatype-9 ol li,
@@ -176,13 +176,13 @@ ol.properties li.invalid-value input
         margin: 0px;
         padding: 0px;
     }
-        ol.properties li.mfdatatype-9.options-expanded li.caption,
-        ol.properties li.mfdatatype-10.options-expanded li.caption {
+        ol.properties li.mfdatatype-9 .options-expanded li.caption,
+        ol.properties li.mfdatatype-10 .options-expanded li.caption {
             background-color: #EEE;
             font-size: 0.8em;
         }
-ol.properties li.mfdatatype-9.options-expanded li,
-ol.properties li.mfdatatype-10.options-expanded li {
+ol.properties li.mfdatatype-9 .options-expanded li,
+ol.properties li.mfdatatype-10 .options-expanded li {
     padding: 3px 5px;
 }
 ol.properties li.mfdatatype-9 div.lookup,
