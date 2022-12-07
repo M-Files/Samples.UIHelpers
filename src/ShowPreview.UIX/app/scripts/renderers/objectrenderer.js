@@ -31,6 +31,8 @@ function ObjectRenderer(dashboard)
         var files = dashboard.Vault.ObjectFileOperations.GetFiles(selectedItem.VersionData.ObjVer);
         if (1 != files.Count)
         {
+            $(".preview").hide();
+            previewerDomElement.ClearPreview();
             return;
         }
         var file = files.Item(1);
@@ -50,6 +52,7 @@ function ObjectRenderer(dashboard)
         try
         {
             previewerDomElement.ShowFilePreview(newPath);
+            $(".preview").show();
             currentPath = newPath;
         }
         catch (e)
