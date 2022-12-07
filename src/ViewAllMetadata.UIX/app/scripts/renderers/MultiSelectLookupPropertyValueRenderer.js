@@ -34,7 +34,6 @@ function MultiSelectLookupPropertyValueRenderer(dashboard, objectRenderer, prope
         return $value;
 
     }
-    this.setOriginalValue();
     this.getCurrentValue = function ()
     {
         var supportsEditing = this.getSupportsEditing();
@@ -43,7 +42,7 @@ function MultiSelectLookupPropertyValueRenderer(dashboard, objectRenderer, prope
         if (false == supportsEditing)
         {
             if (propertyValue.Value.IsNULL())
-                return "";
+                return arr;
             var lookups = propertyValue.Value.GetValueAsLookups();
             for (var i = 0; i < lookups.Count; i++) {
                 arr.push({
@@ -81,8 +80,26 @@ function MultiSelectLookupPropertyValueRenderer(dashboard, objectRenderer, prope
         var currentValue = this.getCurrentValue();
         var originalValue = this.getOriginalValue();
 
-        // TODO: Check arrays.
-        return true;
+        if (currentValue.length != originalValue.length)
+            return true;
+
+        // Check arrays.
+        for (var i = 0; i < currentValue.length; i++) {
+            var toFind = currentValue[i];
+            var found = false;
+            for (var j = 0; j < originalValue.length; j++)
+            {
+                if (originalValue[j].id == toFind.id)
+                {
+                    found = true;
+                    break;
+                }
+            }
+            if (false == found)
+                return true;
+        }
+
+        return false;
     }
     this.isValidValue = function ()
     {
@@ -147,7 +164,6 @@ function MultiSelectLookupPropertyValueRenderer(dashboard, objectRenderer, prope
             {
                 renderer.renderSingleLookupOption
                     (
-                        $listItem,
                         $value,
                         currentValue[i].id,
                         currentValue[i].displayValue
@@ -158,7 +174,6 @@ function MultiSelectLookupPropertyValueRenderer(dashboard, objectRenderer, prope
         // Render "add new" item.
         renderer.renderSingleLookupOption
             (
-                $listItem,
                 $value,
                 null,
                 null

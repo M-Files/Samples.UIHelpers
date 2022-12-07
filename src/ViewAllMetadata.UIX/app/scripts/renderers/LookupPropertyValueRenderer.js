@@ -116,22 +116,22 @@ function LookupPropertyValueRenderer(dashboard, objectRenderer, propertyDef, pro
         });
         return arr;
     }
-    this.renderOptions = function ($listItem, $textInput, $select, restrictByEnteredText)
+    this.renderOptions = function ($div, $textInput, $select, restrictByEnteredText)
     {
-        $listItem.addClass("options-expanded");
+        $div.addClass("options-expanded");
 
         // Is this class?
         if (propertyDef.ID == 100)
         {
             // Class is special.
-            renderer.renderClassOptions($listItem, $textInput, $select, restrictByEnteredText);
+            renderer.renderClassOptions($div, $textInput, $select, restrictByEnteredText);
         }
         else
         {
-            renderer.renderLookupOptions($listItem, $textInput, $select, restrictByEnteredText);
+            renderer.renderLookupOptions($div, $textInput, $select, restrictByEnteredText);
         }
     }
-    this.renderClassOptions = function ($listItem, $textInput, $select, restrictByEnteredText)
+    this.renderClassOptions = function ($div, $textInput, $select, restrictByEnteredText)
     {
         // Get the object type
         var objectType = objectRenderer.getObjectBeingRendered().VersionData.ObjVer.Type;
@@ -180,7 +180,7 @@ function LookupPropertyValueRenderer(dashboard, objectRenderer, propertyDef, pro
                             $textInput.val(displayValue);
                             $textInput.data("displayValue", displayValue);
                             $textInput.data("id", id);
-                            $listItem.removeClass("options-expanded");
+                            $div.removeClass("options-expanded");
                         });
                         $ol.append($li);
                     }
@@ -192,7 +192,7 @@ function LookupPropertyValueRenderer(dashboard, objectRenderer, propertyDef, pro
                 }
             );
     }
-    this.renderLookupOptions = function ($listItem, $textInput, $select, restrictByEnteredText)
+    this.renderLookupOptions = function ($div, $textInput, $select, restrictByEnteredText)
     {
         // Build up the search conditions.
         var searchConditions = new MFiles.SearchConditions();
@@ -261,7 +261,7 @@ function LookupPropertyValueRenderer(dashboard, objectRenderer, propertyDef, pro
                             $textInput.val(displayValue);
                             $textInput.data("displayValue", displayValue);
                             $textInput.data("id", id);
-                            $listItem.removeClass("options-expanded");
+                            $div.removeClass("options-expanded");
                             renderer.dispatchEvent(PropertyValueRenderer.EventTypes.PropertyValueChanged)
                         });
                         $ol.append($li);
@@ -274,29 +274,46 @@ function LookupPropertyValueRenderer(dashboard, objectRenderer, propertyDef, pro
                 }
             );
     }
-    this.renderSingleLookupOption = function ($listItem, $value, selectedItemId, selectedItemDisplayValue)
+    this.renderSingleLookupOption = function ($value, selectedItemId, selectedItemDisplayValue)
     {
+        var $div = $("<div></div>").addClass("lookup");
         var $textInput = $("<input type='text' maxlength='100' />")
             .addClass("text-entry");
         var $select = $("<div></div>").addClass("select")
             .append($("<ol></ol>"));
-        $textInput.click(function () { renderer.renderOptions($listItem, $textInput, $select, true); });
-        $textInput.keyup(function () { renderer.renderOptions($listItem, $textInput, $select, true); });
-        $textInput.focus(function () { renderer.renderOptions($listItem, $textInput, $select, true); });
+        $textInput.click(function (e)
+        {
+            renderer.renderOptions($div, $textInput, $select, true);
+            e.stopPropagation();
+            return false;
+        });
+        $textInput.keyup(function (e)
+        {
+            renderer.renderOptions($div, $textInput, $select, true);
+            e.stopPropagation();
+            return false;
+        });
+        $textInput.focus(function (e)
+        {
+            renderer.renderOptions($div, $textInput, $select, true);
+            e.stopPropagation();
+            return false;
+        });
 
         var $dropdown = $("<a />")
             .addClass("dropdown")
             .click(function ()
             {
                 // Toggle options.
-                $listItem.addClass("options-expanded");
-                renderer.renderOptions($listItem, $textInput, $select, false);
+                $div.addClass("options-expanded");
+                renderer.renderOptions($div, $textInput, $select, false);
                 return false;
             });
 
-        $value.append($textInput);
-        $value.append($select);
-        $value.append($dropdown);
+        $div.append($textInput);
+        $div.append($select);
+        $div.append($dropdown);
+        $value.append($div);
         if (selectedItemId != null)
         {
             $textInput.val(selectedItemDisplayValue);
@@ -322,7 +339,6 @@ function LookupPropertyValueRenderer(dashboard, objectRenderer, propertyDef, pro
         // Render the single item.
         renderer.renderSingleLookupOption
             (
-                $listItem,
                 $value,
                 !propertyValue.Value.IsNull() ? propertyValue.Value.GetLookupID() : null,
                 !propertyValue.Value.IsNull() ? propertyValue.Value.DisplayValue : null

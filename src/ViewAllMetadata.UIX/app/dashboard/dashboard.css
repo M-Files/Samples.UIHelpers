@@ -143,7 +143,7 @@ ol.properties li.invalid-value input
     ol.properties li.mfdatatype-10 a.dropdown {
         display: inline-block;
         position: absolute;
-        right: 1px;
+        right: -3px;
         top: 3px;
         cursor: pointer;
         background-color: #EEE;
@@ -158,7 +158,7 @@ ol.properties li.invalid-value input
     ol.properties li.mfdatatype-10 div.select {
         position: absolute;
         top: 26px;
-        left: 195px;
+        left: 0px;
         right: 0px;
         border: 1px solid #767676;
         background-color: #FFF;
@@ -167,8 +167,8 @@ ol.properties li.invalid-value input
         z-index: 1000;
         display: none;
     }
-        ol.properties li.mfdatatype-9.options-expanded div.select,
-        ol.properties li.mfdatatype-10.options-expanded div.select {
+        ol.properties li.mfdatatype-9 div.lookup.options-expanded div.select,
+        ol.properties li.mfdatatype-10 div.lookup.options-expanded div.select {
             display: block;
         }
     ol.properties li.mfdatatype-9 ol, ol.properties li.mfdatatype-9 ol li,
@@ -176,7 +176,8 @@ ol.properties li.invalid-value input
         margin: 0px;
         padding: 0px;
     }
-        li.caption{
+        ol.properties li.mfdatatype-9.options-expanded li.caption,
+        ol.properties li.mfdatatype-10.options-expanded li.caption {
             background-color: #EEE;
             font-size: 0.8em;
         }
@@ -184,8 +185,12 @@ ol.properties li.mfdatatype-9.options-expanded li,
 ol.properties li.mfdatatype-10.options-expanded li {
     padding: 3px 5px;
 }
-ol.properties li.mfdatatype-9.options-expanded li.current,
-ol.properties li.mfdatatype-10.options-expanded li.current {
+ol.properties li.mfdatatype-9 div.lookup,
+ol.properties li.mfdatatype-10 div.lookup {
+    position: relative;
+}
+ol.properties li.mfdatatype-9 li.current,
+ol.properties li.mfdatatype-10 li.current {
     background-color: #EEE;
 }
         ol.properties li.mfdatatype-9 ol li,
