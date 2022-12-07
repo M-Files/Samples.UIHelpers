@@ -14,8 +14,7 @@ namespace UIHelpers.Modules.ViewAllMetadata
        [JsonConfEditor
        (
            Label = ResourceMarker.Id + nameof(Resources.Configuration.EnableEditing_Label),
-           DefaultValue = false,
-           Hidden = true
+           DefaultValue = false
        )]
         public bool EnableEditing { get; set; }
     }

@@ -2,7 +2,7 @@
 <application xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.m-files.com/schemas/appdef-client-v4.xsd">
 	<guid>1B9552B3-C1C5-44b9-9A5F-D4ABAC5E8AE2</guid>	
 	<name>View all metadata UIX</name>
-	<version>0.2</version>
+	<version>0.2.1</version>
 	<description>The UI component of the 'View all metadata' module</description>
 	<publisher>M-Files Corporation (non-official, open-source)</publisher>
 	<copyright>See https://github.com/M-Files/Samples.UIHelpers</copyright>
