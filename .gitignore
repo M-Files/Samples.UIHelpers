@@ -350,3 +350,4 @@ healthchecksdb
 src/ViewAllMetadata/ViewAllMetadata.UIX.mfappx
 *.mfappx
 /src/Common/bundles
+/src/UIHelpers/install-application.local.ps1

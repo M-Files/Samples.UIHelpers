@@ -1,3 +1,4 @@
+using MFiles.VAF.Configuration;
 using System.Runtime.Serialization;
 using UIHelpers.Modules.Base;
 
@@ -9,13 +10,12 @@ namespace UIHelpers.Modules.ViewAllMetadata
     public class Configuration
         : ConfigurationBase<AdvancedConfiguration, Translation>
     {
-        // TODO: Editing
-        //[DataMember]
-        //[JsonConfEditor
-        //(
-        //    Label = ResourceMarker.Id + nameof(Resources.Configuration.EnableEditing_Label),
-        //    DefaultValue = false
-        //)]
+       [DataMember]
+       [JsonConfEditor
+       (
+           Label = ResourceMarker.Id + nameof(Resources.Configuration.EnableEditing_Label),
+           DefaultValue = false
+       )]
         public bool EnableEditing { get; set; }
     }
 }

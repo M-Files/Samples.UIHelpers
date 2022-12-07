@@ -110,6 +110,7 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <None Include="install-application.local.ps1" />
     <None Include="install-application.ps1" />
     <None Include="ShowPreview.UIX.mfappx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -154,6 +155,10 @@
   <Target Name="DeployIfNeeded" AfterTargets="CoreBuild" Condition="false == $(DefineConstants.Contains('DONOTDEPLOY'))">
     <Message Importance="High" Text="Executing deployment script..." />
     <Exec Command="PowerShell -ExecutionPolicy Bypass -File install-application.ps1" />
+  </Target>
+  <Target Name="DeployIfNeededLocal" AfterTargets="CoreBuild" Condition="Exists('install-application.local.ps1')">
+    <Message Importance="High" Text="Executing (local) deployment script..." />
+    <Exec Command="PowerShell -ExecutionPolicy Bypass -File install-application.local.ps1" />
   </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
