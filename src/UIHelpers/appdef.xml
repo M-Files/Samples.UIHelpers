@@ -7,7 +7,7 @@
   <name>UI Helpers</name>
   <description>Enables various UI-related helpers.</description>
   <publisher>M-Files Corporation (open-source)</publisher>
-  <version>0.1</version>
+  <version>0.2</version>
   <copyright>M-Files Corporation 2022 onwards</copyright>
   <required-mfiles-version>22.11.0.0</required-mfiles-version>
   <multi-server-compatible>true</multi-server-compatible>
