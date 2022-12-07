@@ -2,6 +2,8 @@ using MFiles.VAF.Common;
 using MFiles.VAF.Configuration;
 using MFiles.VAF.Configuration.AdminConfigurations;
 using MFiles.VAF.Configuration.Domain.Dashboards;
+using MFiles.VAF.Extensions.Dashboards;
+using MFiles.VAF.Extensions.ExtensionMethods;
 using MFilesAPI;
 using System;
 using System.Collections.Generic;
@@ -139,6 +141,43 @@ namespace UIHelpers
         /// <remarks>This does not use any async operations, so hide it.</remarks>
         public override IDashboardContent GetAsynchronousOperationDashboardContent(IConfigurationRequestContext context)
             => null;
+
+        /// <inheritdoc />
+        public override IEnumerable<IDashboardContent> GetStatusDashboardRootItems(IConfigurationRequestContext context)
+        {
+            var c = this.GetUsageWarningDashboardContent(context);
+            if (null != c)
+                yield return c;
+            foreach(var i in base.GetStatusDashboardRootItems(context) ?? Enumerable.Empty<IDashboardContent>())
+                if(null != i)
+                    yield return i;
+        }
+
+        /// <summary>
+        /// Gets a warning to show on the configuration page that this is not supported.
+        /// </summary>
+        /// <param name="context">The context associated with this request.</param>
+        /// <returns>The dashboard content, or null.</returns>
+        public virtual IDashboardContent GetUsageWarningDashboardContent(IConfigurationRequestContext context)
+        {
+            var innerContent = new DashboardContentCollection();
+            {
+                var p = new DashboardCustomContentEx("<p>This functionality is from a code sample at <a href='https://github.com/M-Files/Samples.UIHelpers' target='_blank'>https://github.com/M-Files/Samples.UIHelpers</a>.  It is not an official M-Files solution and is not supported in any way by M-Files.  This application is used at your own risk.</p>");
+                p.Styles.Add("color", "red");
+                innerContent.Add(p);
+            }
+
+            // Create panel.
+            var panel = new DashboardPanelEx()
+            {
+                Title = "WARNING",
+                InnerContent = innerContent
+            };
+            panel.InnerContentStyles.AddOrUpdate("padding-left", "10px");
+            panel.InnerContentStyles.AddOrUpdate("margin-left", "10px");
+            panel.InnerContentStyles.AddOrUpdate("border-left", "1px solid #EEE");
+            return panel;
+        }
 
         #endregion
 

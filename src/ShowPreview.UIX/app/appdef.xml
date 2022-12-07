@@ -4,9 +4,9 @@
 	<guid>3bb694b2-383e-4576-a42b-85ec7035951a</guid>
 	<name>Show Preview UIX</name>
 	<version>0.1</version>
-	<description>The UI component of the 'Show preview' module</description>
-	<publisher></publisher>	
-	<copyright></copyright>
+	<publisher>M-Files Corporation (non-official, open-source)</publisher>
+	<version>0.2</version>
+	<copyright>See https://github.com/M-Files/Samples.UIHelpers</copyright>
 	<required-mfiles-version>22.11.0.0</required-mfiles-version>
 	<optional>true</optional>
 	<enabled-by-default>true</enabled-by-default>

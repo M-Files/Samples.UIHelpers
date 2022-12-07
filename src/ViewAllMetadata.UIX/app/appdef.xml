@@ -4,8 +4,8 @@
 	<name>View all metadata UIX</name>
 	<version>0.2</version>
 	<description>The UI component of the 'View all metadata' module</description>
-	<publisher>M-Files Corporation (open-source)</publisher>
-	<copyright>M-Files Corporation 2022 onwards</copyright>
+	<publisher>M-Files Corporation (non-official, open-source)</publisher>
+	<copyright>See https://github.com/M-Files/Samples.UIHelpers</copyright>
 	<required-mfiles-version>22.11.0.0</required-mfiles-version>
     <enabled-by-default>true</enabled-by-default>
 	<master-application-guid>f27a149d-d754-48ac-a547-b6c5917a6c91</master-application-guid>
