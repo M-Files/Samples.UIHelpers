@@ -83,7 +83,9 @@ function LookupPropertyValueRenderer(dashboard, objectRenderer, propertyDef, pro
 
         if (currentValue == "")
             return !isRequired;
-        return currentValue.id > 0;
+        // ID should be > 0, UNLESS it's the class,
+        // in which case the built -in "document" class has an ID of zero and is valid.
+        return currentValue.id > 0 || (propertyDef.ID == 100 && currentValue.id == 0);
     }
     this.setOriginalValue();
     this.hasChanged = function ()
