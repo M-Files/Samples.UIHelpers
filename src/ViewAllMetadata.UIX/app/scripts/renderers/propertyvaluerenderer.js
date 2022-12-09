@@ -320,18 +320,6 @@
 
         var $listItem = renderer.getListItem();
 
-        // If it's invalid then mark the list item.
-        if (!renderer.isValidValue())
-        {
-            if (null != $listItem)
-                $listItem.addClass("invalid-value")
-            return false;
-        }
-
-        // We're good.
-        if (null != $listItem)
-            $listItem.removeClass("invalid-value");
-
         // Create the value for the PV.
         var $value = $("span.read-only-value", renderer.getListItem());
         if ($value.length == 0)
@@ -339,6 +327,19 @@
             $value = $("<span></span>").addClass("read-only-value");
             $parent.append($value);
         }
+
+        // If it's invalid then mark the list item.
+        if (!renderer.isValidValue())
+        {
+            if (null != $listItem)
+                $listItem.addClass("invalid-value")
+            return $value;
+        }
+
+        // We're good.
+        if (null != $listItem)
+            $listItem.removeClass("invalid-value");
+
         var value = renderer.getCurrentValue();
         if ((value + "").length == 0)
         {
