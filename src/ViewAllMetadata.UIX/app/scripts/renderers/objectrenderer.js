@@ -19,7 +19,13 @@
             var associatedPropertyDef = objectClass.AssociatedPropertyDefs[i];
 
             // Skip built-in properties.
-            if (associatedPropertyDef.PropertyDef < 1000 && associatedPropertyDef.PropertyDef != 0 && associatedPropertyDef.PropertyDef != 100)
+            if (associatedPropertyDef.PropertyDef < 1000
+                && associatedPropertyDef.PropertyDef != 0 // Name or title
+                && associatedPropertyDef.PropertyDef != 100 // Class
+                && associatedPropertyDef.PropertyDef != 26 // Keywords
+                && associatedPropertyDef.PropertyDef != 102 // Repository
+                && associatedPropertyDef.PropertyDef != 103 // Location
+                && associatedPropertyDef.PropertyDef != 101) // Class groups
                 continue;
 
             // Add in the property.
