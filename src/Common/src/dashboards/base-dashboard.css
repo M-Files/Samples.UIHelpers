@@ -8,7 +8,7 @@ head, body {
 
 body {
     padding: 10px;
-    font-family: Lato;
+    font-family: Lato, Segoe UI, Tahoma, Arial, sans-serif;
     color: #767676;
 }
 
