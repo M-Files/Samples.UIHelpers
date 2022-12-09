@@ -42,12 +42,12 @@
                 continue;
 
             // Skip built-in properties.
-            if (associatedPropertyDef.PropertyDef < 1000
-                && associatedPropertyDef.PropertyDef != 0 // Name or title
-                && associatedPropertyDef.PropertyDef != 100 // Class
-                && associatedPropertyDef.PropertyDef != 26 // Keywords
-                && associatedPropertyDef.PropertyDef != 102 // Repository
-                && associatedPropertyDef.PropertyDef != 103) // Location
+            if (p.PropertyDef < 1000
+                && p.PropertyDef != 0 // Name or title
+                && p.PropertyDef != 100 // Class
+                && p.PropertyDef != 26 // Keywords
+                && p.PropertyDef != 102 // Repository
+                && p.PropertyDef != 103) // Location
                 continue;
 
             // If this is the name or title and we have another property set for that on the class then skip.
@@ -157,11 +157,16 @@
             propertyValueRenderer.addEventListener
                 (
                     PropertyValueRenderer.EventTypes.PropertyValueChanged,
-                    updateUI
+                    function ()
+                    {
+                        if (this.getPropertyDef().ID == 100)
+                        {
+                            console.warn("Class has changed!");
+                        }
+                        updateUI();
+                    }
                 );
-            var $listItem = propertyValueRenderer.render();
-            if (null != $listItem)
-                $listItem.focus(updateUI);
+            propertyValueRenderer.render();
             propertyValueRenderers.push(propertyValueRenderer);
         }
     }
@@ -177,11 +182,14 @@
     }
 
     // Update the UI re: save/errors.
-    function updateUI()
+    function updateUI(stopAllEditing)
     {
         // Stop any editing.
-        $(".editing").removeClass("editing");
-        $(".options-expanded").removeClass("options-expanded");
+        if (stopAllEditing)
+        {
+            $(".editing").removeClass("editing");
+            $(".options-expanded").removeClass("options-expanded");
+        }
 
         var changedProperties = [];
         var erroredProperties = [];
@@ -196,7 +204,8 @@
                 erroredProperties.push(renderer);
 
             // Attempt to exit edit mode.
-            renderer.exitEditMode();
+            if (stopAllEditing)
+                renderer.exitEditMode();
         }
 
         // Update the body with flags.
@@ -215,7 +224,7 @@
 
     // When the body is clicked, exit editing mode.
     var $body = $("body");
-    //$body.click(updateUI);
+    $body.click(function () { updateUI(true); });
 
     // Configure the close button.
     $("#btnClose").click(function ()
@@ -279,7 +288,7 @@
     renderer.discardChanges = function ()
     {
         renderer.render(renderer.originalObject, true);
-        updateUI();
+        updateUI(true);
     }
     // Configure the discard button.
     $("#btnDiscard").click(function ()

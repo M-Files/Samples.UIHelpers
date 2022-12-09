@@ -23,6 +23,7 @@
         $textarea.val(propertyValue.Value.DisplayValue);
         $textarea.blur(function ()
         {
+            renderer.exitEditMode();
             renderer.dispatchEvent(PropertyValueRenderer.EventTypes.PropertyValueChanged);
         });
         $value.append($textarea);

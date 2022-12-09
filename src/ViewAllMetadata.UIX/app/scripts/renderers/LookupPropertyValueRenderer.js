@@ -183,6 +183,8 @@ function LookupPropertyValueRenderer(dashboard, objectRenderer, propertyDef, pro
                             $textInput.data("displayValue", displayValue);
                             $textInput.data("id", id);
                             $div.removeClass("options-expanded");
+                            renderer.getListItem().removeClass("editing");
+                            renderer.dispatchEvent(PropertyValueRenderer.EventTypes.PropertyValueChanged);
                         });
                         $ol.append($li);
                     }
@@ -333,7 +335,8 @@ function LookupPropertyValueRenderer(dashboard, objectRenderer, propertyDef, pro
                             $textInput.data("displayValue", displayValue);
                             $textInput.data("id", id);
                             $div.removeClass("options-expanded");
-                            renderer.dispatchEvent(PropertyValueRenderer.EventTypes.PropertyValueChanged)
+                            renderer.getListItem().removeClass("editing");
+                            renderer.dispatchEvent(PropertyValueRenderer.EventTypes.PropertyValueChanged);
                         });
                         $ol.append($li);
                     }
@@ -352,8 +355,9 @@ function LookupPropertyValueRenderer(dashboard, objectRenderer, propertyDef, pro
             .addClass("text-entry");
         var $select = $("<div></div>").addClass("select")
             .append($("<ol></ol>"));
-        $textInput.keypress(function (e)
+        $textInput.keyup(function (e)
         {
+            renderer.dispatchEvent(PropertyValueRenderer.EventTypes.PropertyValueChanged);
             renderer.renderOptions($div, $textInput, $select, true);
             return true;
         });

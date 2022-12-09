@@ -19,6 +19,6 @@
 			eventListeners[eventType] = [];
 		for (var i = 0; i < eventListeners[eventType].length; i++)
 			if (typeof (eventListeners[eventType][i]) == "function")
-				eventListeners[eventType][i].apply(e, Array.prototype.slice.call(arguments, 1));
+				eventListeners[eventType][i].apply(this, Array.prototype.slice.call(arguments, 1));
 	}
 }

@@ -361,6 +361,7 @@
         $input.val(propertyValue.Value.DisplayValue);
         $input.blur(function ()
         {
+            renderer.exitEditMode();
             renderer.dispatchEvent(PropertyValueRenderer.EventTypes.PropertyValueChanged);
         });
         $value.append($input);
@@ -384,6 +385,14 @@
         // Hide options.
         $(".options-expanded").removeClass("options-expanded");
 
+        // Stop all others from being edited.
+        var $listItemsBeingEdited = $("li.editing").not($listItem);
+        for (var i = 0; i < $listItemsBeingEdited.length; i++)
+        {
+            var r = $($listItemsBeingEdited.get(0)).data("renderer");
+            r.exitEditMode();
+        }
+
         // Already editing?
         if ($listItem.hasClass("editing"))
             return;
@@ -398,6 +407,10 @@
         if (!dashboard.CustomData.configuration.EnableEditing)
             return;
 
+        // Don't do anything if we're not editing.
+        if (!$listItem.hasClass("editing"))
+            return true;
+
         // Update the UI.
         renderer.renderReadOnlyValue($parent);
         $listItem.removeClass("editing");
@@ -409,6 +422,7 @@
     {
         // Create the (parent) list item.
         $listItem = $("<li></li>");
+        $listItem.data("renderer", renderer);
         $listItem.attr("tabindex", "0");
         $listItem.addClass("mfdatatype-" + propertyDef.DataType.toString()); // Add a class for the data type
         $listItem.data("propertyDef", propertyDef);
