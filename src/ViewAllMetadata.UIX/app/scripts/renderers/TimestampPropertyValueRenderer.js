@@ -1,5 +1,5 @@
 ﻿
-function TimestampPropertyValueRenderer(dashboard, objectRenderer, propertyDef, propertyValue, isRequired, $parent)
+function TimestampPropertyValueRenderer(dashboard, objectRenderer, propertyDef, propertyValue, isRequired, $parent, isRemovable)
 {
     PropertyValueRenderer.apply(this, arguments);
 

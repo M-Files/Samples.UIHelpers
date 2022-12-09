@@ -3,6 +3,7 @@
     var renderer = this;
     renderer.dashboard = dashboard;
     var propertyValueRenderers = [];
+    var deletedProperties = [];
     function getOrderedProperties(objectClass, objectProperties)
     {
         var renderedPropertyDefs = [];
@@ -36,6 +37,10 @@
         for (var i = 0; i < objectProperties.Count; i++)
         {
             var p = objectProperties[i];
+
+            // Skip deleted ones.
+            if (deletedProperties.indexOf(p.PropertyDef) > -1)
+                continue;
 
             // Skip rendered ones.
             if (renderedPropertyDefs.indexOf(p.PropertyDef) > -1)
@@ -82,6 +87,10 @@
             return propertyValueRenderers[i].getCurrentValue();
         }
         return null;
+    }
+    renderer.reRender = function (force, keepPropertyData)
+    {
+        return renderer.render(renderer.originalObject, force, keepPropertyData);
     }
     renderer.render = function (selectedItem, force, keepPropertyData)
     {
@@ -139,6 +148,10 @@
                     selectedItemProperties.Add(-1, pv);
             }
         }
+        else
+        {
+            deletedProperties = [];
+        }
 
         // Clear the rendered properties.
         var $propertiesList = $("ol.properties");
@@ -176,7 +189,8 @@
                 propertyDef,
                 propertyValue,
                 property.isRequired,
-                $propertiesList
+                $propertiesList,
+                property.isRemovable
             );
             propertyValueRenderer.addEventListener
                 (
@@ -185,7 +199,28 @@
                     {
                         // Re-render if the class changes.
                         if (this.getPropertyDef().ID == 100)
-                            renderer.render(renderer.originalObject, true, true);
+                            renderer.reRender(true, true);
+
+                        // Update the UI.
+                        updateUI();
+                    }
+            );
+            propertyValueRenderer.addEventListener
+                (
+                    PropertyValueRenderer.EventTypes.PropertyValueRemoved,
+                    function ()
+                    {
+                        // Remove this property value.
+                        for (var i = 0; i < propertyValueRenderers.length; i++)
+                        {
+                            // If it's this one then remove it and re-render.
+                            if (propertyValueRenderers[i] == this)
+                            {
+                                deletedProperties.push(propertyValueRenderers[i].getPropertyDef().ID);
+                                renderer.reRender(true, true);
+                                break;
+                            }
+                        }
 
                         // Update the UI.
                         updateUI();
@@ -222,15 +257,15 @@
         {
 
             // Should we enable buttons and things?
-            var renderer = propertyValueRenderers[i];
-            if (renderer.hasChanged())
-                changedProperties.push(renderer);
-            if (!renderer.isValidValue())
-                erroredProperties.push(renderer);
+            var pvr = propertyValueRenderers[i];
+            if (pvr.hasChanged())
+                changedProperties.push(pvr);
+            if (!pvr.isValidValue())
+                erroredProperties.push(pvr);
 
             // Attempt to exit edit mode.
             if (stopAllEditing)
-                renderer.exitEditMode();
+                pvr.exitEditMode();
         }
 
         // Update the body with flags.
@@ -238,7 +273,7 @@
             .removeClass("changed")
             .removeClass("has-errors");
         $("#btnSave").removeAttr("disabled");
-        if (changedProperties.length > 0)
+        if (deletedProperties.length > 0 || changedProperties.length > 0)
             $body.addClass("changed");
         if (erroredProperties.length > 0)
         {
@@ -268,6 +303,15 @@
 
         // Get the original object properties.
         var propertyValues = renderer.originalObject.Properties;
+
+        // Remove any deleted.
+        for (var i = 0; i < deletedProperties.length; i++)
+        {
+            // If the collection contains a value then remove it.
+            var index = propertyValues.IndexOf(deletedProperties[i]);
+            if (index > -1)
+                propertyValues.Remove(index);
+        }
 
         // Gather the properties.
         for (var i = 0; i < propertyValueRenderers.length; i++)
@@ -309,6 +353,7 @@
 
     renderer.discardChanges = function ()
     {
+        deletedProperties = [];
         renderer.render(renderer.originalObject, true);
         updateUI(true);
     }

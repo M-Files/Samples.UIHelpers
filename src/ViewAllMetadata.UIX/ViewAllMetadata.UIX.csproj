@@ -35,6 +35,9 @@
       <Link>app\common-shellui.min.js</Link>
       <DependentUpon>common-shellui.js</DependentUpon>
     </Content>
+    <Content Include="..\Common\src\dashboards\images\icon-delete.png">
+      <Link>app\images\icon-delete.png</Link>
+    </Content>
     <Content Include="..\Common\src\dashboards\images\icon-edit.png">
       <Link>app\images\icon-edit.png</Link>
     </Content>

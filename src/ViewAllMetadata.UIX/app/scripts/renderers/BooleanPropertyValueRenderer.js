@@ -1,5 +1,5 @@
 ﻿
-function BooleanPropertyValueRenderer(dashboard, objectRenderer, propertyDef, propertyValue, isRequired, $parent)
+function BooleanPropertyValueRenderer(dashboard, objectRenderer, propertyDef, propertyValue, isRequired, $parent, isRemovable)
 {
     var renderer = this;
     PropertyValueRenderer.apply(this, arguments);

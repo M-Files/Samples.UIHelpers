@@ -98,6 +98,20 @@ ol.properties li.editable:hover {
     background-repeat: no-repeat;
     background-position: 170px 6px;
 }
+    ol.properties a.remove {
+        display: none;
+        background-image: url("../images/icon-delete.png");
+        background-repeat: no-repeat;
+        background-position: 0px 0px;
+        width: 16px;
+        height: 16px;
+        cursor: pointer;
+        vertical-align: middle;
+        margin-right: 5px;
+    }
+    ol.properties li.removable:hover a.remove {
+        display: inline-block;
+    }
 ol.properties li.editable .editing-value
 {
     display: none;

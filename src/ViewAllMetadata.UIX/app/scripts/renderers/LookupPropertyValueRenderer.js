@@ -1,5 +1,5 @@
 ﻿
-function LookupPropertyValueRenderer(dashboard, objectRenderer, propertyDef, propertyValue, isRequired, $parent)
+function LookupPropertyValueRenderer(dashboard, objectRenderer, propertyDef, propertyValue, isRequired, $parent, isRemovable)
 {
     // Set up the base object.
     var renderer = this;

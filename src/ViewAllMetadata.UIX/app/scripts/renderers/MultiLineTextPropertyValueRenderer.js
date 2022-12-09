@@ -1,4 +1,4 @@
-﻿function MultiLineTextPropertyValueRenderer(dashboard, objectRenderer, propertyDef, propertyValue, isRequired, $parent)
+﻿function MultiLineTextPropertyValueRenderer(dashboard, objectRenderer, propertyDef, propertyValue, isRequired, $parent, isRemovable)
 {
     var renderer = this;
     SingleLineTextPropertyValueRenderer.apply(this, arguments);

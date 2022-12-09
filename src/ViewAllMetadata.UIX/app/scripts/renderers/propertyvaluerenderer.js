@@ -1,4 +1,4 @@
-﻿function PropertyValueRenderer(dashboard, objectRenderer, propertyDef, propertyValue, isRequired, $parent)
+﻿function PropertyValueRenderer(dashboard, objectRenderer, propertyDef, propertyValue, isRequired, $parent, isRemovable)
 {
     var renderer = this;
     var $listItem = null;
@@ -305,13 +305,31 @@
 
     this.renderLabel = function($parent)
     {
+
         // Create the label for the PV.
-        var $label = $("<label></label>");
+        var $label = $("<label></label>")
+            .attr("for", "propertyEditor-" + propertyDef.ID);
         if (isRequired)
             $label.addClass("mandatory");
         var $labelSpan = $("<span></span>");
         $labelSpan.text(propertyDef.Name);
         $label.append($labelSpan);
+
+        // If it can be removed then render the icon.
+        if (isRemovable)
+        {
+            var $removeButton = $("<a></a>")
+                .addClass("remove")
+                .click(function ()
+                {
+                    renderer.dispatchEvent(PropertyValueRenderer.EventTypes.PropertyValueRemoved);
+                });
+            if (null != $parent)
+            {
+                $parent.addClass("removable");
+                $label.prepend($removeButton);
+            }
+        }
 
         // Add to a parent if we can.
         if (null != $parent)
@@ -363,7 +381,9 @@
         var $value = $("<span></span>").addClass("editing-value");
 
         // Create a standard input.
-        var $input = $("<input type='text' maxlength='100' />").addClass("auto-select");
+        var $input = $("<input type='text' maxlength='100' />")
+            .addClass("auto-select")
+            .attr("id", "propertyEditor-" + propertyDef.ID);
         $input.val(propertyValue.Value.DisplayValue);
         $input.blur(function ()
         {
@@ -488,34 +508,35 @@
     return renderer;
 }
 PropertyValueRenderer.EventTypes = {
-    PropertyValueChanged: 1
+    PropertyValueChanged: 1,
+    PropertyValueRemoved: 2
 };
-PropertyValueRenderer.create = function (dashboard, objectRenderer, propertyDef, propertyValue, isRequired, $parent)
+PropertyValueRenderer.create = function (dashboard, objectRenderer, propertyDef, propertyValue, isRequired, $parent, isRemovable)
 {
     switch (propertyDef.DataType)
     {
         case MFDatatypeMultiSelectLookup:
-            return new MultiSelectLookupPropertyValueRenderer(dashboard, objectRenderer, propertyDef, propertyValue, isRequired, $parent);
+            return new MultiSelectLookupPropertyValueRenderer(dashboard, objectRenderer, propertyDef, propertyValue, isRequired, $parent, isRemovable);
         case MFDatatypeLookup:
-            return new LookupPropertyValueRenderer(dashboard, objectRenderer, propertyDef, propertyValue, isRequired, $parent);
+            return new LookupPropertyValueRenderer(dashboard, objectRenderer, propertyDef, propertyValue, isRequired, $parent, isRemovable);
         case MFDatatypeTimestamp:
-            return new TimestampPropertyValueRenderer(dashboard, objectRenderer, propertyDef, propertyValue, isRequired, $parent);
+            return new TimestampPropertyValueRenderer(dashboard, objectRenderer, propertyDef, propertyValue, isRequired, $parent, isRemovable);
         case MFDatatypeTime:
-            return new TimePropertyValueRenderer(dashboard, objectRenderer, propertyDef, propertyValue, isRequired, $parent);
+            return new TimePropertyValueRenderer(dashboard, objectRenderer, propertyDef, propertyValue, isRequired, $parent, isRemovable);
         case MFDatatypeDate:
-            return new DatePropertyValueRenderer(dashboard, objectRenderer, propertyDef, propertyValue, isRequired, $parent);
+            return new DatePropertyValueRenderer(dashboard, objectRenderer, propertyDef, propertyValue, isRequired, $parent, isRemovable);
         case MFDatatypeBoolean:
-            return new BooleanPropertyValueRenderer(dashboard, objectRenderer, propertyDef, propertyValue, isRequired, $parent);
+            return new BooleanPropertyValueRenderer(dashboard, objectRenderer, propertyDef, propertyValue, isRequired, $parent, isRemovable);
         case MFDatatypeInteger:
-            return new IntegerPropertyValueRenderer(dashboard, objectRenderer, propertyDef, propertyValue, isRequired, $parent);
+            return new IntegerPropertyValueRenderer(dashboard, objectRenderer, propertyDef, propertyValue, isRequired, $parent, isRemovable);
         case MFDatatypeFloating:
-            return new FloatingPropertyValueRenderer(dashboard, objectRenderer, propertyDef, propertyValue, isRequired, $parent);
+            return new FloatingPropertyValueRenderer(dashboard, objectRenderer, propertyDef, propertyValue, isRequired, $parent, isRemovable);
         case MFDatatypeMultiLineText:
-            return new MultiLineTextPropertyValueRenderer(dashboard, objectRenderer, propertyDef, propertyValue, isRequired, $parent);
+            return new MultiLineTextPropertyValueRenderer(dashboard, objectRenderer, propertyDef, propertyValue, isRequired, $parent, isRemovable);
         case MFDatatypeText:
-            return new SingleLineTextPropertyValueRenderer(dashboard, objectRenderer, propertyDef, propertyValue, isRequired, $parent);
+            return new SingleLineTextPropertyValueRenderer(dashboard, objectRenderer, propertyDef, propertyValue, isRequired, $parent, isRemovable);
         default:
             alert("Property datatype " + propertyDef.DataType + " not handled; rendering may fail.");
-            return new PropertyValueRenderer(dashboard, objectRenderer, propertyDef, propertyValue, isRequired, $parent);
+            return new PropertyValueRenderer(dashboard, objectRenderer, propertyDef, propertyValue, isRequired, $parent, isRemovable);
     }
 }

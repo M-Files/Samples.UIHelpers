@@ -1,5 +1,5 @@
 ﻿
-function IntegerPropertyValueRenderer(dashboard, objectRenderer, propertyDef, propertyValue, isRequired, $parent)
+function IntegerPropertyValueRenderer(dashboard, objectRenderer, propertyDef, propertyValue, isRequired, $parent, isRemovable)
 {
     FloatingPropertyValueRenderer.apply(this, arguments);
     var base = this.getBase();

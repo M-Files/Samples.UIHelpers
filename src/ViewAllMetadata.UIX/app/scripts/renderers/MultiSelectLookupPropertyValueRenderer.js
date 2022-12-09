@@ -1,5 +1,5 @@
 ﻿
-function MultiSelectLookupPropertyValueRenderer(dashboard, objectRenderer, propertyDef, propertyValue, isRequired, $parent)
+function MultiSelectLookupPropertyValueRenderer(dashboard, objectRenderer, propertyDef, propertyValue, isRequired, $parent, isRemovable)
 {
     var renderer = this;
     LookupPropertyValueRenderer.apply(this, arguments);
