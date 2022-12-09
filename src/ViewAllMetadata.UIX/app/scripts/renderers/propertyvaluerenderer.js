@@ -294,7 +294,13 @@
     {
         var currentValue = this.getCurrentValue();
 
-        return (isRequired && (currentValue + "").length > 0) || !isRequired;
+        // Not required; fine.
+        if (!isRequired)
+            return true;
+
+        // Required, so either needs to have a length or have an automatic value.
+        return (currentValue + "").length > 0 
+            || propertyDef.AutomaticValueType != MFAutomaticValueTypeNone;
     }
 
     this.renderLabel = function($parent)
@@ -325,6 +331,17 @@
             $listItem.append($value);
         }
 
+        // Render the value.
+        var value = renderer.getCurrentValue();
+        if ((value + "").length == 0)
+        {
+            $listItem.addClass("empty");
+            value = propertyDef.AutomaticValueType == MFAutomaticValueTypeNone
+                ? "---"
+                : "(automatic)";
+        }
+        $value.text(value);
+
         // If it's invalid then mark the list item.
         if (!renderer.isValidValue())
         {
@@ -336,14 +353,6 @@
         // We're good.
         if (null != $listItem)
             $listItem.removeClass("invalid-value");
-
-        var value = renderer.getCurrentValue();
-        if ((value + "").length == 0)
-        {
-            $listItem.addClass("empty");
-            value = "---";
-        }
-        $value.text(value);
 
         return $value;
     }

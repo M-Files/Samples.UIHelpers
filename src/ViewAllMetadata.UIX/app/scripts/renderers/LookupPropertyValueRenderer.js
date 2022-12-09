@@ -36,15 +36,17 @@ function LookupPropertyValueRenderer(dashboard, objectRenderer, propertyDef, pro
             pv.Value.SetValue(propertyDef.DataType, null);
         } else
         {
-            currentValue = currentValue.id;
+            var lookup = new MFiles.Lookup();
+            lookup.Item = currentValue.id;
+            lookup.DisplayValue = currentValue.displayValue;
 
             try
             {
-                pv.Value.SetValue(propertyDef.DataType, currentValue);
+                pv.Value.SetValueToLookup(lookup);
             }
             catch (e)
             {
-                alert("Could not set value of " + currentValue + " for property " + propertyDef.Name);
+                alert("Could not set value of " + currentValue.id + " for property " + propertyDef.Name);
             }
         }
         return pv;

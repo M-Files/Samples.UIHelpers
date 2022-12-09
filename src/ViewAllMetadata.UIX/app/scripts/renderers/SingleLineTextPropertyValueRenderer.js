@@ -11,15 +11,5 @@
             ? propertyValue.Value.DisplayValue
             : $(".auto-select", $listItem).val() + "";
     }
-    this.isValidValue = function ()
-    {
-        var currentValue = this.getCurrentValue();
-
-        // If it does not have a value but is required, die.
-        if ((currentValue + "").length == 0 && isRequired)
-            return false;
-
-        return true;
-    }
     this.setOriginalValue();
 }

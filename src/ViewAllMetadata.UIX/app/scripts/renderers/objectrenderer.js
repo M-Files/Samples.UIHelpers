@@ -83,7 +83,7 @@
         }
         return null;
     }
-    renderer.render = function (selectedItem, force)
+    renderer.render = function (selectedItem, force, keepPropertyData)
     {
 
         // Sanity.
@@ -96,14 +96,18 @@
         }
 
         // Is it the same object?
-        if (renderer.originalObject != null && !force)
+        var isSameObject = false;
+        if (renderer.originalObject != null)
         {
             // If it's the same object then don't refresh.
-            if (selectedItem.VersionData.ObjVer.ID == renderer.originalObject.VersionData.ObjVer.ID
+            isSameObject = (selectedItem.VersionData.ObjVer.ID == renderer.originalObject.VersionData.ObjVer.ID
                 && selectedItem.VersionData.ObjVer.Type == renderer.originalObject.VersionData.ObjVer.Type
-                && selectedItem.VersionData.ObjVer.Version == renderer.originalObject.VersionData.ObjVer.Version)
-                return;
+                && selectedItem.VersionData.ObjVer.Version == renderer.originalObject.VersionData.ObjVer.Version);
         }
+        if (isSameObject && !force)
+            return;
+        if (!isSameObject)
+            keepPropertyData = false;
 
         renderer.originalObject = selectedItem.Clone();
 
@@ -116,6 +120,26 @@
         // Set the title.
         $("#title").text(selectedItem.VersionData.Title)
 
+        // Get the class of the object.
+        var objectClass = renderer.getPropertyValue(100);
+        if (!keepPropertyData || null == objectClass || null == objectClass.Value || objectClass.Value.IsNULL())
+            objectClass = selectedItem.VersionData.Class
+        else
+            objectClass = objectClass.Value.GetLookupID();
+
+        // If we keep the property data then try to do so.
+        var selectedItemProperties = selectedItem.Properties;
+        if (keepPropertyData)
+        {
+            selectedItemProperties = new MFiles.PropertyValues();
+            for (var i = 0; i < propertyValueRenderers.length; i++) 
+            {
+                var pv = propertyValueRenderers[i].getPropertyValue();
+                if (null != pv)
+                    selectedItemProperties.Add(-1, pv);
+            }
+        }
+
         // Clear the rendered properties.
         var $propertiesList = $("ol.properties");
         $propertiesList.empty();
@@ -124,8 +148,8 @@
         // Render the properties.
         var properties = getOrderedProperties
         (
-            dashboard.CustomData.vaultStructureManager.getObjectClass(selectedItem.VersionData.Class),
-            selectedItem.Properties
+            dashboard.CustomData.vaultStructureManager.getObjectClass(objectClass),
+            selectedItemProperties
         );
         for (var i = 0; i < properties.length; i++)
         {
@@ -137,12 +161,12 @@
                 continue;
 
             // Get the property value.
-            var propertyIndex = selectedItem.Properties.IndexOf(propertyDef.ID);
+            var propertyIndex = selectedItemProperties.IndexOf(propertyDef.ID);
             var propertyValue = new MFiles.PropertyValue();
             propertyValue.PropertyDef = propertyDef.ID;
             propertyValue.Value.SetValueToNULL(propertyDef.DataType);
             if(-1 != propertyIndex)
-                propertyValue = selectedItem.Properties[propertyIndex - 1];
+                propertyValue = selectedItemProperties[propertyIndex - 1];
 
             // Render.
             var propertyValueRenderer = PropertyValueRenderer.create
@@ -159,9 +183,9 @@
                     PropertyValueRenderer.EventTypes.PropertyValueChanged,
                     function ()
                     {
-                        // We will need to know if the class changes in the future.
+                        // Re-render if the class changes.
                         if (this.getPropertyDef().ID == 100)
-                            console.warn("Class has changed!");
+                            renderer.render(renderer.originalObject, true, true);
 
                         // Update the UI.
                         updateUI();
@@ -242,27 +266,24 @@
             return false;
         var vault = dashboard.Vault;
 
-        function getPropertyValueFromRenderer(propertyDef)
-        {
-            for (var i = 0; i < propertyValueRenderers.length; i++)
-            {
-                if (propertyValueRenderers[i].getPropertyDef().ID == propertyDef)
-                    return propertyValueRenderers[i].getPropertyValue();
-            }
-            return null;
-
-        }
+        // Get the original object properties.
+        var propertyValues = renderer.originalObject.Properties;
 
         // Gather the properties.
-        var propertyValues = new MFiles.PropertyValues();
-        for (var i = 0; i < renderer.originalObject.Properties.Count; i++)
+        for (var i = 0; i < propertyValueRenderers.length; i++)
         {
+
             // Get the value for this property.
-            var pvValue = getPropertyValueFromRenderer(renderer.originalObject.Properties[i].PropertyDef)
-                || renderer.originalObject.Properties[i];
+            var pv = propertyValueRenderers[i].getPropertyValue();
+
+            // If the collection contains a value then remove it.
+            var index = propertyValues.IndexOf(pv.PropertyDef);
+            if (index > -1)
+                propertyValues.Remove(index);
 
             // Add it.
-            propertyValues.Add(-1, pvValue);
+            if(null != pv)
+                propertyValues.Add(index, pv);
         }
 
         // Update the properties.
