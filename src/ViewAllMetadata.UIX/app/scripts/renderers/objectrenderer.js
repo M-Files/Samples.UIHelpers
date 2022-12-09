@@ -42,7 +42,12 @@
                 continue;
 
             // Skip built-in properties.
-            if (p.PropertyDef < 1000 && p.PropertyDef != 0 && p.PropertyDef != 100)
+            if (associatedPropertyDef.PropertyDef < 1000
+                && associatedPropertyDef.PropertyDef != 0 // Name or title
+                && associatedPropertyDef.PropertyDef != 100 // Class
+                && associatedPropertyDef.PropertyDef != 26 // Keywords
+                && associatedPropertyDef.PropertyDef != 102 // Repository
+                && associatedPropertyDef.PropertyDef != 103) // Location
                 continue;
 
             // If this is the name or title and we have another property set for that on the class then skip.
@@ -133,9 +138,11 @@
 
             // Get the property value.
             var propertyIndex = selectedItem.Properties.IndexOf(propertyDef.ID);
-            if (-1 == propertyIndex)
-                continue;
-            var propertyValue = selectedItem.Properties[propertyIndex - 1];
+            var propertyValue = new MFiles.PropertyValue();
+            propertyValue.PropertyDef = propertyDef.ID;
+            propertyValue.Value.SetValueToNULL(propertyDef.DataType);
+            if(-1 != propertyIndex)
+                propertyValue = selectedItem.Properties[propertyIndex - 1];
 
             // Render.
             var propertyValueRenderer = PropertyValueRenderer.create

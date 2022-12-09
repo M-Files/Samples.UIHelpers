@@ -107,9 +107,9 @@ ol.properties li.editable:focus .read-only-value,
 ol.properties li.invalid-value .read-only-value {
     display: none;
 }
-ol.properties li.editable.editing .editing-value,
-ol.properties li.editable:focus .editing-value,
-ol.properties li.invalid-value .editing-value {
+body.editable ol.properties li.editable.editing .editing-value,
+body.editable ol.properties li.editable:focus .editing-value,
+body.editable ol.properties li.invalid-value .editing-value {
     display: block;
 }
 /* make text, real and integer input boxes full width */
