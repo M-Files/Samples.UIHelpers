@@ -24,8 +24,7 @@
                 && associatedPropertyDef.PropertyDef != 100 // Class
                 && associatedPropertyDef.PropertyDef != 26 // Keywords
                 && associatedPropertyDef.PropertyDef != 102 // Repository
-                && associatedPropertyDef.PropertyDef != 103 // Location
-                && associatedPropertyDef.PropertyDef != 101) // Class groups
+                && associatedPropertyDef.PropertyDef != 103) // Location
                 continue;
 
             // Add in the property.

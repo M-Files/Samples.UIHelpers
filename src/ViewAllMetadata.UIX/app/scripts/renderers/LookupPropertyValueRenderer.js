@@ -70,7 +70,7 @@ function LookupPropertyValueRenderer(dashboard, objectRenderer, propertyDef, pro
             return "";
         }
         var v = $textEntry.data("id");
-        if (isNaN(v) || v == 0)
+        if (isNaN(v))
             return "";
         return {
             id: v,
