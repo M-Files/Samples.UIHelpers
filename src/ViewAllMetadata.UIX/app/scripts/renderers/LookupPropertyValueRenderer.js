@@ -6,10 +6,10 @@ function LookupPropertyValueRenderer(dashboard, objectRenderer, propertyDef, pro
     PropertyValueRenderer.apply(this, arguments);
     var base = this.getBase();
 
-    this.renderReadOnlyValue = function ($parent)
+    this.renderReadOnlyValue = function ()
     {
         var $listItem = this.getListItem();
-        var $value = base.renderReadOnlyValue.apply(this, [$parent]);
+        var $value = base.renderReadOnlyValue.apply(this, []);
         var value = this.getCurrentValue();
         if ((value + "").length == 0)
         {

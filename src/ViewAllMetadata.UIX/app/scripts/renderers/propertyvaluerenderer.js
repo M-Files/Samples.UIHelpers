@@ -313,19 +313,16 @@
 
         return $label;
     }
-    this.renderReadOnlyValue = function($parent)
+    this.renderReadOnlyValue = function()
     {
-        if (null == $parent)
-            return;
-
         var $listItem = renderer.getListItem();
 
         // Create the value for the PV.
-        var $value = $("span.read-only-value", renderer.getListItem());
+        var $value = $("span.read-only-value", $listItem);
         if ($value.length == 0)
         {
             $value = $("<span></span>").addClass("read-only-value");
-            $parent.append($value);
+            $listItem.append($value);
         }
 
         // If it's invalid then mark the list item.
@@ -407,14 +404,8 @@
         if (!dashboard.CustomData.configuration.EnableEditing)
             return;
 
-        // Don't do anything if we're not editing.
-        if (!$listItem.hasClass("editing"))
-            return true;
-
         // Update the UI.
-        renderer.renderReadOnlyValue($parent);
         $listItem.removeClass("editing");
-
         return true;
     }
 
@@ -432,7 +423,7 @@
         this.renderLabel($listItem);
 
         // Create the read-only value.
-        this.renderReadOnlyValue($listItem);
+        this.renderReadOnlyValue();
 
         // Is editing enabled?
         if (dashboard.CustomData.configuration.EnableEditing)
@@ -472,11 +463,20 @@
         if (null != $parent)
             $parent.append($listItem);
 
-
         return $listItem;
     }
 
-    return this;
+    // React when the property changes and update our read-only version.
+    renderer.addEventListener
+        (
+            PropertyValueRenderer.EventTypes.PropertyValueChanged,
+            function ()
+            {
+                renderer.renderReadOnlyValue();
+            }
+        )
+
+    return renderer;
 }
 PropertyValueRenderer.EventTypes = {
     PropertyValueChanged: 1

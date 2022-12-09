@@ -7,10 +7,10 @@ function MultiSelectLookupPropertyValueRenderer(dashboard, objectRenderer, prope
     {
         renderReadOnlyValue: this.renderReadOnlyValue
     };
-    this.renderReadOnlyValue = function ($parent)
+    this.renderReadOnlyValue = function ()
     {
         var $listItem = this.getListItem();
-        var $value = base.renderReadOnlyValue.apply(this, [$parent]);
+        var $value = base.renderReadOnlyValue.apply(this, []);
         var value = this.getCurrentValue();
 
         // Only replace the value if we have something (otherwise leave as "---").

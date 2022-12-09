@@ -39,10 +39,10 @@ function BooleanPropertyValueRenderer(dashboard, objectRenderer, propertyDef, pr
         }
     }
     this.setOriginalValue();
-    this.renderReadOnlyValue = function ($parent)
+    this.renderReadOnlyValue = function ()
     {
         var $listItem = this.getListItem();
-        var $value = base.renderReadOnlyValue.apply(this, [$parent]);
+        var $value = base.renderReadOnlyValue.apply(this, []);
 
         // Set the value.
         var value = this.getCurrentValue();

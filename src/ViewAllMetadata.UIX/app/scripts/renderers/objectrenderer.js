@@ -159,10 +159,11 @@
                     PropertyValueRenderer.EventTypes.PropertyValueChanged,
                     function ()
                     {
+                        // We will need to know if the class changes in the future.
                         if (this.getPropertyDef().ID == 100)
-                        {
                             console.warn("Class has changed!");
-                        }
+
+                        // Update the UI.
                         updateUI();
                     }
                 );
