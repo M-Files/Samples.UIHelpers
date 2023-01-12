@@ -41,10 +41,16 @@
     <Content Include="src\dashboards\base-dashboard.css" />
     <Content Include="src\ConfigurationManager.js" />
     <Content Include="src\dashboards\images\arrow_drop_down_s1_grey.png" />
+    <Content Include="src\dashboards\images\create_s1_grey.png" />
+    <Content Include="src\dashboards\images\disable.png" />
+    <Content Include="src\dashboards\images\ellipsis_s1_grey.png" />
+    <Content Include="src\dashboards\images\enable.png" />
     <Content Include="src\dashboards\images\icon-delete.png" />
     <Content Include="src\dashboards\scripts\console-dashboard.js" />
     <Content Include="src\console-shellui.js" />
     <Content Include="src\dashboards\scripts\Dashboard.js" />
+    <Content Include="src\dashboards\scripts\polyfill.min.js" />
+    <Content Include="src\dashboards\scripts\setImmediate.js" />
     <Content Include="src\Events.js" />
     <Content Include="src\dashboards\images\bottom-pane.png" />
     <Content Include="src\dashboards\images\icon-edit.png" />

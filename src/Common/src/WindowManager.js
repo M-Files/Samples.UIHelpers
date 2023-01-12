@@ -5,7 +5,7 @@
 	var tabId = null;
 	var tabTitle = null;
 	var t = this;
-	var registrationCallback = null;
+	var selectionChangedCallback = null;
 	var bottomTab;
 	var sideTab;
 	var shown = false;
@@ -41,7 +41,7 @@
 
 		// Set the new location.
 		currentLocation = newLocation;
-		registrationCallback = null;
+		selectionChangedCallback = null;
 
 		// Update vault.
 		t.saveDefaultWindowSize();
@@ -188,9 +188,9 @@
 
 		// Define the data to send to the dashboard.
 		var customData = {
-			registrationCallback: function (fn)
+			selectionChangedCallback: function (fn)
 			{
-				registrationCallback = fn
+				selectionChangedCallback = fn
 			},
 			tabClosedCallback: t.close,
 			windowManager: orchestrator.getWindowManager(),
@@ -202,7 +202,7 @@
 		};
 
 		// If we have a function then try to call it.
-		if (registrationCallback && typeof (registrationCallback) == "function")
+		if (selectionChangedCallback && typeof (selectionChangedCallback) == "function")
 		{
 			try
 			{
@@ -210,7 +210,7 @@
 				var selectedItems = orchestrator.getSelectedItems()
 				if (null == selectedItems)
 					return false;
-				registrationCallback(selectedItems);
+				selectionChangedCallback(selectedItems);
 
 				switch (currentLocation)
 				{

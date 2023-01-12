@@ -9,7 +9,7 @@ dayjs().utcOffset(new Date().getTimezoneOffset());
 {
 
     // Set up the dashboard.
-    var dashboard = new Dashboard();
+    var dashboard = new SingleObjectDashboard();
 
     // Our renderer will be set up later.
     var renderer = null;
