@@ -42,9 +42,14 @@
     <Content Include="src\ConfigurationManager.js" />
     <Content Include="src\dashboards\images\arrow_drop_down_s1_grey.png" />
     <Content Include="src\dashboards\images\create_s1_grey.png" />
+    <Content Include="src\dashboards\images\delete_s1_grey.png" />
     <Content Include="src\dashboards\images\disable.png" />
     <Content Include="src\dashboards\images\ellipsis_s1_grey.png" />
     <Content Include="src\dashboards\images\enable.png" />
+    <Content Include="src\dashboards\images\filter_s1.png" />
+    <Content Include="src\dashboards\images\filter_s1.svg" />
+    <Content Include="src\dashboards\images\filter_s1_grey.png" />
+    <Content Include="src\dashboards\images\filter_s1_grey.svg" />
     <Content Include="src\dashboards\images\icon-delete.png" />
     <Content Include="src\dashboards\scripts\console-dashboard.js" />
     <Content Include="src\console-shellui.js" />
