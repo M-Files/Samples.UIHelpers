@@ -54,7 +54,7 @@
     <Content Include="src\dashboards\scripts\console-dashboard.js" />
     <Content Include="src\console-shellui.js" />
     <Content Include="src\dashboards\scripts\Dashboard.js" />
-    <Content Include="src\dashboards\scripts\polyfill.min.js" />
+    <Content Include="src\dashboards\scripts\Promise.polyfill.min.js" />
     <Content Include="src\dashboards\scripts\setImmediate.js" />
     <Content Include="src\Events.js" />
     <Content Include="src\dashboards\images\bottom-pane.png" />
@@ -64,6 +64,7 @@
     <Content Include="src\json2.js" />
     <Content Include="src\Orchestrator.js" />
     <Content Include="src\dashboards\scripts\jquery-1.12.4.min.js" />
+    <Content Include="src\Promise.polyfill.shellui.js" />
     <Content Include="src\SingleWindowOrchestrator.js" />
     <Content Include="src\VaultStructureManager.js" />
     <Content Include="src\WindowManager.js" />
