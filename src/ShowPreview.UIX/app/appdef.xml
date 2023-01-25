@@ -5,7 +5,6 @@
 	<name>Show Preview UIX</name>
 	<version>0.1</version>
 	<publisher>M-Files Corporation (non-official, open-source)</publisher>
-	<version>0.2</version>
 	<copyright>See https://github.com/M-Files/Samples.UIHelpers</copyright>
 	<required-mfiles-version>22.11.0.0</required-mfiles-version>
 	<optional>true</optional>
