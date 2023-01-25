@@ -29,6 +29,7 @@ function Dashboard()
     console.log("Dashboard activated");
 
     var events = new Events();
+    t.events = events;
     t.addEventListener = events.addEventListener;
     t.dispatchEvent = events.dispatchEvent;
 
