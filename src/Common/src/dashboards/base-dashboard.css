@@ -8,7 +8,7 @@ head, body {
 
 body {
     padding: 10px;
-    font-family: Lato;
+    font-family: Lato, Segoe UI, Tahoma, Arial, sans-serif;
     color: #767676;
 }
 
@@ -72,15 +72,23 @@ button {
     text-align: center;
 }
 
-    button:hover, button:active, button.save:active, button.save:hover {
-        border-color: #318CCC;
-        background-color: #318CCC;
-        color: white;
-    }
+button:hover, button:active, button.save:active, button.save:hover {
+    border-color: #318CCC;
+    background-color: #318CCC;
+    color: white;
+}
 
-    button.save {
-        border-color: #318CCC;
-        color: #318CCC;
+button.save {
+    border-color: #318CCC;
+    color: #318CCC;
+}
+    button.save:disabled, button.save[disabled],
+    button.save:disabled:active, button.save:disabled:hover,
+    button.save[disabled]:active, button.save[disabled]:hover {
+        color: #CCC;
+        border-color: #CCC;
+        cursor: not-allowed;
+        background-color: white;
     }
 
 .buttonGroup.top {

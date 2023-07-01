@@ -10,8 +10,14 @@
 
 	var propertyDefinitions = {};
 	var classes = {};
+	var valueLists = {};
 
-	t.getPropertyDefinition = function(propertyDefId)
+	t.getValueList = function (valueListId)
+	{
+		return valueLists[valueListId];
+	}
+
+	t.getPropertyDefinition = function (propertyDefId)
 	{
 		return propertyDefinitions[propertyDefId];
 	}
@@ -52,6 +58,25 @@
 					{
 						var c = output[i];
 						classes[c.ID] = c;
+					}
+				},
+				function (shorterror, longerror, errorobj)
+				{
+					// Error checking permissions.
+					MFiles.ReportException(errorobj);
+				}
+		);
+
+		// Load all the value lists.
+		shellUI.Vault.Async.ValueListOperations.GetValueLists
+			(
+				function (output)
+				{
+					valueLists = {};
+					for (var i = 0; i < output.Count; i++)
+					{
+						var pd = output[i];
+						valueLists[pd.ID] = pd;
 					}
 				},
 				function (shorterror, longerror, errorobj)

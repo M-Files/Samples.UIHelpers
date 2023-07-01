@@ -31,6 +31,13 @@
     <Content Include="..\Common\bundles\common-shellui.js">
       <Link>app\common-shellui.js</Link>
     </Content>
+    <Content Include="..\Common\bundles\common-shellui.min.js">
+      <Link>app\common-shellui.min.js</Link>
+      <DependentUpon>common-shellui.js</DependentUpon>
+    </Content>
+    <Content Include="..\Common\src\dashboards\images\icon-delete.png">
+      <Link>app\images\icon-delete.png</Link>
+    </Content>
     <Content Include="..\Common\src\dashboards\images\icon-edit.png">
       <Link>app\images\icon-edit.png</Link>
     </Content>
@@ -38,7 +45,23 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="app\dashboard\dashboard.css" />
+    <Content Include="app\dashboard\jquery.datetimepicker.min.css" />
+    <Content Include="app\scripts\dayjs\customParseFormat.js" />
+    <Content Include="app\scripts\dayjs\dayjs.min.js" />
+    <Content Include="app\scripts\dayjs\localizedFormat.js" />
+    <Content Include="app\scripts\dayjs\utc.js" />
+    <Content Include="app\scripts\jquery.datetimepicker.full.min.js" />
     <Content Include="app\scripts\renderers\objectrenderer.js" />
+    <Content Include="app\scripts\renderers\BooleanPropertyValueRenderer.js" />
+    <Content Include="app\scripts\renderers\IntegerPropertyValueRenderer.js" />
+    <Content Include="app\scripts\renderers\FloatingPropertyValueRenderer.js" />
+    <Content Include="app\scripts\renderers\DatePropertyValueRenderer.js" />
+    <Content Include="app\scripts\renderers\TimePropertyValueRenderer.js" />
+    <Content Include="app\scripts\renderers\TimestampPropertyValueRenderer.js" />
+    <Content Include="app\scripts\renderers\LookupPropertyValueRenderer.js" />
+    <Content Include="app\scripts\renderers\MultiSelectLookupPropertyValueRenderer.js" />
+    <Content Include="app\scripts\renderers\MultiLineTextPropertyValueRenderer.js" />
+    <Content Include="app\scripts\renderers\SingleLineTextPropertyValueRenderer.js" />
     <Content Include="app\scripts\renderers\propertyvaluerenderer.js" />
     <Content Include="app\shellui.js" />
     <Content Include="app\dashboard\dashboard.html" />

@@ -9,7 +9,8 @@
       "src/SingleWindowOrchestrator.js",
       "src/ConfigurationManager.js",
       "src/VaultStructureManager.js",
-      "src/WindowManager.js"
+      "src/WindowManager.js",
+      "src/Promise.polyfill.shellui.js"
     ]
   },
   {
@@ -17,6 +18,8 @@
     "inputFiles": [
       "src/dashboards/scripts/console-dashboard.js",
       "src/dashboards/scripts/jquery-1.12.4.min.js",
+      "src/dashboards/scripts/setImmediate.js",
+      "src/dashboards/scripts/Promise.polyfill.min.js",
       "src/Events.js",
       "src/dashboards/scripts/Dashboard.js"
     ]
